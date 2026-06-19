@@ -8,419 +8,773 @@
 2. [System Architecture](#2-system-architecture)
 3. [Technology Stack](#3-technology-stack)
 4. [Database Schema](#4-database-schema)
-5. [Component Breakdown](#5-component-breakdown)
-6. [API Documentation](#6-api-documentation)
-7. [Authentication & Authorization](#7-authentication--authorization)
-8. [Error Handling Conventions](#8-error-handling-conventions)
-9. [Environment Variables](#9-environment-variables)
+5. [Server Component Breakdown](#5-server-component-breakdown)
+6. [Client Component Breakdown](#6-client-component-breakdown)
+7. [API Documentation](#7-api-documentation)
+8. [Authentication & Authorization](#8-authentication--authorization)
+9. [Error Handling Conventions](#9-error-handling-conventions)
+10. [Environment Variables](#10-environment-variables)
 
 ---
 
 ## 1. Project Overview
 
-This portal serves two user roles — **Student (Fresher)** and **Admin (HMC Staff)** — and handles the complete lifecycle of:
+This portal serves three user roles — **Student (Fresher)**, **HMC Staff (Hostel Management Committee)**, and **SWC Admin** — and handles the complete lifecycle of:
 
-- Fresher account provisioning and first-login password reset
-- Student onboarding form collection
+- Fresher account provisioning and first-login mandatory password reset
+- Student onboarding form collection (personal, medical, emergency contact data)
 - Hostel and room inventory management
-- Room and roommate allocation (manual/desk-based)
+- Room and roommate allocation — desk-based at arrival or pre-allocation by HMC
 - Conditional roommate contact disclosure
-- Student dashboard with allotment slip PDF generation
-- Admin reporting and export
+- Student dashboard with allocation status and hostel information
+- Allotment slip PDF generation (Phase 2)
+- Admin reporting, search, filter, and CSV/Excel export
+- Multi-year reuse: the system resets per academic batch without dropping historical data
 
 ---
 
 ## 2. System Architecture
 
-The backend is structured as a **modular monolith** using Node.js + Express, split into the following self-contained components (feature modules). Each module owns its routes, controllers, services, and validators. A shared layer handles auth middleware, error handling, DB connection, and utilities.
+The codebase lives in a **single repository** with three top-level directories: `client`, `server`, and `shared`.
 
 ```
-src/
-├── app.ts                  # Express app setup
-├── server.ts               # Entry point
-├── config/
-│   ├── db.ts               # Mongoose connection
-│   └── env.ts              # Env config loader
-├── middlewares/
-│   ├── auth.middleware.ts  # JWT verification
-│   ├── role.middleware.ts  # Role-based guard
-│   └── error.middleware.ts # Global error handler
-├── utils/
-│   ├── email.util.ts       # Email sender (nodemailer)
-│   ├── pdf.util.ts         # Allotment slip PDF generator
-│   ├── export.util.ts      # CSV/Excel exporter
-│   └── token.util.ts       # JWT helpers
-├── modules/
-│   ├── auth/
-│   ├── user/
-│   ├── onboarding/
-│   ├── hostel/
-│   ├── room/
-│   ├── allocation/
-│   └── dashboard/
-└── types/
-    └── express.d.ts        # Augmented Request type
+iitg-onboarding/
+├── client/              # React 19 SPA (Vite 8)
+├── server/              # Express 5 modular monolith (Node.js 24)
+├── shared/              # Zod schemas + TypeScript types shared by both
+├── package.json         # Root — single npm install
+├── package-lock.json
+└── tsconfig.base.json   # Base TypeScript config extended by client and server
+```
+
+The server is a **modular monolith** — each feature owns its routes, controller, service, and validator. A shared layer handles auth middleware, error handling, database connection, Redis, and utilities.
+
+---
+
+### Server Directory Structure
+
+```
+server/
+├── src/
+│   ├── app.ts                      # Express app setup + middleware registration
+│   ├── server.ts                   # HTTP server entry point
+│   ├── worker.ts                   # BullMQ email worker (separate process)
+│   ├── config/
+│   │   ├── prisma.ts               # Prisma client (PrismaPg adapter)
+│   │   ├── redis.ts                # ioredis client shared across rate limit, BullMQ, JWT blocklist
+│   │   └── env.ts                  # Re-exports validated env from shared/env.ts
+│   ├── middleware/
+│   │   ├── auth.middleware.ts      # JWT cookie verification + Redis blocklist + sessionInvalidatedAt check
+│   │   ├── role.middleware.ts      # Role-based route guard
+│   │   ├── validate.middleware.ts  # Zod request body/query validation factory
+│   │   └── error.middleware.ts     # Global error handler (Express 5 async-safe)
+│   ├── utils/
+│   │   ├── email.util.ts           # Nodemailer wrapper (IITG SMTP relay)
+│   │   ├── pdf.util.ts             # Allotment slip PDF via Puppeteer (Phase 2)
+│   │   ├── export.util.ts          # CSV / Excel export via ExcelJS
+│   │   └── jwt.util.ts             # signAccessToken, signRefreshToken, verifyToken
+│   ├── jobs/
+│   │   └── email.queue.ts          # BullMQ Queue definition + job dispatch helpers
+│   ├── modules/
+│   │   ├── auth/
+│   │   │   ├── auth.routes.ts
+│   │   │   ├── auth.controller.ts
+│   │   │   ├── auth.service.ts
+│   │   │   └── auth.validator.ts
+│   │   ├── user/
+│   │   │   ├── user.routes.ts
+│   │   │   ├── user.controller.ts
+│   │   │   └── user.service.ts
+│   │   ├── onboarding/
+│   │   │   ├── onboarding.routes.ts
+│   │   │   ├── onboarding.controller.ts
+│   │   │   ├── onboarding.service.ts
+│   │   │   └── onboarding.validator.ts
+│   │   ├── hostel/
+│   │   │   ├── hostel.routes.ts
+│   │   │   ├── hostel.controller.ts
+│   │   │   └── hostel.service.ts
+│   │   ├── room/
+│   │   │   ├── room.routes.ts
+│   │   │   ├── room.controller.ts
+│   │   │   └── room.service.ts
+│   │   ├── allocation/
+│   │   │   ├── allocation.routes.ts
+│   │   │   ├── allocation.controller.ts
+│   │   │   └── allocation.service.ts
+│   │   └── dashboard/
+│   │       ├── dashboard.routes.ts
+│   │       ├── dashboard.controller.ts
+│   │       └── dashboard.service.ts
+│   └── types/
+│       └── express.d.ts            # Augments Express Request with req.user
+└── prisma/
+    └── schema.prisma               # Single source of truth for the database schema
+```
+
+---
+
+### Client Directory Structure
+
+```
+client/
+├── src/
+│   ├── main.tsx                    # App entry point
+│   ├── routes/                     # TanStack Router file-based route tree
+│   │   ├── __root.tsx              # Root layout (auth guard, navigation shell)
+│   │   ├── login.tsx
+│   │   ├── change-password.tsx     # First-login gate; blocks all other routes
+│   │   ├── onboarding.tsx          # Student onboarding form
+│   │   ├── dashboard/
+│   │   │   ├── student.tsx         # Allocation status, roommate info, hostel details
+│   │   │   └── admin.tsx           # Overview stats, student listing
+│   │   └── admin/
+│   │       ├── users.tsx           # User provisioning and management
+│   │       ├── hostels.tsx         # Hostel CRUD
+│   │       ├── rooms.tsx           # Room inventory
+│   │       └── allocations.tsx     # Room allocation desk view
+│   ├── components/
+│   │   ├── ui/                     # shadcn/ui component copies (Button, Input, Table, etc.)
+│   │   ├── forms/
+│   │   │   └── OnboardingForm.tsx  # RHF + Zod wired to shared onboardingSchema
+│   │   └── layouts/
+│   │       ├── StudentLayout.tsx
+│   │       └── AdminLayout.tsx
+│   ├── lib/
+│   │   ├── queryClient.ts          # TanStack Query instance (staleTime, gcTime config)
+│   │   └── api.ts                  # Axios instance with withCredentials: true + 401 refresh interceptor
+│   └── hooks/
+│       ├── useAuth.ts              # Auth state via TanStack Query (current user, role)
+│       └── useAllocation.ts        # Allocation status query + mutation hooks
+└── index.html
+```
+
+---
+
+### Shared Directory Structure
+
+```
+shared/
+├── auth.ts           # loginSchema, changePasswordSchema, forgotPasswordSchema, resetPasswordSchema
+├── student.ts        # onboardingSchema, OnboardingInput type, BloodGroup enum
+├── allocation.ts     # allocationSchema, roomChangeSchema, roommateSwapSchema
+├── email.ts          # EmailJob type (BullMQ job data shape)
+└── env.ts            # Zod env schema; parsed and exported as `env` object
+```
+
+Both `client` and `server` import from `../../shared/` via a tsconfig path alias `@shared/*`.
+
+---
+
+### Root Scripts (`package.json`)
+
+```json
+{
+  "scripts": {
+    "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\" \"npm run dev:worker\"",
+    "dev:client": "cd client && npm run dev",
+    "dev:server": "cd server && node --watch src/server.ts",
+    "dev:worker": "cd server && node --watch src/worker.ts",
+    "build": "npm run build:client && npm run build:server",
+    "build:client": "cd client && npm run build",
+    "build:server": "cd server && npx tsup",
+    "typecheck": "cd client && tsc --noEmit && cd ../server && tsc --noEmit",
+    "lint": "eslint client/src server/src shared --ext ts,tsx"
+  },
+  "devDependencies": {
+    "concurrently": "^8.0.0",
+    "eslint": "^8.0.0",
+    "typescript": "^5.8.0"
+  }
+}
 ```
 
 ---
 
 ## 3. Technology Stack
 
-| Layer | Choice |
-|---|---|
-| Runtime | Node.js 24 |
-| Language | TypeScript 5+ |
-| Framework | Express 4 |
-| Database | MongoDB 7+ via Mongoose 8 |
-| Auth | JWT (access token) + bcrypt |
-| PDF Generation | PDFKit or Puppeteer |
-| Export | ExcelJS (xlsx/csv) |
-| Validation | Zod |
-| File Upload | Multer + xlsx/csv-parse |
-| Session Timeout | Token expiry + client-side idle timer |
+### Server
+
+| Layer | Package | Version |
+|---|---|---|
+| Runtime | Node.js | 24 LTS |
+| Package Manager | npm | 11+ |
+| Language | TypeScript | 5.8+ |
+| Framework | Express | 5.x |
+| ORM | Prisma (`prisma-client` + `@prisma/adapter-pg`) | 7.x |
+| Database | PostgreSQL | 17 |
+| Redis Client | ioredis | 5.x |
+| Job Queue | BullMQ | 5.x |
+| Validation | Zod (shared with client) | 3.x |
+| Auth | Custom JWT + bcryptjs | — |
+| File Upload | Multer + csv-parse | latest |
+| Email | Nodemailer + IITG SMTP relay | 6.x |
+| Export | ExcelJS | 4.x |
+| PDF Generation | Puppeteer via BullMQ worker | Phase 2 |
+| Server Build | tsup | 8.x |
+| Process Manager | PM2 (cluster mode) | 5.x |
+
+### Client
+
+| Layer | Package | Version |
+|---|---|---|
+| Framework | React | 19.x |
+| Build Tool | Vite + @vitejs/plugin-react | 8.x / 6.x |
+| Routing | TanStack Router | v1 |
+| Data Fetching | TanStack Query | v5 |
+| Forms | React Hook Form + @hookform/resolvers | 7.x |
+| Validation | Zod (shared with server) | 3.x |
+| UI Components | shadcn/ui | latest |
+| Styling | Tailwind CSS | 4.x |
+| HTTP Client | Axios | 1.x |
 
 ---
 
 ## 4. Database Schema
 
-All timestamps use ISO 8601 UTC. Soft deletes are not used; records are hard-deleted only where noted.
+All timestamps use ISO 8601 UTC. Soft deletes use `deletedAt` — records are never hard-deleted from student and user tables. Allocation audit records are append-only (never updated). All primary keys are CUIDs generated by Prisma.
 
 ---
 
-### 4.1 `users` Collection
+### Prisma Schema (`server/prisma/schema.prisma`)
 
-Represents both students and hostel admins. Role field differentiates behavior.
-
-```typescript
-{
-  _id: ObjectId,
-  loginId: String,           // Unique. Admin-provisioned (e.g., JEE advance roll number or custom ID)
-  email: String,             // Unique. Used for forgot-password flow
-  passwordHash: String,      // bcrypt hash
-  role: "student" | "hmc",
-  isFirstLogin: Boolean,     // true until first password reset is completed
-  isActive: Boolean,         // Admin can deactivate
-  lastLoginAt: Date | null,
-  sessionInvalidatedAt: Date | null,  // Used to invalidate all old tokens on password reset
-  createdAt: Date,
-  updatedAt: Date
+```prisma
+generator client {
+  provider   = "prisma-client"
+  output     = "../src/generated/prisma"
+  engineType = "client"
 }
 
-Indexes:
-  - loginId: unique
-  - email: unique
-  - role: 1
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Academic Year ────────────────────────────────────────────────────────────
+// Every batch-specific table carries an academicYearId.
+// To start a new batch, create a new AcademicYear record and seed fresh data.
+// Historical records remain untouched.
+
+model AcademicYear {
+  id        String   @id @default(cuid())
+  year      String   @unique  // e.g. "2025-2026"
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  students         Student[]
+  hostels          Hostel[]
+  allocations      Allocation[]
+  allocationAudits AllocationAudit[]
+  bulkUploadLogs   BulkUploadLog[]
+
+  @@index([isActive])
+}
+
+// ─── User ─────────────────────────────────────────────────────────────────────
+
+model User {
+  id                   String    @id @default(cuid())
+  loginId              String    @unique  // Admin-provisioned (e.g. JEE roll number or custom ID)
+  email                String    @unique  // Institute email; used for forgot-password flow
+  passwordHash         String
+  role                 UserRole  @default(STUDENT)
+  isActive             Boolean   @default(true)
+  mustChangePassword   Boolean   @default(true)   // true until first-login password reset is done
+  sessionInvalidatedAt DateTime?                  // Set on password change; tokens issued before this are rejected
+  lastLoginAt          DateTime?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+  deletedAt            DateTime?                  // Soft delete
+
+  student              Student?
+  hmcAdmin             HMCAdmin?
+  allocationsPerformed Allocation[]
+  passwordResetTokens  PasswordResetToken[]
+  bulkUploadLogs       BulkUploadLog[]
+  allocationAudits     AllocationAudit[]
+
+  @@index([role])
+  @@index([isActive])
+  @@index([deletedAt])
+}
+
+enum UserRole {
+  STUDENT
+  HMC
+  ADMIN
+}
+
+// ─── Student ──────────────────────────────────────────────────────────────────
+
+model Student {
+  id             String           @id @default(cuid())
+  userId         String           @unique
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  academicYearId String
+  academicYear   AcademicYear     @relation(fields: [academicYearId], references: [id])
+
+  // Pre-filled from admin bulk upload
+  name           String
+  rollNumber     String
+  branch         String
+  email          String  // mirrors user.email for convenience
+
+  // Filled by student during onboarding — null until submitted
+  contactNumber                 String?
+  alternateContactNumber        String?
+  permanentAddress              String?
+  state                         String?
+  emergencyContactName          String?
+  emergencyContactNumber        String?
+  emergencyContactRelation      String?  // e.g. "Father", "Guardian"
+  bloodGroup                    BloodGroup?
+  medicalConditions             String?
+  allergies                     String?
+  physicalAccessibilityRequirements String?
+
+  onboardingStatus      OnboardingStatus @default(PENDING)
+  onboardingSubmittedAt DateTime?
+  consentGiven          Boolean          @default(false)
+  editAllowedByAdmin    Boolean          @default(false)  // Admin can re-open the form for correction
+
+  allocation            Allocation?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([academicYearId, rollNumber])
+  @@index([academicYearId])
+  @@index([onboardingStatus])
+  @@index([branch])
+}
+
+enum OnboardingStatus {
+  PENDING
+  SUBMITTED
+}
+
+enum BloodGroup {
+  A_POSITIVE
+  A_NEGATIVE
+  B_POSITIVE
+  B_NEGATIVE
+  O_POSITIVE
+  O_NEGATIVE
+  AB_POSITIVE
+  AB_NEGATIVE
+}
+
+// ─── Hostel ───────────────────────────────────────────────────────────────────
+
+model Hostel {
+  id             String       @id @default(cuid())
+  academicYearId String
+  academicYear   AcademicYear @relation(fields: [academicYearId], references: [id])
+
+  name           String
+  code           String       // Short identifier e.g. "TGB" for Tagore Bhawan
+  type           HostelType
+  wardenName     String
+  wardenContact  String
+  wardenEmail    String
+  messTimings    Json         // { breakfast: string, lunch: string, dinner: string }
+  rules          Json         // string[]
+  facilities     Json         // string[] e.g. ["Wi-Fi", "Laundry", "Gym"]
+  isActive       Boolean      @default(true)
+
+  rooms          Room[]
+  hmcAdmins      HMCAdmin[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([academicYearId, code])
+  @@index([academicYearId])
+  @@index([isActive])
+}
+
+enum HostelType {
+  BOYS
+  GIRLS
+  CO_ED
+}
+
+// ─── Room ─────────────────────────────────────────────────────────────────────
+
+model Room {
+  id               String  @id @default(cuid())
+  hostelId         String
+  hostel           Hostel  @relation(fields: [hostelId], references: [id], onDelete: Cascade)
+  roomNumber       String  // e.g. "A-101"
+  floor            Int?
+  capacity         Int     @default(2)
+  currentOccupancy Int     @default(0)  // Kept in sync via Prisma transactions on alloc/dealloc
+  isAccessible     Boolean @default(false)  // Reserved for students with accessibility requirements
+  isActive         Boolean @default(true)
+
+  allocations      Allocation[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([hostelId, roomNumber])
+  @@index([hostelId])
+  @@index([isActive])
+  @@index([currentOccupancy])
+}
+
+// ─── Allocation ───────────────────────────────────────────────────────────────
+// One active allocation per student at a time.
+
+model Allocation {
+  id             String       @id @default(cuid())
+  studentId      String       @unique
+  student        Student      @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  academicYearId String
+  academicYear   AcademicYear @relation(fields: [academicYearId], references: [id])
+  hostelId       String       // Denormalised for fast hostel-level queries
+  roomId         String
+  room           Room         @relation(fields: [roomId], references: [id])
+  allocatedBy    String
+  allocator      User         @relation(fields: [allocatedBy], references: [id])
+  isActive       Boolean      @default(true)  // false when student is moved or deallocated
+  notes          String?
+  allocatedAt    DateTime     @default(now())
+
+  auditLogs      AllocationAudit[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([academicYearId])
+  @@index([roomId])
+  @@index([isActive])
+  @@index([studentId, isActive])
+}
+
+// ─── Allocation Audit ─────────────────────────────────────────────────────────
+// Append-only. Records are never updated after insert.
+
+model AllocationAudit {
+  id                  String       @id @default(cuid())
+  allocationId        String
+  allocation          Allocation   @relation(fields: [allocationId], references: [id])
+  academicYearId      String
+  academicYear        AcademicYear @relation(fields: [academicYearId], references: [id])
+  action              AuditAction
+  performedBy         String
+  performer           User         @relation(fields: [performedBy], references: [id])
+  previousRoomId      String?
+  newRoomId           String?
+  previousRoommateIds String[]     // Student IDs of previous co-occupants
+  newRoommateIds      String[]
+  notes               String?
+  performedAt         DateTime     @default(now())
+
+  @@index([allocationId])
+  @@index([academicYearId])
+  @@index([performedAt])
+}
+
+enum AuditAction {
+  ALLOCATED
+  ROOM_CHANGED
+  ROOMMATE_SWAPPED
+  DEALLOCATED
+}
+
+// ─── Password Reset Token ─────────────────────────────────────────────────────
+
+model PasswordResetToken {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash  String   @unique  // SHA-256 hash; raw token is sent via email
+  expiresAt  DateTime           // Checked at query time; expired rows cleaned by a scheduled job
+  isUsed     Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+// ─── Bulk Upload Log ──────────────────────────────────────────────────────────
+
+model BulkUploadLog {
+  id             String         @id @default(cuid())
+  uploadedBy     String
+  uploader       User           @relation(fields: [uploadedBy], references: [id])
+  academicYearId String
+  academicYear   AcademicYear   @relation(fields: [academicYearId], references: [id])
+  type           BulkUploadType
+  fileName       String
+  totalRows      Int
+  successCount   Int
+  failureCount   Int
+  errors         Json           // { row: number, reason: string }[]
+  uploadedAt     DateTime       @default(now())
+
+  @@index([uploadedBy])
+  @@index([academicYearId])
+  @@index([uploadedAt])
+}
+
+enum BulkUploadType {
+  FRESHER_MASTER
+  HOSTEL_INVENTORY
+}
+
+// ─── HMC Admin ────────────────────────────────────────────────────────────────
+
+model HMCAdmin {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  hostelId  String
+  hostel    Hostel   @relation(fields: [hostelId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@index([hostelId])
+}
 ```
 
 ---
 
-### 4.2 `students` Collection
+### Key Schema Notes
 
-Extended profile linked 1:1 to a user. Populated from the admin's master upload and completed by the student during onboarding.
+**`currentOccupancy` on Room** is a denormalised field kept for fast availability queries. It is always updated inside a `prisma.$transaction()` together with the allocation record, preventing race conditions when two HMC coordinators allocate the same room simultaneously.
 
-```typescript
-{
-  _id: ObjectId,
-  userId: ObjectId,          // ref: users
-  name: String,
-  rollNumber: String,        // Unique
-  branch: String,
-  email: String,             // Matches users.email
-
-  // Onboarding fields — null until submitted
-  contactNumber: String | null,
-  alternateContactNumber: String | null,
-  permanentAddress: String | null,
-  state: String | null,
-  emergencyContactName: String | null,
-  emergencyContactNumber: String | null,
-  emergencyContactRelation: String | null,
-  bloodGroup: String | null,
-  medicalConditions: String | null,    // Free text
-  physicalAccessibilityRequirements: String | null,
-
-  onboardingStatus: "pending" | "submitted",
-  onboardingSubmittedAt: Date | null,
-  consentGiven: Boolean,
-
-  // Admin control
-  editAllowedByAdmin: Boolean,         // If true, student can re-submit form
-
-  createdAt: Date,
-  updatedAt: Date
-}
-
-Indexes:
-  - userId: unique
-  - rollNumber: unique
-  - onboardingStatus: 1
-  - branch: 1
+```ts
+// allocation.service.ts — transactional occupancy update
+await prisma.$transaction([
+  prisma.allocation.create({ data: allocationPayload }),
+  prisma.room.update({
+    where: { id: roomId },
+    data: { currentOccupancy: { increment: 1 } },
+  }),
+  prisma.allocationAudit.create({ data: auditPayload }),
+])
 ```
+
+**Roommate contact visibility** is computed at query time in `dashboard.service.ts`. A student's contact number is exposed to their co-occupant only when both have `isActive = true` allocations pointing to the same room.
+
+**Multi-year reuse:** Every batch-scoped table (`Student`, `Hostel`, `Allocation`, etc.) carries an `academicYearId`. To open a new batch, the admin creates a new `AcademicYear` record and seeds fresh hostel and student data. All prior-year records remain intact and queryable.
+
+**`editAllowedByAdmin`:** An admin can flip this field to `true` on any student's record to permit re-submission of their onboarding form after it has already been submitted. The service rejects re-submission if the flag is `false`.
 
 ---
 
-### 4.3 `hostels` Collection
+## 5. Server Component Breakdown
 
-Represents a hostel building.
-
-```typescript
-{
-  _id: ObjectId,
-  name: String,              // e.g., "Tagore Bhawan"
-  type: "boys" | "girls" | "co-ed",
-  wardenName: String,
-  wardenContact: String,
-  messTimings: {
-    breakfast: String,       // e.g., "7:30 AM – 9:00 AM"
-    lunch: String,
-    dinner: String
-  },
-  rules: [String],           // Array of rule strings
-  facilities: [String],      // e.g., ["Wi-Fi", "Laundry", "Gym"]
-  isActive: Boolean,
-  createdAt: Date,
-  updatedAt: Date
-}
-
-Indexes:
-  - name: 1
-```
-
----
-
-### 4.4 `rooms` Collection
-
-Each room belongs to one hostel. A room has a defined capacity.
-
-```typescript
-{
-  _id: ObjectId,
-  hostelId: ObjectId,        // ref: hostels
-  roomNumber: String,        // e.g., "A-101"
-  floor: Number | null,
-  capacity: Number,          // Admin-configured (1–2), if isAccessible : true, is 1 else 2
-  currentOccupancy: Number,  // Derived field; updated on allocation
-  isAccessible: Boolean,     // For students with accessibility requirements, by default false
-  isActive: Boolean, // make is false if the 
-  createdAt: Date,
-  updatedAt: Date
-}
-
-Indexes:
-  - hostelId: 1
-  - hostelId + roomNumber: unique (compound)
-  - currentOccupancy: 1
-  - isActive: 1
-```
-
----
-
-### 4.5 `allocations` Collection
-
-Core record binding a student to a hostel room. One active allocation per student at a time.
-
-```typescript
-{
-  _id: ObjectId,
-  studentId: ObjectId,       // ref: students
-  hostelId: ObjectId,        // ref: hostels
-  roomId: ObjectId,          // ref: rooms
-  allocatedBy: ObjectId,     // ref: users (admin)
-  allocatedAt: Date,
-  isActive: Boolean,         // false when student is moved or deallocated
-  notes: String | null,      // Admin notes
-
-  // Audit history is stored in allocationAudits collection
-  createdAt: Date,
-  updatedAt: Date
-}
-
-Indexes:
-  - studentId: 1
-  - roomId: 1
-  - isActive: 1
-  - studentId + isActive: compound (for fast lookup of current allocation)
-```
-
----
-
-### 4.6 `allocationAudits` Collection
-
-Append-only audit log for every allocation action. Never updated, only inserted.
-
-```typescript
-{
-  _id: ObjectId,
-  allocationId: ObjectId,    // ref: allocations
-  action: "allocated" | "roomChanged" | "roommateSwapped" | "deallocated",
-  performedBy: ObjectId,     // ref: users (admin)
-  previousRoomId: ObjectId | null,
-  newRoomId: ObjectId | null,
-  previousRoommateIds: [ObjectId],
-  newRoommateIds: [ObjectId],
-  notes: String | null,
-  performedAt: Date
-}
-
-Indexes:
-  - allocationId: 1
-  - performedAt: -1
-```
-
----
-
-### 4.7 `passwordResetTokens` Collection
-
-Short-lived tokens for the forgot-password flow.
-
-```typescript
-{
-  _id: ObjectId,
-  userId: ObjectId,          // ref: users
-  token: String,             // Hashed random token
-  expiresAt: Date,           // TTL: 15 minutes
-  isUsed: Boolean,
-  createdAt: Date
-}
-
-Indexes:
-  - token: unique
-  - expiresAt: 1 (TTL index — MongoDB auto-purges expired docs)
-  - userId: 1
-```
-
----
-
-### 4.8 `bulkUploadLogs` Collection
-
-Tracks each admin bulk-upload operation for auditability.
-
-```typescript
-{
-  _id: ObjectId,
-  uploadedBy: ObjectId,      // ref: users (admin)
-  type: "fresherMaster" | "hostelInventory",
-  fileName: String,
-  totalRows: Number,
-  successCount: Number,
-  failureCount: Number,
-  errors: [
-    {
-      row: Number,
-      reason: String
-    }
-  ],
-  uploadedAt: Date
-}
-
-Indexes:
-  - uploadedBy: 1
-  - uploadedAt: -1
-```
-
----
-
-## 5. Component Breakdown
-
-The backend is broken into seven feature modules plus a shared layer.
+The server has seven feature modules plus a shared infrastructure layer.
 
 ---
 
 ### 5.1 Auth Module
 
-Responsibility: login, session management, first-login password reset, forgot password, and token validation.
+**Responsibility:** Login, first-login password gate, change password, forgot-password flow, refresh token rotation, and logout.
 
-Files: `modules/auth/auth.routes.ts`, `auth.controller.ts`, `auth.service.ts`, `auth.validator.ts`
+**Files:** `modules/auth/auth.routes.ts`, `auth.controller.ts`, `auth.service.ts`, `auth.validator.ts`
 
-Key logic:
-- On login, check `isFirstLogin`; if true, return a flag in response so the client forces the password-reset screen.
-- On password reset, update `sessionInvalidatedAt` to current time. All JWTs issued before this timestamp are treated as invalid by the auth middleware.
-- Forgot-password tokens are hashed with SHA-256 before storage; raw token is sent via email.
+**Key logic:**
+- Login validates `loginId` + `password`. On success, issues two httpOnly cookies: `access_token` (15 min) and `refresh_token` (7 days). No token is returned in the response body.
+- If `mustChangePassword = true`, the login response includes `mustChangePassword: true`. The client blocks all navigation until the change-password screen is completed.
+- On password change: sets `mustChangePassword = false`, updates `sessionInvalidatedAt = now()`. This invalidates all previously issued tokens for the user at the middleware level without needing to enumerate a per-token blocklist.
+- On logout: adds the access token's `jti` to the Redis blocklist with TTL equal to the token's remaining lifetime. Clears both cookies.
+- `POST /auth/refresh` reads the `refresh_token` cookie, verifies it, issues a new `access_token` cookie. Called automatically by the client Axios interceptor on receiving a `401`.
+- Forgot-password tokens are SHA-256 hashed before storage; the raw token is sent via BullMQ email queue and matched at reset time.
 
 ---
 
 ### 5.2 User Module
 
-Responsibility: Admin-facing user management — provision accounts, deactivate, view user list.
+**Responsibility:** Admin-facing account management — provision accounts, deactivate/reactivate, list users.
 
-Files: `modules/user/user.routes.ts`, `user.controller.ts`, `user.service.ts`
+**Files:** `modules/user/user.routes.ts`, `user.controller.ts`, `user.service.ts`
 
-Key logic:
-- Admin uploads a CSV/Excel file; the service parses rows, creates `users` + `students` records in bulk.
-- Duplicate `rollNumber` or `email` rows are skipped and logged in `bulkUploadLogs`.
-- Passwords are set to a provisioned default and hashed; `isFirstLogin = true`.
+**Key logic:**
+- Admin uploads a CSV/Excel file via Multer. The service parses rows with `csv-parse` and bulk-creates `User` + `Student` records using `prisma.createMany({ skipDuplicates: true })`.
+- Duplicate `rollNumber` or `email` rows are skipped and logged in `BulkUploadLog`.
+- Passwords are set to an admin-provisioned default and hashed with bcryptjs (12 rounds). `mustChangePassword = true` on all new accounts.
+- Credential emails are dispatched via BullMQ email queue (never inline) so the upload response is not blocked.
 
 ---
 
 ### 5.3 Onboarding Module
 
-Responsibility: Student form submission and admin oversight of completion status.
+**Responsibility:** Student form submission and admin oversight of completion status.
 
-Files: `modules/onboarding/onboarding.routes.ts`, `onboarding.controller.ts`, `onboarding.service.ts`, `onboarding.validator.ts`
+**Files:** `modules/onboarding/onboarding.routes.ts`, `onboarding.controller.ts`, `onboarding.service.ts`, `onboarding.validator.ts`
 
-Key logic:
-- `GET /onboarding/me` returns pre-filled fields (name, roll, branch) + any previously saved data.
-- On `POST /onboarding/submit`, check `editAllowedByAdmin` if `onboardingStatus === "submitted"` — reject if false.
-- On successful submission, set `onboardingStatus = "submitted"` and `consentGiven = true`.
+**Key logic:**
+- `GET /onboarding/me` returns pre-filled admin-seeded fields (name, roll, branch) merged with any previously saved onboarding data.
+- On `POST /onboarding/submit`: if `onboardingStatus = SUBMITTED` and `editAllowedByAdmin = false`, return `409`. Otherwise save all fields, set `onboardingStatus = SUBMITTED`, `consentGiven = true`, `onboardingSubmittedAt = now()`.
+- Validation is handled by the shared `onboardingSchema` Zod schema from `shared/student.ts`, applied via `validate.middleware.ts`.
 
 ---
 
 ### 5.4 Hostel Module
 
-Responsibility: CRUD for hostels and room inventory; admin configuration.
+**Responsibility:** CRUD for hostel records and room inventory; admin configuration.
 
-Files: `modules/hostel/hostel.routes.ts`, `hostel.controller.ts`, `hostel.service.ts`
+**Files:** `modules/hostel/hostel.routes.ts`, `hostel.controller.ts`, `hostel.service.ts`
 
-Key logic:
-- Hostel info (warden, mess timings, rules, facilities) is served to both students (read-only) and admins (full CRUD).
-- Room upload via CSV bulk-creates room records under a hostel.
-- Room capacity is set per-room and enforced at allocation time.
+**Key logic:**
+- Hostel data (warden, mess timings, rules, facilities) is read-only for students and fully editable for admins.
+- `messTimings`, `rules`, and `facilities` are stored as Prisma `Json` columns and returned as structured objects or arrays.
+- Room bulk upload via CSV/Excel (Multer + `csv-parse`) bulk-creates room records under a hostel. Results are logged in `BulkUploadLog`.
 
 ---
 
 ### 5.5 Room Module
 
-Responsibility: Room inventory queries — available rooms, occupancy, accessibility filters.
+**Responsibility:** Room inventory queries — available rooms, occupancy, accessibility filters.
 
-Files: `modules/room/room.routes.ts`, `room.controller.ts`, `room.service.ts`
+**Files:** `modules/room/room.routes.ts`, `room.controller.ts`, `room.service.ts`
 
-Key logic:
+**Key logic:**
 - `getAvailableRooms(hostelId)` returns rooms where `currentOccupancy < capacity` and `isActive = true`.
-- Occupancy count (`currentOccupancy`) is updated atomically using MongoDB `$inc` on each allocation/deallocation to avoid race conditions.
+- `isAccessible = true` rooms are reserved for students with `physicalAccessibilityRequirements` set.
+- Room capacity cannot be reduced below `currentOccupancy`. Returns `422` if violated.
 
 ---
 
 ### 5.6 Allocation Module
 
-Responsibility: Core allocation engine — assign rooms, assign roommates, swap rooms/roommates, audit trail.
+**Responsibility:** Core allocation engine — assign rooms, change rooms, swap roommates, audit trail.
 
-Files: `modules/allocation/allocation.routes.ts`, `allocation.controller.ts`, `allocation.service.ts`
+**Files:** `modules/allocation/allocation.routes.ts`, `allocation.controller.ts`, `allocation.service.ts`
 
-Key logic:
-- Before allocating, verify the room has remaining capacity.
-- Allocation sets `isActive = true` on the new `allocations` record and increments `rooms.currentOccupancy`.
-- Room change: deactivates old allocation, creates new one, decrements old room occupancy, increments new.
-- Roommate swap: swaps `roomId` between two students' allocations; no net change in occupancy.
-- Every mutation writes an `allocationAudits` record.
-- Roommate contacts are revealed only when both students sharing a room have active `allocations` records pointing to the same room.
+**Key logic:**
+- Before allocating, the service checks `currentOccupancy < capacity` inside a `prisma.$transaction()` to prevent race conditions at the desk.
+- **Allocate:** create `Allocation` + increment `room.currentOccupancy` + write `AllocationAudit` — all in one transaction.
+- **Room change:** deactivate old `Allocation`, create new one, decrement old room occupancy, increment new room occupancy — single transaction.
+- **Roommate swap:** swap `roomId` between two students' `Allocation` records; net occupancy unchanged across both rooms.
+- Every mutation appends an `AllocationAudit` record (never updated after insert).
+- Roommate contact is revealed only when both students sharing a room have `isActive = true` allocations to the same room.
 
 ---
 
 ### 5.7 Dashboard Module
 
-Responsibility: Aggregated views for students and admins; PDF slip generation; data export.
+**Responsibility:** Aggregated views for students and admins; data export; allotment slip (Phase 2).
 
-Files: `modules/dashboard/dashboard.routes.ts`, `dashboard.controller.ts`, `dashboard.service.ts`
+**Files:** `modules/dashboard/dashboard.routes.ts`, `dashboard.controller.ts`, `dashboard.service.ts`
 
-Key logic:
-- Student dashboard: looks up active allocation → joins hostel and room → finds co-occupants in same room → conditionally exposes roommate contact only if roommate is also allocated to that room.
-- Admin dashboard: aggregation pipelines for occupancy overview, onboarding completion counts, per-hostel breakdowns.
-- PDF slip: generated server-side using PDFKit; returned as a binary stream with `Content-Disposition: attachment`.
-- Export: ExcelJS writes to a buffer; returned with `application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`.
+**Key logic:**
+- **Student dashboard:** fetch active allocation → join hostel and room → find co-occupants in the same room → conditionally expose roommate contact per the visibility rule.
+- **Admin overview:** aggregated counts for onboarding and allocation status, per-hostel occupancy breakdown — via Prisma `groupBy` and `_count`.
+- **Admin student listing:** paginated with filters on `onboardingStatus`, `allocationStatus`, `branch`, `hostelId`, and free-text search on `name` or `rollNumber`.
+- **Export:** ExcelJS writes to a buffer and is sent with correct `Content-Type` and `Content-Disposition` headers.
+- **PDF slip (Phase 2):** Puppeteer renders the allotment slip server-side; job dispatched via BullMQ worker.
 
 ---
 
-## 6. API Documentation
+## 6. Client Component Breakdown
+
+---
+
+### 6.1 Routing (TanStack Router)
+
+File-based routing lives in `client/src/routes/`. The `@tanstack/router-plugin` Vite plugin auto-generates `routeTree.gen.ts` at build time.
+
+```ts
+// client/src/routes/__root.tsx
+import { createRootRouteWithContext } from '@tanstack/react-router'
+import { QueryClient } from '@tanstack/react-query'
+
+export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
+  beforeLoad: async ({ context, location }) => {
+    // Auth guard: redirect to /login if no session
+    // First-login gate: redirect to /change-password if mustChangePassword = true
+  },
+})
+```
+
+Route loaders prefetch TanStack Query data before rendering, so pages are never blank on first load.
+
+---
+
+### 6.2 Data Fetching (TanStack Query)
+
+All server state lives in TanStack Query. No global client-side state manager (no Redux, no Zustand).
+
+```ts
+// client/src/lib/queryClient.ts
+import { QueryClient } from '@tanstack/react-query'
+
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5,   // 5 minutes
+      gcTime: 1000 * 60 * 10,     // 10 minutes
+      retry: 1,
+    },
+  },
+})
+```
+
+---
+
+### 6.3 HTTP Client (Axios)
+
+```ts
+// client/src/lib/api.ts
+import axios from 'axios'
+
+export const api = axios.create({
+  baseURL: '/api/v1',
+  withCredentials: true,   // Required for httpOnly cookie-based auth
+})
+
+// Intercept 401s, attempt token refresh, retry original request
+api.interceptors.response.use(
+  (res) => res,
+  async (error) => {
+    const original = error.config
+    if (error.response?.status === 401 && !original._retry) {
+      original._retry = true
+      await api.post('/auth/refresh')
+      return api(original)
+    }
+    return Promise.reject(error)
+  }
+)
+```
+
+The proxy in `client/vite.config.ts` forwards `/api/*` to `http://localhost:5000` in development, so no CORS configuration is needed locally.
+
+---
+
+### 6.4 Forms (React Hook Form + Zod)
+
+All forms use RHF with the Zod resolver, sharing schemas from `shared/`.
+
+```ts
+// client/src/components/forms/OnboardingForm.tsx
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { onboardingSchema, type OnboardingInput } from '@shared/student'
+
+export function OnboardingForm() {
+  const form = useForm<OnboardingInput>({
+    resolver: zodResolver(onboardingSchema),
+  })
+  // ...
+}
+```
+
+shadcn/ui `<Form>`, `<FormField>`, `<FormItem>`, `<FormControl>`, and `<FormMessage>` components are used as the layout layer — they are built-in wrappers around RHF's `Controller`.
+
+---
+
+### 6.5 First-Login Gate
+
+On login, if the server returns `mustChangePassword: true`, TanStack Router's `beforeLoad` hook redirects all routes to `/change-password`. The change-password route calls `POST /auth/change-password`, then invalidates the session query and redirects to the appropriate dashboard.
+
+---
+
+## 7. API Documentation
 
 ### Base URL
 
@@ -430,9 +784,10 @@ Key logic:
 
 ### Common Headers
 
+Authentication is cookie-based. The browser sends the `access_token` httpOnly cookie automatically on every request when the Axios instance has `withCredentials: true`. **No `Authorization` header is needed or accepted.**
+
 ```
-Authorization: Bearer <jwt_token>    (all protected routes)
-Content-Type: application/json       (all POST/PUT/PATCH)
+Content-Type: application/json    (all POST / PUT / PATCH requests)
 ```
 
 ### Common Response Envelope
@@ -442,19 +797,21 @@ Content-Type: application/json       (all POST/PUT/PATCH)
   "success": true | false,
   "data": { ... } | null,
   "message": "Human-readable message",
-  "errors": [ ... ] | null    // Validation errors only
+  "errors": [ ... ] | null
 }
 ```
 
+`errors` is populated only on `400` validation failures and contains Zod's structured field-level messages.
+
 ---
 
-### 6.1 Auth Routes — `/api/v1/auth`
+### 7.1 Auth Routes — `/api/v1/auth`
 
 ---
 
 #### POST `/auth/login`
 
-Login with pre-provisioned credentials.
+Login with admin-provisioned credentials.
 
 Access: Public
 
@@ -471,16 +828,17 @@ Response `200 OK`:
 {
   "success": true,
   "data": {
-    "token": "<jwt>",
-    "role": "student",
-    "isFirstLogin": true
+    "role": "STUDENT",
+    "mustChangePassword": true
   }
 }
 ```
 
-Response `401 Unauthorized`: Invalid credentials.
+Notes:
+- Sets two httpOnly cookies on the response: `access_token` (15 min) and `refresh_token` (7 days). No token is included in the response body.
+- If `mustChangePassword: true`, the client must redirect to `/change-password` and block all other navigation until the password is changed.
 
-Notes: If `isFirstLogin` is `true`, the client must redirect to the change-password screen before allowing further navigation.
+Response `401 Unauthorized`: Invalid `loginId` or `password`.
 
 ---
 
@@ -488,7 +846,7 @@ Notes: If `isFirstLogin` is `true`, the client must redirect to the change-passw
 
 Mandatory first-login password reset and voluntary password change.
 
-Access: Protected (student, admin)
+Access: Protected (student, hmc, admin)
 
 Request body:
 ```json
@@ -506,20 +864,55 @@ Response `200 OK`:
 }
 ```
 
-Notes: On success, sets `isFirstLogin = false` and updates `sessionInvalidatedAt`. Client must discard the old token and redirect to login.
+Notes: Sets `mustChangePassword = false` and `sessionInvalidatedAt = now()`. Client clears local state and redirects to `/login` — all existing tokens are now rejected.
+
+---
+
+#### POST `/auth/refresh`
+
+Exchange a valid `refresh_token` cookie for a new `access_token` cookie.
+
+Access: Public (requires valid `refresh_token` cookie)
+
+Response `200 OK`:
+```json
+{
+  "success": true
+}
+```
+
+Notes: Called automatically by the Axios 401 interceptor. Sets a new `access_token` cookie. Response `401` means the refresh token is missing, invalid, or expired — client must redirect to `/login`.
+
+---
+
+#### POST `/auth/logout`
+
+Invalidate the current session.
+
+Access: Protected (student, hmc, admin)
+
+Response `200 OK`:
+```json
+{
+  "success": true,
+  "message": "Logged out."
+}
+```
+
+Notes: Adds the access token's `jti` to Redis blocklist with TTL = token's remaining lifetime. Clears both `access_token` and `refresh_token` cookies.
 
 ---
 
 #### POST `/auth/forgot-password`
 
-Initiate forgot-password flow by sending a reset link to the registered email.
+Initiate forgot-password flow.
 
 Access: Public
 
 Request body:
 ```json
 {
-  "email": "student@college.edu"
+  "email": "student@iitg.ac.in"
 }
 ```
 
@@ -531,7 +924,7 @@ Response `200 OK`:
 }
 ```
 
-Notes: Always returns 200 regardless of whether the email exists, to prevent user enumeration.
+Notes: Always returns `200` regardless of whether the email exists (prevents user enumeration). Reset email is dispatched via BullMQ email queue.
 
 ---
 
@@ -559,27 +952,13 @@ Response `200 OK`:
 
 Response `400 Bad Request`: Token expired or already used.
 
----
-
-#### POST `/auth/logout`
-
-Invalidate the current session (client discards token; server logs the event).
-
-Access: Protected (student, admin)
-
-Response `200 OK`:
-```json
-{
-  "success": true,
-  "message": "Logged out."
-}
-```
+Notes: Raw token is SHA-256 hashed and matched against `PasswordResetToken.tokenHash`. On success, marks token `isUsed = true` and sets `sessionInvalidatedAt = now()` on the user.
 
 ---
 
-### 6.2 User / Admin Provisioning Routes — `/api/v1/users`
+### 7.2 User / Admin Provisioning Routes — `/api/v1/users`
 
-All routes in this section require `role: admin`.
+All routes require `role: ADMIN`.
 
 ---
 
@@ -593,10 +972,11 @@ Request: `multipart/form-data`
 
 Form fields:
 ```
-file: <csv or xlsx file>
+file: <csv or xlsx>
+academicYearId: <cuid>
 ```
 
-Expected file columns: `name`, `rollNumber`, `branch`, `email`, `loginId`, `password`, `hostel` (optional pre-assignment hint)
+Expected file columns: `name`, `rollNumber`, `branch`, `email`, `loginId`, `password`
 
 Response `200 OK`:
 ```json
@@ -610,7 +990,7 @@ Response `200 OK`:
       { "row": 45, "reason": "Duplicate rollNumber: CSE2024044" },
       { "row": 89, "reason": "Missing required field: email" }
     ],
-    "uploadLogId": "<ObjectId>"
+    "uploadLogId": "<cuid>"
   }
 }
 ```
@@ -625,7 +1005,7 @@ Access: Admin only
 
 Query params:
 ```
-role=student|admin
+role=STUDENT|HMC|ADMIN
 isActive=true|false
 page=1
 limit=20
@@ -637,7 +1017,9 @@ Response `200 OK`:
 {
   "success": true,
   "data": {
-    "users": [ { "_id": "...", "loginId": "...", "email": "...", "role": "...", "isActive": true } ],
+    "users": [
+      { "id": "...", "loginId": "...", "email": "...", "role": "STUDENT", "isActive": true }
+    ],
     "total": 120,
     "page": 1,
     "limit": 20
@@ -649,7 +1031,7 @@ Response `200 OK`:
 
 #### PATCH `/users/:userId/deactivate`
 
-Deactivate a user account.
+Deactivate a user account (sets `isActive = false`).
 
 Access: Admin only
 
@@ -679,13 +1061,13 @@ Response `200 OK`:
 
 ---
 
-### 6.3 Onboarding Routes — `/api/v1/onboarding`
+### 7.3 Onboarding Routes — `/api/v1/onboarding`
 
 ---
 
 #### GET `/onboarding/me`
 
-Fetch the onboarding form data for the logged-in student (pre-filled + any previously saved fields).
+Fetch the onboarding form data for the logged-in student.
 
 Access: Student only
 
@@ -706,8 +1088,9 @@ Response `200 OK`:
     "emergencyContactRelation": null,
     "bloodGroup": null,
     "medicalConditions": null,
+    "allergies": null,
     "physicalAccessibilityRequirements": null,
-    "onboardingStatus": "pending",
+    "onboardingStatus": "PENDING",
     "editAllowedByAdmin": false
   }
 }
@@ -731,9 +1114,10 @@ Request body:
   "emergencyContactName": "Suresh Mehta",
   "emergencyContactNumber": "9000011111",
   "emergencyContactRelation": "Father",
-  "bloodGroup": "B+",
+  "bloodGroup": "B_POSITIVE",
   "medicalConditions": "Mild asthma",
-  "physicalAccessibilityRequirements": "None",
+  "allergies": null,
+  "physicalAccessibilityRequirements": null,
   "consentGiven": true
 }
 ```
@@ -758,7 +1142,7 @@ Response `409 Conflict`:
 
 #### GET `/onboarding/status`
 
-Get the onboarding completion status for the logged-in student.
+Get onboarding completion status for the logged-in student.
 
 Access: Student only
 
@@ -767,7 +1151,7 @@ Response `200 OK`:
 {
   "success": true,
   "data": {
-    "status": "submitted",
+    "status": "SUBMITTED",
     "submittedAt": "2024-07-10T14:32:00Z"
   }
 }
@@ -777,15 +1161,16 @@ Response `200 OK`:
 
 #### GET `/onboarding/admin/list`
 
-List all freshers with their onboarding status. Supports search and filter.
+Paginated list of all freshers with onboarding status.
 
-Access: Admin only
+Access: Admin / HMC only
 
 Query params:
 ```
-status=pending|submitted
+status=PENDING|SUBMITTED
 branch=<branch name>
 search=<name or rollNumber>
+academicYearId=<cuid>
 page=1
 limit=20
 ```
@@ -801,7 +1186,7 @@ Response `200 OK`:
         "name": "Rohan Mehta",
         "rollNumber": "CSE2024001",
         "branch": "CSE",
-        "onboardingStatus": "submitted",
+        "onboardingStatus": "SUBMITTED",
         "onboardingSubmittedAt": "2024-07-10T14:32:00Z"
       }
     ],
@@ -816,7 +1201,7 @@ Response `200 OK`:
 
 #### PATCH `/onboarding/admin/:studentId/allow-edit`
 
-Allow a specific student to re-submit their onboarding form.
+Grant a specific student permission to re-submit their onboarding form.
 
 Access: Admin only
 
@@ -830,15 +1215,20 @@ Response `200 OK`:
 
 ---
 
-### 6.4 Hostel Routes — `/api/v1/hostels`
+### 7.4 Hostel Routes — `/api/v1/hostels`
 
 ---
 
 #### GET `/hostels`
 
-List all active hostels.
+List all active hostels for the current academic year.
 
-Access: Protected (student, admin)
+Access: Protected (student, hmc, admin)
+
+Query params:
+```
+academicYearId=<cuid>
+```
 
 Response `200 OK`:
 ```json
@@ -846,11 +1236,13 @@ Response `200 OK`:
   "success": true,
   "data": [
     {
-      "_id": "...",
+      "id": "...",
       "name": "Tagore Bhawan",
-      "type": "boys",
+      "code": "TGB",
+      "type": "BOYS",
       "wardenName": "Dr. P.K. Singh",
       "wardenContact": "9988776655",
+      "wardenEmail": "warden.tgb@iitg.ac.in",
       "messTimings": {
         "breakfast": "7:30 AM – 9:00 AM",
         "lunch": "12:30 PM – 2:00 PM",
@@ -869,7 +1261,7 @@ Response `200 OK`:
 
 Get full details of a specific hostel.
 
-Access: Protected (student, admin)
+Access: Protected (student, hmc, admin)
 
 Response `200 OK`: Full hostel object as above.
 
@@ -884,10 +1276,13 @@ Access: Admin only
 Request body:
 ```json
 {
+  "academicYearId": "...",
   "name": "Tagore Bhawan",
-  "type": "boys",
+  "code": "TGB",
+  "type": "BOYS",
   "wardenName": "Dr. P.K. Singh",
   "wardenContact": "9988776655",
+  "wardenEmail": "warden.tgb@iitg.ac.in",
   "messTimings": {
     "breakfast": "7:30 AM – 9:00 AM",
     "lunch": "12:30 PM – 2:00 PM",
@@ -908,7 +1303,7 @@ Update hostel details (warden, mess timings, rules, facilities).
 
 Access: Admin only
 
-Request body: Same shape as POST, all fields optional.
+Request body: Same shape as POST; all fields optional.
 
 Response `200 OK`: Updated hostel object.
 
@@ -940,19 +1335,19 @@ Response `200 OK`:
 
 ---
 
-### 6.5 Room Routes — `/api/v1/rooms`
+### 7.5 Room Routes — `/api/v1/rooms`
 
 ---
 
 #### GET `/rooms`
 
-List rooms with optional filters. Returns occupancy status.
+List rooms with optional filters and occupancy status.
 
-Access: Admin only
+Access: Admin / HMC only
 
 Query params:
 ```
-hostelId=<id>
+hostelId=<cuid>
 available=true|false
 isAccessible=true|false
 floor=<number>
@@ -967,7 +1362,7 @@ Response `200 OK`:
   "data": {
     "rooms": [
       {
-        "_id": "...",
+        "id": "...",
         "hostelId": "...",
         "hostelName": "Tagore Bhawan",
         "roomNumber": "A-101",
@@ -987,9 +1382,9 @@ Response `200 OK`:
 
 #### GET `/rooms/:roomId`
 
-Get details of a specific room, including current occupants.
+Get details of a specific room including current occupants.
 
-Access: Admin only
+Access: Admin / HMC only
 
 Response `200 OK`:
 ```json
@@ -1026,13 +1421,13 @@ Request body:
 
 Response `200 OK`: Updated room object.
 
-Notes: Capacity cannot be set below `currentOccupancy`. Returns `409` if violated.
+Notes: Returns `422 Unprocessable Entity` if new capacity would fall below `currentOccupancy`.
 
 ---
 
-### 6.6 Allocation Routes — `/api/v1/allocations`
+### 7.6 Allocation Routes — `/api/v1/allocations`
 
-All routes require `role: admin`.
+All routes require `role: HMC` or `role: ADMIN`.
 
 ---
 
@@ -1040,14 +1435,14 @@ All routes require `role: admin`.
 
 Allocate a room to a student.
 
-Access: Admin only
+Access: Admin / HMC only
 
 Request body:
 ```json
 {
-  "studentId": "<ObjectId>",
-  "hostelId": "<ObjectId>",
-  "roomId": "<ObjectId>",
+  "studentId": "<cuid>",
+  "hostelId": "<cuid>",
+  "roomId": "<cuid>",
   "notes": "Pre-allocated before arrival"
 }
 ```
@@ -1074,12 +1469,12 @@ Response `409 Conflict`: Student already has an active allocation, or room is at
 
 Change the room of an already-allocated student.
 
-Access: Admin only
+Access: Admin / HMC only
 
 Request body:
 ```json
 {
-  "newRoomId": "<ObjectId>",
+  "newRoomId": "<cuid>",
   "notes": "Moved due to maintenance"
 }
 ```
@@ -1102,13 +1497,13 @@ Response `200 OK`:
 
 Swap the room assignments of two students.
 
-Access: Admin only
+Access: Admin / HMC only
 
 Request body:
 ```json
 {
-  "studentIdA": "<ObjectId>",
-  "studentIdB": "<ObjectId>",
+  "studentIdA": "<cuid>",
+  "studentIdB": "<cuid>",
   "notes": "Student request approved"
 }
 ```
@@ -1125,7 +1520,7 @@ Response `200 OK`:
 
 #### DELETE `/allocations/:allocationId`
 
-Deallocate a student (sets `isActive = false`, decrements room occupancy).
+Deallocate a student — sets `isActive = false` and decrements room occupancy.
 
 Access: Admin only
 
@@ -1143,14 +1538,15 @@ Response `200 OK`:
 
 List all allocations with filters.
 
-Access: Admin only
+Access: Admin / HMC only
 
 Query params:
 ```
-hostelId=<id>
-roomId=<id>
-studentId=<id>
+hostelId=<cuid>
+roomId=<cuid>
+studentId=<cuid>
 isActive=true|false
+academicYearId=<cuid>
 page=1
 limit=20
 ```
@@ -1179,7 +1575,7 @@ Response `200 OK`:
 
 #### GET `/allocations/:allocationId/audit`
 
-Get the audit trail for a specific allocation.
+Get the full audit trail for a specific allocation.
 
 Access: Admin only
 
@@ -1190,13 +1586,13 @@ Response `200 OK`:
   "data": {
     "auditLogs": [
       {
-        "action": "allocated",
+        "action": "ALLOCATED",
         "performedBy": "Admin Name",
         "performedAt": "2024-07-12T10:00:00Z",
         "notes": "Pre-allocated before arrival"
       },
       {
-        "action": "roomChanged",
+        "action": "ROOM_CHANGED",
         "performedBy": "Admin Name",
         "performedAt": "2024-07-14T11:00:00Z",
         "previousRoomId": "...",
@@ -1210,13 +1606,13 @@ Response `200 OK`:
 
 ---
 
-### 6.7 Dashboard Routes — `/api/v1/dashboard`
+### 7.7 Dashboard Routes — `/api/v1/dashboard`
 
 ---
 
 #### GET `/dashboard/student`
 
-Get the student's personal dashboard data.
+Get the logged-in student's dashboard data.
 
 Access: Student only
 
@@ -1225,9 +1621,15 @@ Response `200 OK`:
 {
   "success": true,
   "data": {
-    "allocationStatus": "allocated",
+    "allocationStatus": "ALLOCATED",
     "hostelName": "Tagore Bhawan",
     "roomNumber": "A-101",
+    "wardenContact": "9988776655",
+    "messTimings": {
+      "breakfast": "7:30 AM – 9:00 AM",
+      "lunch": "12:30 PM – 2:00 PM",
+      "dinner": "7:30 PM – 9:00 PM"
+    },
     "roommates": [
       {
         "name": "Amit Sharma",
@@ -1239,9 +1641,10 @@ Response `200 OK`:
 }
 ```
 
-Notes: `roommates` is an empty array if not yet allocated. `contactNumber` in roommate objects is `null` and `roommateContactVisible = false` if the roommate does not yet have an active allocation.
-
-Allocation status values: `"pending"` (no allocation exists) or `"allocated"` (active allocation exists).
+Notes:
+- `allocationStatus` is `"PENDING"` (no active allocation) or `"ALLOCATED"`.
+- `roommates` is an empty array when not yet allocated.
+- `contactNumber` in roommate objects is `null` and `roommateContactVisible = false` when the roommate does not yet have an active allocation to the same room.
 
 ---
 
@@ -1250,6 +1653,8 @@ Allocation status values: `"pending"` (no allocation exists) or `"allocated"` (a
 Download the hostel allotment slip as a PDF.
 
 Access: Student only (must have active allocation)
+
+**Status: Phase 2 — not available in Phase 1.**
 
 Response `200 OK`:
 ```
@@ -1264,9 +1669,14 @@ Response `404 Not Found`: No active allocation exists for the student.
 
 #### GET `/dashboard/admin/overview`
 
-Get the admin overview: onboarding stats, occupancy summary.
+Get onboarding stats and per-hostel occupancy summary.
 
-Access: Admin only
+Access: Admin / HMC only
+
+Query params:
+```
+academicYearId=<cuid>
+```
 
 Response `200 OK`:
 ```json
@@ -1301,16 +1711,17 @@ Response `200 OK`:
 
 #### GET `/dashboard/admin/students`
 
-Paginated student listing with onboarding and allocation status. Supports search and filter.
+Paginated student listing with onboarding and allocation status.
 
-Access: Admin only
+Access: Admin / HMC only
 
 Query params:
 ```
-onboardingStatus=pending|submitted
-allocationStatus=pending|allocated
+onboardingStatus=PENDING|SUBMITTED
+allocationStatus=PENDING|ALLOCATED
 branch=<branch>
-hostelId=<id>
+hostelId=<cuid>
+academicYearId=<cuid>
 search=<name or rollNumber>
 page=1
 limit=20
@@ -1327,8 +1738,8 @@ Response `200 OK`:
         "name": "Rohan Mehta",
         "rollNumber": "CSE2024001",
         "branch": "CSE",
-        "onboardingStatus": "submitted",
-        "allocationStatus": "allocated",
+        "onboardingStatus": "SUBMITTED",
+        "allocationStatus": "ALLOCATED",
         "hostelName": "Tagore Bhawan",
         "roomNumber": "A-101"
       }
@@ -1352,107 +1763,232 @@ Query params:
 ```
 type=students|allocations
 format=csv|xlsx
-hostelId=<id>           (optional filter)
-onboardingStatus=pending|submitted   (optional filter)
-allocationStatus=pending|allocated   (optional filter)
+academicYearId=<cuid>
+hostelId=<cuid>                       (optional)
+onboardingStatus=PENDING|SUBMITTED    (optional)
+allocationStatus=PENDING|ALLOCATED    (optional)
 ```
 
 Response `200 OK`:
 ```
 Content-Type: text/csv  OR  application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
-Content-Disposition: attachment; filename="students-export-2024-07-14.csv"
+Content-Disposition: attachment; filename="students-export-2025-07-14.csv"
 <file binary>
 ```
 
 ---
 
-## 7. Authentication & Authorization
+## 8. Authentication & Authorization
 
 ### JWT Structure
 
-Payload:
+**Access token** — stored in `access_token` httpOnly cookie, expires in 15 minutes:
 ```json
 {
   "sub": "<userId>",
-  "role": "student | admin",
+  "role": "STUDENT | HMC | ADMIN",
+  "jti": "<unique token id>",
   "iat": 1720000000,
-  "exp": 1720086400
+  "exp": 1720000900
 }
 ```
 
-Expiry: 24 hours (configurable via env). Session timeout is enforced client-side; token expiry is the server-side hard limit.
-
-### Session Invalidation
-
-On password change or reset, the server sets `users.sessionInvalidatedAt = now()`. The auth middleware checks:
-
+**Refresh token** — stored in `refresh_token` httpOnly cookie, expires in 7 days:
+```json
+{
+  "sub": "<userId>",
+  "jti": "<unique token id>",
+  "iat": 1720000000,
+  "exp": 1720604800
+}
 ```
-if (token.iat < user.sessionInvalidatedAt) → reject with 401
+
+No token is ever returned in a response body.
+
+---
+
+### Cookie Configuration
+
+Both cookies are set with:
 ```
-
-This invalidates all previously issued tokens for that user without a blocklist.
-
-### Role Guards
-
-Two middleware layers applied per route:
-
-`auth.middleware.ts` — verifies token signature, expiry, and `sessionInvalidatedAt`.
-
-`role.middleware.ts` — checks `req.user.role` against the allowed roles for the route. Returns `403 Forbidden` on mismatch.
-
-Usage:
-```typescript
-router.get("/admin/list", authenticate, authorize("admin"), handler);
-router.get("/me", authenticate, authorize("student"), handler);
+HttpOnly:  true
+SameSite:  Strict
+Secure:    true   (production only; false in development)
+Path:      /
 ```
 
 ---
 
-## 8. Error Handling Conventions
+### Session Invalidation — Two-Layer Approach
 
-All errors are caught by the global `error.middleware.ts` and returned in the standard envelope.
+**Layer 1 — Per-token logout (Redis blocklist):**
+
+On `POST /auth/logout`, the access token's `jti` is written to Redis with a TTL equal to the token's remaining lifetime:
+
+```ts
+await redis.set(`jwt:blocklist:${jti}`, '1', 'EX', remainingSeconds)
+```
+
+The auth middleware checks `redis.get('jwt:blocklist:{jti}')` on every request. If found, the token is rejected with `401`.
+
+**Layer 2 — All-tokens invalidation (`sessionInvalidatedAt`):**
+
+On `POST /auth/change-password` or `POST /auth/reset-password`, the server sets `user.sessionInvalidatedAt = now()`. The auth middleware checks:
+
+```ts
+if (tokenPayload.iat < user.sessionInvalidatedAt.getTime() / 1000) {
+  // reject 401 — token was issued before the password change
+}
+```
+
+This invalidates all previously issued tokens for that user without needing to enumerate them individually — effective for the full session revocation scenario.
+
+---
+
+### Auth Middleware Execution Order (`auth.middleware.ts`)
+
+Applied to every protected route in this order:
+
+1. Read `access_token` from `req.cookies`. If absent → `401`.
+2. Verify JWT signature and expiry (`jwt.verify`). If invalid → `401`.
+3. Check `redis.get('jwt:blocklist:{jti}')`. If found → `401`.
+4. Query `prisma.user.findUnique({ where: { id: payload.sub } })`.
+5. Check `payload.iat < user.sessionInvalidatedAt`. If true → `401`.
+6. Check `user.isActive`. If false → `403`.
+7. Attach `payload` to `req.user`. Call `next()`.
+
+---
+
+### Role Guard (`role.middleware.ts`)
+
+Applied after `auth.middleware.ts` on role-restricted routes:
+
+```ts
+router.get('/admin/list', authenticate, authorize('ADMIN', 'HMC'), handler)
+router.get('/me',         authenticate, authorize('STUDENT'),        handler)
+```
+
+Returns `403 Forbidden` on role mismatch.
+
+---
+
+### First-Login Gate
+
+- Server returns `mustChangePassword: true` in the login response body.
+- TanStack Router's `beforeLoad` hook on `__root.tsx` reads this from the session query and redirects to `/change-password` before any other route loads.
+- The server does not block other API calls at the middleware level for this — the gate is enforced client-side. The `sessionInvalidatedAt` mechanism remains as the server-side hard stop after a password change is completed.
+
+---
+
+## 9. Error Handling Conventions
+
+All errors are caught by the global `error.middleware.ts`. Express 5 automatically propagates async rejections to the error handler — no `try/catch` is required in route handlers for unhandled errors.
 
 | HTTP Status | Meaning |
 |---|---|
-| 400 | Validation error or bad input |
-| 401 | Missing, invalid, or expired token |
-| 403 | Authenticated but insufficient role |
+| 400 | Validation error or malformed input (Zod parse failure) |
+| 401 | Missing, invalid, expired, or blocklisted token |
+| 403 | Authenticated but insufficient role, or deactivated account |
 | 404 | Resource not found |
-| 409 | Conflict (duplicate submission, room full, already allocated) |
-| 422 | Business rule violation (e.g., capacity below occupancy) |
+| 409 | Conflict — duplicate submission, room at capacity, already allocated |
+| 422 | Business rule violation — e.g. capacity set below current occupancy |
 | 500 | Unhandled server error |
 
-Validation errors (400) include a structured `errors` array:
+Validation errors (`400`) include a structured `errors` array:
 ```json
 {
   "success": false,
   "message": "Validation failed",
   "errors": [
-    { "field": "contactNumber", "message": "Must be a 10-digit number" }
+    { "field": "contactNumber", "message": "Must be a 10-digit number" },
+    { "field": "bloodGroup",    "message": "Invalid enum value" }
   ]
 }
 ```
 
----
+Custom `AppError` class used in services:
+```ts
+// server/src/utils/errors.ts
+export class AppError extends Error {
+  constructor(
+    public statusCode: number,
+    message: string,
+    public code?: string
+  ) {
+    super(message)
+    Error.captureStackTrace(this, this.constructor)
+  }
+}
 
-## 9. Environment Variables
-
-```env
-# Server
-PORT=3000
-NODE_ENV=development
-
-# MongoDB
-MONGO_URI=mongodb://localhost:27017/hostel_portal
-
-# JWT
-JWT_SECRET=<strong_random_secret>
-JWT_EXPIRES_IN=24h
-
-# App
-FRONTEND_URL=https://swc.iitg.ac.in/freshers-onboarding
-RESET_TOKEN_EXPIRES_MINUTES=15
+// Usage
+throw new AppError(409, 'Room is at full capacity', 'ROOM_FULL')
 ```
 
 ---
 
+## 10. Environment Variables
+
+All variables are validated via Zod at server startup (`shared/env.ts`). The server exits immediately with a descriptive error if any required variable is missing or malformed. Never read `process.env` directly in application code — always import from `shared/env.ts`.
+
+```env
+# ─── Server ───────────────────────────────────────────────────────────────────
+NODE_ENV=development
+PORT=5000
+CLIENT_URL=http://localhost:3000
+
+# ─── Database ─────────────────────────────────────────────────────────────────
+# connection_limit and pool_timeout tune Prisma's per-process connection pool.
+# Formula: (pg max_connections - 10 reserved) / number of PM2 workers
+DATABASE_URL=postgresql://user:password@localhost:5432/iitg_onboarding?connection_limit=15&pool_timeout=20
+
+# ─── Redis ────────────────────────────────────────────────────────────────────
+# Single ioredis client shared across rate limiting, BullMQ, and JWT blocklist.
+# Key prefixes: rl: (rate limit), bull: (BullMQ), jwt:blocklist: (logout tokens)
+REDIS_URL=redis://localhost:6379
+
+# ─── Auth ─────────────────────────────────────────────────────────────────────
+JWT_SECRET=<minimum 32 character random string>
+JWT_ACCESS_TTL=15m
+JWT_REFRESH_TTL=7d
+
+# ─── Email (IITG Google Workspace SMTP relay) ─────────────────────────────────
+SMTP_HOST=smtp-relay.gmail.com
+SMTP_PORT=587
+SMTP_USER=noreply@iitg.ac.in
+SMTP_PASS=<Google app-specific password or OAuth2 credential>
+SMTP_FROM=noreply@iitg.ac.in
+
+# ─── Password Reset ───────────────────────────────────────────────────────────
+RESET_TOKEN_EXPIRES_MINUTES=15
+```
+
+Zod schema (`shared/env.ts`):
+```ts
+import { z } from 'zod'
+
+export const envSchema = z.object({
+  NODE_ENV: z.enum(['development', 'production']).default('development'),
+  PORT: z.coerce.number().default(5000),
+  CLIENT_URL: z.string().url(),
+
+  DATABASE_URL: z.string().startsWith('postgresql://'),
+  REDIS_URL: z.string().startsWith('redis://'),
+
+  JWT_SECRET: z.string().min(32, 'JWT_SECRET must be at least 32 characters'),
+  JWT_ACCESS_TTL: z.string().default('15m'),
+  JWT_REFRESH_TTL: z.string().default('7d'),
+
+  SMTP_HOST: z.string(),
+  SMTP_PORT: z.coerce.number(),
+  SMTP_USER: z.string().email(),
+  SMTP_PASS: z.string(),
+  SMTP_FROM: z.string().email(),
+
+  RESET_TOKEN_EXPIRES_MINUTES: z.coerce.number().default(15),
+})
+
+export type Env = z.infer<typeof envSchema>
+export const env = envSchema.parse(process.env)
+```
+
+---
