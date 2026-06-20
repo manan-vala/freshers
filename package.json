@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\"",
     "dev:client": "cd client && npm run dev",
-    "dev:server": "cd server && node --watch src/server.ts",
+    "dev:server": "cd server && npx tsx --watch src/server.ts",
     "worker": "cd server && node --watch src/worker.ts",
     "build": "npm run build:client && npm run build:server",
     "build:client": "cd client && npm run build",
