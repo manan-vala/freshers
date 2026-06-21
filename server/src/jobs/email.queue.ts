@@ -10,6 +10,8 @@ export const emailQueue = new Queue<EmailJob>('emails', {
   connection: {
     host: new URL(env.REDIS_URL).hostname,
     port: Number(new URL(env.REDIS_URL).port) || 6379,
+    username: new URL(env.REDIS_URL).username || undefined,
+    password: new URL(env.REDIS_URL).password || undefined,
     family: 4,
     maxRetriesPerRequest: null,
   },
