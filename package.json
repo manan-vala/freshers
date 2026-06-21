@@ -24,6 +24,9 @@
     "url": "https://github.com/swciitg/Freshers-Onboarding/issues"
   },
   "homepage": "https://github.com/swciitg/Freshers-Onboarding#readme",
+  "dependencies": {
+    "zod": "^3.25.76"
+  },
   "devDependencies": {
     "concurrently": "^8.2.2",
     "eslint": "^8.57.1",
