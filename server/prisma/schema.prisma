@@ -1,13 +1,296 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider   = "prisma-client"
+  output     = "../src/generated/prisma"
+  engineType = "client"
 }
 
 datasource db {
   provider = "postgresql"
+}
+
+// ─── Academic Year ────────────────────────────────────────────────────────────
+// Every batch-specific table carries an academicYearId.
+// To start a new batch, create a new AcademicYear record and seed fresh data.
+// Historical records remain untouched.
+
+model AcademicYear {
+  id        String   @id @default(cuid())
+  year      String   @unique  // e.g. "2025-2026"
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  students         Student[]
+  hostels          Hostel[]
+  allocations      Allocation[]
+  allocationAudits AllocationAudit[]
+  bulkUploadLogs   BulkUploadLog[]
+
+  @@index([isActive])
+}
+
+// ─── User ─────────────────────────────────────────────────────────────────────
+
+model User {
+  id                   String    @id @default(cuid())
+  loginId              String    @unique  // Admin-provisioned (e.g. JEE roll number or custom ID)
+  email                String    @unique  // Institute email; used for forgot-password flow
+  passwordHash         String
+  role                 UserRole  @default(STUDENT)
+  isActive             Boolean   @default(true)
+  mustChangePassword   Boolean   @default(true)   // true until first-login password reset is done
+  sessionInvalidatedAt DateTime?                  // Set on password change; tokens issued before this are rejected
+  lastLoginAt          DateTime?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+  deletedAt            DateTime?                  // Soft delete
+
+  student              Student?
+  hmcAdmin             HMCAdmin?
+  allocationsPerformed Allocation[]
+  passwordResetTokens  PasswordResetToken[]
+  bulkUploadLogs       BulkUploadLog[]
+  allocationAudits     AllocationAudit[]
+
+  @@index([role])
+  @@index([isActive])
+  @@index([deletedAt])
+}
+
+enum UserRole {
+  STUDENT
+  HMC
+  ADMIN
+}
+
+// ─── Student ──────────────────────────────────────────────────────────────────
+
+model Student {
+  id             String           @id @default(cuid())
+  userId         String           @unique
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  academicYearId String
+  academicYear   AcademicYear     @relation(fields: [academicYearId], references: [id])
+
+  // Pre-filled from admin bulk upload
+  name           String
+  rollNumber     String
+  branch         String
+  email          String  // mirrors user.email for convenience
+
+  // Filled by student during onboarding — null until submitted
+  contactNumber                 String?
+  alternateContactNumber        String?
+  permanentAddress              String?
+  state                         String?
+  emergencyContactName          String?
+  emergencyContactNumber        String?
+  emergencyContactRelation      String?  // e.g. "Father", "Guardian"
+  bloodGroup                    BloodGroup?
+  medicalConditions             String?
+  allergies                     String?
+  physicalAccessibilityRequirements String?
+
+  onboardingStatus      OnboardingStatus @default(PENDING)
+  onboardingSubmittedAt DateTime?
+  consentGiven          Boolean          @default(false)
+  editAllowedByAdmin    Boolean          @default(false)  // Admin can re-open the form for correction
+
+  allocation            Allocation?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([academicYearId, rollNumber])
+  @@index([academicYearId])
+  @@index([onboardingStatus])
+  @@index([branch])
+}
+
+enum OnboardingStatus {
+  PENDING
+  SUBMITTED
+}
+
+enum BloodGroup {
+  A_POSITIVE
+  A_NEGATIVE
+  B_POSITIVE
+  B_NEGATIVE
+  O_POSITIVE
+  O_NEGATIVE
+  AB_POSITIVE
+  AB_NEGATIVE
+}
+
+// ─── Hostel ───────────────────────────────────────────────────────────────────
+
+model Hostel {
+  id             String       @id @default(cuid())
+  academicYearId String
+  academicYear   AcademicYear @relation(fields: [academicYearId], references: [id])
+
+  name           String
+  code           String       // Short identifier e.g. "TGB" for Tagore Bhawan
+  type           HostelType
+  wardenName     String
+  wardenContact  String
+  wardenEmail    String
+  messTimings    Json         // { breakfast: string, lunch: string, dinner: string }
+  rules          Json         // string[]
+  facilities     Json         // string[] e.g. ["Wi-Fi", "Laundry", "Gym"]
+  isActive       Boolean      @default(true)
+
+  rooms          Room[]
+  hmcAdmins      HMCAdmin[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([academicYearId, code])
+  @@index([academicYearId])
+  @@index([isActive])
+}
+
+enum HostelType {
+  BOYS
+  GIRLS
+  CO_ED
+}
+
+// ─── Room ─────────────────────────────────────────────────────────────────────
+
+model Room {
+  id               String  @id @default(cuid())
+  hostelId         String
+  hostel           Hostel  @relation(fields: [hostelId], references: [id], onDelete: Cascade)
+  roomNumber       String  // e.g. "A-101"
+  floor            Int?
+  capacity         Int     @default(2)
+  currentOccupancy Int     @default(0)  // Kept in sync via Prisma transactions on alloc/dealloc
+  isAccessible     Boolean @default(false)  // Reserved for students with accessibility requirements
+  isActive         Boolean @default(true)
+
+  allocations      Allocation[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([hostelId, roomNumber])
+  @@index([hostelId])
+  @@index([isActive])
+  @@index([currentOccupancy])
+}
+
+// ─── Allocation ───────────────────────────────────────────────────────────────
+// One active allocation per student at a time.
+
+model Allocation {
+  id             String       @id @default(cuid())
+  studentId      String       @unique
+  student        Student      @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  academicYearId String
+  academicYear   AcademicYear @relation(fields: [academicYearId], references: [id])
+  hostelId       String       // Denormalised for fast hostel-level queries
+  roomId         String
+  room           Room         @relation(fields: [roomId], references: [id])
+  allocatedBy    String
+  allocator      User         @relation(fields: [allocatedBy], references: [id])
+  isActive       Boolean      @default(true)  // false when student is moved or deallocated
+  notes          String?
+  allocatedAt    DateTime     @default(now())
+
+  auditLogs      AllocationAudit[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([academicYearId])
+  @@index([roomId])
+  @@index([isActive])
+  @@index([studentId, isActive])
+}
+
+// ─── Allocation Audit ─────────────────────────────────────────────────────────
+// Append-only. Records are never updated after insert.
+
+model AllocationAudit {
+  id                  String       @id @default(cuid())
+  allocationId        String
+  allocation          Allocation   @relation(fields: [allocationId], references: [id])
+  academicYearId      String
+  academicYear        AcademicYear @relation(fields: [academicYearId], references: [id])
+  action              AuditAction
+  performedBy         String
+  performer           User         @relation(fields: [performedBy], references: [id])
+  previousRoomId      String?
+  newRoomId           String?
+  previousRoommateIds String[]     // Student IDs of previous co-occupants
+  newRoommateIds      String[]
+  notes               String?
+  performedAt         DateTime     @default(now())
+
+  @@index([allocationId])
+  @@index([academicYearId])
+  @@index([performedAt])
+}
+
+enum AuditAction {
+  ALLOCATED
+  ROOM_CHANGED
+  ROOMMATE_SWAPPED
+  DEALLOCATED
+}
+
+// ─── Password Reset Token ─────────────────────────────────────────────────────
+
+model PasswordResetToken {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash  String   @unique  // SHA-256 hash; raw token is sent via email
+  expiresAt  DateTime           // Checked at query time; expired rows cleaned by a scheduled job
+  isUsed     Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+// ─── Bulk Upload Log ──────────────────────────────────────────────────────────
+
+model BulkUploadLog {
+  id             String         @id @default(cuid())
+  uploadedBy     String
+  uploader       User           @relation(fields: [uploadedBy], references: [id])
+  academicYearId String
+  academicYear   AcademicYear   @relation(fields: [academicYearId], references: [id])
+  type           BulkUploadType
+  fileName       String
+  totalRows      Int
+  successCount   Int
+  failureCount   Int
+  errors         Json           // { row: number, reason: string }[]
+  uploadedAt     DateTime       @default(now())
+
+  @@index([uploadedBy])
+  @@index([academicYearId])
+  @@index([uploadedAt])
+}
+
+enum BulkUploadType {
+  FRESHER_MASTER
+  HOSTEL_INVENTORY
+}
+
+// ─── HMC Admin ────────────────────────────────────────────────────────────────
+
+model HMCAdmin {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  hostelId  String
+  hostel    Hostel   @relation(fields: [hostelId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@index([hostelId])
 }
