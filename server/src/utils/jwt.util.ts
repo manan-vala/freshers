@@ -2,40 +2,41 @@ import jwt from 'jsonwebtoken'
 import { env } from '@/config/env'
 import { randomUUID } from 'crypto'
 
+// Must mirror the UserRole enum in schema.prisma exactly.
 export interface JWTPayload {
-  sub: string
-  role: 'STUDENT' | 'WARDEN' | 'ADMIN' | 'SUPER_ADMIN'
-  jti: string
+  sub: string             // userId
+  role: 'STUDENT' | 'HMC' | 'ADMIN'
+  jti: string             // unique token ID — used for Redis blocklist on logout
   iat: number
   exp: number
 }
 
 /**
- * Generates a short-lived access token with a unique JTI for Redis blocklisting
+ * Issues a short-lived access token (15 min by default).
+ * Each token gets a unique `jti` so it can be individually blocklisted on logout.
  */
-export function generateAccessToken(userId: string, role: JWTPayload['role']): string {
-  const payload = { sub: userId, role }
-  return jwt.sign(payload, env.JWT_SECRET, {
-    expiresIn: env.JWT_ACCESS_TTL,
-    jwtid: randomUUID(), // Sets the `jti` claim
-  })
+export function signAccessToken(payload: Pick<JWTPayload, 'sub' | 'role'>): string {
+  return jwt.sign(
+    { ...payload, jti: randomUUID() },
+    env.JWT_SECRET as string,
+    { expiresIn: env.JWT_ACCESS_TTL as jwt.SignOptions['expiresIn'] }
+  )
 }
 
 /**
- * Generates a longer-lived refresh token
+ * Issues a long-lived refresh token (7 days by default).
  */
-export function generateRefreshToken(userId: string, role: JWTPayload['role']): string {
-  const payload = { sub: userId, role }
-  return jwt.sign(payload, env.JWT_SECRET, {
-    expiresIn: env.JWT_REFRESH_TTL,
-    jwtid: randomUUID(), // Sets the `jti` claim
-  })
+export function signRefreshToken(userId: string): string {
+  return jwt.sign(
+    { sub: userId, jti: randomUUID() },
+    env.JWT_SECRET as string,
+    { expiresIn: env.JWT_REFRESH_TTL as jwt.SignOptions['expiresIn'] }
+  )
 }
-
 
 /**
  * Verifies a token synchronously.
- * Throws JsonWebTokenError or TokenExpiredError if invalid.
+ * Throws JsonWebTokenError or TokenExpiredError if invalid/expired.
  */
 export function verifyToken(token: string): JWTPayload {
   return jwt.verify(token, env.JWT_SECRET) as JWTPayload

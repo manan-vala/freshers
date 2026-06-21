@@ -6,7 +6,7 @@ import { AppError } from '@/utils/errors'
 
 // Express 5 automatically catches async throws and forwards them to the
 // error middleware — no try/catch needed here.
-export async function authenticate(req: Request, res: Response, next: NextFunction) {
+export async function authenticate(req: Request, _res: Response, next: NextFunction) {
   const token = req.cookies.access_token as string | undefined
   if (!token) {
     next(new AppError(401, 'Unauthenticated'))
@@ -29,8 +29,8 @@ export async function authenticate(req: Request, res: Response, next: NextFuncti
   }
 
   // 2. Check user still exists and is active
-  const user = await prisma.user.findUnique({ where: { id: payload.sub } })
-  if (!user || user.deletedAt) {
+  const user = await prisma.user.findFirst({ where: { id: payload.sub, deletedAt: null } })
+  if (!user) {
     next(new AppError(401, 'User not found'))
     return
   }
@@ -41,7 +41,7 @@ export async function authenticate(req: Request, res: Response, next: NextFuncti
 
   // 3. Check sessionInvalidatedAt (password change invalidation)
   if (user.sessionInvalidatedAt) {
-    const invalidatedAtSec = user.sessionInvalidatedAt.getTime() / 1000
+    const invalidatedAtSec = Math.floor(user.sessionInvalidatedAt.getTime() / 1000)
     if (payload.iat < invalidatedAtSec) {
       next(new AppError(401, 'Session expired'))
       return
