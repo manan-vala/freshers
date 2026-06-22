@@ -10,7 +10,10 @@ import './index.css'
 const router = createRouter({
   routeTree,
   basepath: import.meta.env.VITE_BASE_URL || '/',
-  context: { queryClient },
+  context: { 
+    queryClient,
+    user: null, 
+  },
 })
 
 declare module '@tanstack/react-router' {

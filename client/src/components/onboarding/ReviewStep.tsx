@@ -1,9 +1,9 @@
+import { useFormContext } from "react-hook-form"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Field, FieldLabel } from "@/components/ui/field"
 import type { OnboardingData } from "./types"
 
 interface Props {
-  data: OnboardingData;
   isConsented: boolean;
   setIsConsented: (val: boolean) => void;
 }
@@ -28,7 +28,10 @@ function DataRow({ label, value }: { label: string, value: React.ReactNode }) {
   )
 }
 
-export function ReviewStep({ data, isConsented, setIsConsented }: Props) {
+export function ReviewStep({ isConsented, setIsConsented }: Props) {
+  const form = useFormContext<OnboardingData>();
+  const data = form.getValues();
+
   return (
     <div className="flex flex-col">
       <Section title="General Details">
@@ -37,7 +40,9 @@ export function ReviewStep({ data, isConsented, setIsConsented }: Props) {
         <DataRow label="Phone Number" value={data.phone} />
         <DataRow label="Emergency Phone" value={data.emergencyPhone} />
         <DataRow label="Stream" value={data.stream} />
-        <DataRow label="Department / Section" value={data.department} />
+        {data.stream === "Bachelor of Technology (B.Tech)" && (
+          <DataRow label="Department / Section" value={data.department} />
+        )}
         <DataRow label="Gender" value={data.gender} />
       </Section>
 

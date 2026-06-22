@@ -177,6 +177,11 @@ export async function getMe(userId: string) {
       role: true,
       isActive: true,
       mustChangePassword: true,
+      student: {
+        select: {
+          onboardingStatus: true,
+        }
+      }
     },
   });
 

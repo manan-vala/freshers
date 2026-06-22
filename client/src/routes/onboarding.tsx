@@ -1,13 +1,24 @@
 import { useState } from 'react'
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { createFileRoute, useNavigate, redirect } from '@tanstack/react-router'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@/components/ui/button'
+import { Form } from '@/components/ui/form'
 import { StepIndicator } from '@/components/onboarding/StepIndicator'
 import { GeneralDetailsStep } from '@/components/onboarding/GeneralDetailsStep'
 import { MedicalDetailsStep } from '@/components/onboarding/MedicalDetailsStep'
 import { ReviewStep } from '@/components/onboarding/ReviewStep'
-import { initialOnboardingData, type OnboardingData } from '@/components/onboarding/types'
+import { initialOnboardingData, onboardingSchema, type OnboardingData } from '@/components/onboarding/types'
 
 export const Route = createFileRoute('/onboarding')({
+  beforeLoad: ({ context }) => {
+    if (!context.user) {
+      throw redirect({ to: '/login' })
+    }
+    if (context.user.student?.onboardingStatus === 'SUBMITTED') {
+      throw redirect({ to: '/onboarding-complete' })
+    }
+  },
   component: OnboardingPage,
 })
 
@@ -16,17 +27,28 @@ const STEPS = ["General Details", "Medical Details", "Review & Submit"];
 function OnboardingPage() {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0);
-  const [data, setData] = useState<OnboardingData>(initialOnboardingData);
   const [isConsented, setIsConsented] = useState(false);
 
-  const updateData = (updates: Partial<OnboardingData>) => {
-    setData(prev => ({ ...prev, ...updates }));
-  };
+  const form = useForm<OnboardingData>({
+    resolver: zodResolver(onboardingSchema) as any,
+    defaultValues: initialOnboardingData as OnboardingData,
+    mode: 'onChange',
+  });
 
-  const handleNext = () => {
-    if (currentStep < STEPS.length - 1) {
-      setCurrentStep(prev => prev + 1);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+  const handleNext = async () => {
+    let fieldsToValidate: (keyof OnboardingData)[] = [];
+    if (currentStep === 0) {
+      fieldsToValidate = ['fullName', 'email', 'phone', 'emergencyPhone', 'stream', 'department', 'gender'];
+    } else if (currentStep === 1) {
+      fieldsToValidate = ['dob', 'bloodGroup', 'medicalConditions', 'identificationMark', 'isHandicapped', 'handicapDetails'];
+    }
+    
+    const isValid = await form.trigger(fieldsToValidate);
+    if (isValid) {
+      if (currentStep < STEPS.length - 1) {
+        setCurrentStep(prev => prev + 1);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
     }
   };
 
@@ -39,7 +61,7 @@ function OnboardingPage() {
     }
   };
 
-  const handleSubmit = () => {
+  const onSubmit = (data: any) => {
     if (!isConsented) return;
     console.log("Submitting Onboarding Data:", data);
     alert("Onboarding submitted successfully! Check console for data.");
@@ -68,33 +90,36 @@ function OnboardingPage() {
 
           <StepIndicator steps={STEPS} currentStep={currentStep} />
 
-          <div className="mt-8 mb-10">
-            {currentStep === 0 && (
-              <GeneralDetailsStep data={data} updateData={updateData} />
-            )}
-            {currentStep === 1 && (
-              <MedicalDetailsStep data={data} updateData={updateData} />
-            )}
-            {currentStep === 2 && (
-              <ReviewStep data={data} isConsented={isConsented} setIsConsented={setIsConsented} />
-            )}
-          </div>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="mt-8 mb-10 flex flex-col gap-8">
+              <div>
+                {currentStep === 0 && <GeneralDetailsStep />}
+                {currentStep === 1 && <MedicalDetailsStep />}
+                {currentStep === 2 && (
+                  <ReviewStep 
+                    isConsented={isConsented} 
+                    setIsConsented={setIsConsented} 
+                  />
+                )}
+              </div>
 
-          <div className="flex items-center justify-between pt-6 border-t">
-            <Button variant="outline" onClick={handleBack}>
-              {currentStep === 0 ? "Cancel" : "Back"}
-            </Button>
-            
-            {currentStep === STEPS.length - 1 ? (
-              <Button onClick={handleSubmit} disabled={!isConsented}>
-                Submit Profile
-              </Button>
-            ) : (
-              <Button onClick={handleNext}>
-                Next Step
-              </Button>
-            )}
-          </div>
+              <div className="flex items-center justify-between pt-6 border-t">
+                <Button type="button" variant="outline" onClick={handleBack}>
+                  {currentStep === 0 ? "Cancel" : "Back"}
+                </Button>
+                
+                {currentStep === STEPS.length - 1 ? (
+                  <Button type="submit" disabled={!isConsented}>
+                    Submit Profile
+                  </Button>
+                ) : (
+                  <Button type="button" onClick={handleNext}>
+                    Next Step
+                  </Button>
+                )}
+              </div>
+            </form>
+          </Form>
         </div>
       </main>
     </div>

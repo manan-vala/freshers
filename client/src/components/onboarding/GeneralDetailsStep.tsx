@@ -1,119 +1,167 @@
+import { useFormContext } from "react-hook-form"
 import { Input } from "@/components/ui/input"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Field, FieldLabel, FieldSet } from "@/components/ui/field"
+import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form"
+import { FieldSet } from "@/components/ui/field"
 import { STREAMS, BTECH_DEPARTMENTS } from "@/lib/constants"
 import type { OnboardingData } from "./types"
 
-interface Props {
-  data: OnboardingData;
-  updateData: (updates: Partial<OnboardingData>) => void;
-}
+export function GeneralDetailsStep() {
+  const form = useFormContext<OnboardingData>();
+  const streamValue = form.watch("stream");
 
-export function GeneralDetailsStep({ data, updateData }: Props) {
   return (
     <div className="flex flex-col gap-6">
       <FieldSet>
-        <Field>
-          <FieldLabel>Full Name (same as allotment sheet)</FieldLabel>
-          <Input 
-            value={data.fullName} 
-            onChange={e => updateData({ fullName: e.target.value })} 
-            placeholder="John Doe" 
-          />
-        </Field>
+        <FormField
+          control={form.control}
+          name="fullName"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Full Name (same as allotment sheet)</FormLabel>
+              <FormControl>
+                <Input placeholder="John Doe" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         
-        <Field>
-          <FieldLabel>Gmail ID</FieldLabel>
-          <Input 
-            type="email" 
-            value={data.email} 
-            onChange={e => updateData({ email: e.target.value })} 
-            placeholder="john.doe@gmail.com" 
-          />
-        </Field>
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Gmail ID</FormLabel>
+              <FormControl>
+                <Input type="email" placeholder="john.doe@gmail.com" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Field>
-            <FieldLabel>Phone Number</FieldLabel>
-            <Input 
-              type="tel" 
-              value={data.phone} 
-              onChange={e => updateData({ phone: e.target.value })} 
-              placeholder="+91 9876543210" 
-            />
-          </Field>
+          <FormField
+            control={form.control}
+            name="phone"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Phone Number</FormLabel>
+                <FormControl>
+                  <Input type="tel" placeholder="+91 9876543210" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           
-          <Field>
-            <FieldLabel>Emergency Phone Number</FieldLabel>
-            <Input 
-              type="tel" 
-              value={data.emergencyPhone} 
-              onChange={e => updateData({ emergencyPhone: e.target.value })} 
-              placeholder="+91 9876543210" 
-            />
-          </Field>
+          <FormField
+            control={form.control}
+            name="emergencyPhone"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Emergency Phone Number</FormLabel>
+                <FormControl>
+                  <Input type="tel" placeholder="+91 9876543210" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
 
-        <Field>
-          <FieldLabel>Stream</FieldLabel>
-          <Select value={data.stream} onValueChange={v => updateData({ stream: v, department: '' })}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select Stream" />
-            </SelectTrigger>
-            <SelectContent>
-              {STREAMS.map(s => (
-                <SelectItem key={s} value={s}>{s}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </Field>
-
-        {data.stream && (
-          <Field>
-            <FieldLabel>Department / Section</FieldLabel>
-            {data.stream === "Bachelor of Technology (B.Tech)" ? (
-              <Select value={data.department} onValueChange={v => updateData({ department: v })}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select Department" />
-                </SelectTrigger>
+        <FormField
+          control={form.control}
+          name="stream"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Stream</FormLabel>
+              <Select 
+                onValueChange={(val) => {
+                  field.onChange(val);
+                  form.setValue("department", "");
+                }} 
+                defaultValue={field.value}
+              >
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select Stream" />
+                  </SelectTrigger>
+                </FormControl>
                 <SelectContent>
-                  {BTECH_DEPARTMENTS.map(d => (
-                    <SelectItem key={d} value={d}>{d}</SelectItem>
+                  {STREAMS.map(s => (
+                    <SelectItem key={s} value={s}>{s}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
-            ) : (
-              <Input 
-                value={data.department} 
-                onChange={e => updateData({ department: e.target.value })} 
-                placeholder="Department Name" 
-              />
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {streamValue === "Bachelor of Technology (B.Tech)" && (
+          <FormField
+            control={form.control}
+            name="department"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Department / Section</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select Department" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {BTECH_DEPARTMENTS.map(d => (
+                      <SelectItem key={d} value={d}>{d}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
             )}
-          </Field>
+          />
         )}
 
-        <Field>
-          <FieldLabel>Gender</FieldLabel>
-          <RadioGroup 
-            value={data.gender} 
-            onValueChange={v => updateData({ gender: v })}
-            className="flex flex-row gap-6 mt-2"
-          >
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="Male" id="r1" />
-              <label htmlFor="r1" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Male</label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="Female" id="r2" />
-              <label htmlFor="r2" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Female</label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="Other" id="r3" />
-              <label htmlFor="r3" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Other</label>
-            </div>
-          </RadioGroup>
-        </Field>
+        <FormField
+          control={form.control}
+          name="gender"
+          render={({ field }) => (
+            <FormItem className="space-y-3">
+              <FormLabel>Gender</FormLabel>
+              <FormControl>
+                <RadioGroup
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  className="flex flex-row gap-6 mt-2"
+                >
+                  <FormItem className="flex items-center space-x-2 space-y-0">
+                    <FormControl>
+                      <RadioGroupItem value="Male" />
+                    </FormControl>
+                    <FormLabel className="font-normal">Male</FormLabel>
+                  </FormItem>
+                  <FormItem className="flex items-center space-x-2 space-y-0">
+                    <FormControl>
+                      <RadioGroupItem value="Female" />
+                    </FormControl>
+                    <FormLabel className="font-normal">Female</FormLabel>
+                  </FormItem>
+                  <FormItem className="flex items-center space-x-2 space-y-0">
+                    <FormControl>
+                      <RadioGroupItem value="Other" />
+                    </FormControl>
+                    <FormLabel className="font-normal">Other</FormLabel>
+                  </FormItem>
+                </RadioGroup>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
       </FieldSet>
     </div>
   )
