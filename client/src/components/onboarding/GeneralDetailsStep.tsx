@@ -50,7 +50,10 @@ export function GeneralDetailsStep() {
               <FormItem>
                 <FormLabel>Phone Number</FormLabel>
                 <FormControl>
-                  <Input type="tel" placeholder="+91 9876543210" {...field} />
+                  <div className="flex gap-2">
+                    <Input className="w-16 md:w-20 text-center px-1" defaultValue="+91" aria-label="Country code" />
+                    <Input type="tel" className="flex-1" placeholder="9876543210" {...field} />
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -64,7 +67,10 @@ export function GeneralDetailsStep() {
               <FormItem>
                 <FormLabel>Emergency Phone Number</FormLabel>
                 <FormControl>
-                  <Input type="tel" placeholder="+91 9876543210" {...field} />
+                  <div className="flex gap-2">
+                    <Input className="w-16 md:w-20 text-center px-1" defaultValue="+91" aria-label="Country code" />
+                    <Input type="tel" className="flex-1" placeholder="9876543210" {...field} />
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>

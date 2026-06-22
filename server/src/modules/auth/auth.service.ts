@@ -9,11 +9,8 @@ import { randomBytes, createHash } from 'crypto';
 import type { LoginInput, ChangePasswordInput, ForgotPasswordInput, ResetPasswordInput } from '@shared/auth';
 
 export async function login(input: LoginInput) {
-  // `findUnique` does not support filtering on non-unique fields in `where`.
-  // `deletedAt` is not unique, so we use `findFirst` with the unique loginId
-  // filter combined with the soft-delete guard.
   const user = await prisma.user.findFirst({
-    where: { loginId: input.loginId, deletedAt: null },
+    where: { email: input.email, deletedAt: null },
   });
 
   if (!user || !user.isActive) {

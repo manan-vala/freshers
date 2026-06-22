@@ -6,7 +6,8 @@ import { IconEye, IconEyeOff, IconLoader2 } from '@tabler/icons-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
-import { useLogin, loginSchema, type LoginInput } from '@/lib/auth'
+import { useLogin } from '@/lib/auth'
+import { loginSchema, type LoginInput } from '@shared/auth'
 
 export const Route = createFileRoute('/login')({
   beforeLoad: ({ context }) => {
@@ -28,7 +29,7 @@ function LoginPage() {
   const form = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      loginId: '',
+      email: '',
       password: '',
     },
   })
@@ -98,23 +99,24 @@ function LoginPage() {
         <div className="w-full max-w-md bg-white p-8 sm:p-10 rounded-2xl shadow-xl border border-slate-100 animate-in fade-in slide-in-from-bottom-4 duration-500">
           <div className="mb-8 text-center">
             <h2 className="text-2xl font-bold text-slate-900 mb-2">Student Login</h2>
-            <p className="text-slate-500 text-sm">Enter your Roll Number and Password to access your portal</p>
+            <p className="text-slate-500 text-sm">Enter your IITG email and password to access your portal</p>
           </div>
 
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
               <FormField
                 control={form.control}
-                name="loginId"
+                name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Login ID / Roll Number</FormLabel>
+                    <FormLabel>Institute Email</FormLabel>
                     <FormControl>
                       <Input 
-                        placeholder="e.g. 240101001" 
+                        placeholder="e.g. name@iitg.ac.in" 
                         {...field} 
                         className="h-11"
-                        autoComplete="username"
+                        autoComplete="email"
+                        type="email"
                       />
                     </FormControl>
                     <FormMessage />

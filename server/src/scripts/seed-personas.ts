@@ -26,26 +26,37 @@ async function main() {
   const hashedPassword = await hashPassword(defaultPassword);
 
   const personas = [
-    { loginId: 'test1', email: 'test1@outlook.com', name: 'Test Persona 1', rollNumber: '26010001' },
-    { loginId: 'test2', email: 'test2@outlook.com', name: 'Test Persona 2', rollNumber: '26010002' },
-    { loginId: 'test3', email: 'test3@outlook.com', name: 'Test Persona 3', rollNumber: '26010003' },
-    { loginId: 'test4', email: 'test4@outlook.com', name: 'Test Persona 4', rollNumber: '26010004' },
-    { loginId: 'test5', email: 'test5@outlook.com', name: 'Test Persona 5', rollNumber: '26010005' },
+    { email: 'test1@iitg.ac.in', name: 'Test Persona 1', rollNumber: '26010001' },
+    { email: 'test2@iitg.ac.in', name: 'Test Persona 2', rollNumber: '26010002' },
+    { email: 'test3@iitg.ac.in', name: 'Test Persona 3', rollNumber: '26010003' },
+    { email: 'test4@iitg.ac.in', name: 'Test Persona 4', rollNumber: '26010004' },
+    { email: 'test5@iitg.ac.in', name: 'Test Persona 5', rollNumber: '26010005' },
   ];
 
+  // Clean up old test data first (both @outlook.com and @iitg.ac.in)
+  const allTestEmails = [
+    ...personas.map(p => p.email),
+    'test1@outlook.com', 'test2@outlook.com', 'test3@outlook.com', 'test4@outlook.com', 'test5@outlook.com'
+  ];
+  
+  await prisma.user.deleteMany({
+    where: {
+      email: { in: allTestEmails }
+    }
+  });
+
   for (const p of personas) {
-    // Upsert User
+    // Upsert User — keyed on email since that is now the login identifier
     const user = await prisma.user.upsert({
-      where: { loginId: p.loginId },
+      where: { email: p.email },
       update: {
-        email: p.email,
         passwordHash: hashedPassword,
         mustChangePassword: false, // Don't force password change for testing
         isActive: true,
         role: 'STUDENT',
       },
       create: {
-        loginId: p.loginId,
+        loginId: p.email, // loginId mirrors email for backwards-compat with the unique constraint
         email: p.email,
         passwordHash: hashedPassword,
         mustChangePassword: false,
@@ -74,12 +85,12 @@ async function main() {
       },
     });
 
-    console.log(`Upserted Persona: ${p.loginId} (Email: ${p.email})`);
+    console.log(`Upserted Persona: ${p.email}`);
   }
 
   console.log('\nSeed completed successfully.');
   console.log('You can log in using:');
-  console.log('Login IDs: test1, test2, test3, test4, test5');
+  console.log('Emails: test1@iitg.ac.in through test5@iitg.ac.in');
   console.log(`Password: ${defaultPassword}`);
 }
 

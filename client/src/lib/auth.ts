@@ -1,13 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from './api';
-import { z } from 'zod';
-
-export const loginSchema = z.object({
-  loginId: z.string().min(3, 'Login ID is required'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
-});
-
-export type LoginInput = z.infer<typeof loginSchema>;
+import type { LoginInput } from '@shared/auth';
 
 export interface User {
   id: string;
@@ -28,7 +21,7 @@ export const authKeys = {
 // Fetch current user
 export const fetchMe = async (): Promise<User | null> => {
   try {
-    const { data } = await api.get('/auth/me');
+    const { data } = await api.get('/v1/auth/me');
     return data.data;
   } catch (error) {
     return null;
@@ -50,7 +43,7 @@ export function useLogin() {
 
   return useMutation({
     mutationFn: async (credentials: LoginInput) => {
-      const { data } = await api.post('/auth/login', credentials);
+      const { data } = await api.post('/v1/auth/login', credentials);
       return data.data; // The user object returned from login
     },
     onSuccess: (data) => {
@@ -66,7 +59,7 @@ export function useLogout() {
 
   return useMutation({
     mutationFn: async () => {
-      await api.post('/auth/logout');
+      await api.post('/v1/auth/logout');
     },
     onSuccess: () => {
       queryClient.setQueryData(authKeys.me, null);

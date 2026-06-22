@@ -50,8 +50,8 @@ export const initialOnboardingData: Partial<OnboardingData> = {
   
   dob: '',
   bloodGroup: '',
-  medicalConditions: '',
-  identificationMark: '',
+  medicalConditions: 'None',
+  identificationMark: 'None',
   isHandicapped: false,
   handicapDetails: '',
 };
