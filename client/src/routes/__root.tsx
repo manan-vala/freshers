@@ -1,13 +1,10 @@
-import { createRootRouteWithContext, Outlet, redirect } from '@tanstack/react-router'
+import { createRootRouteWithContext, Outlet } from '@tanstack/react-router'
 import type { QueryClient } from '@tanstack/react-query'
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
-  beforeLoad: async ({ location }) => {
-    const isAuthRoute = location.pathname === '/login'
-
-    if (!isAuthRoute && location.pathname === '/') {
-      throw redirect({ to: '/login' })
-    }
-  },
-  component: () => <Outlet />,
+  component: () => (
+    <div className="min-h-screen bg-slate-50 font-sans text-slate-900">
+      <Outlet />
+    </div>
+  ),
 })
