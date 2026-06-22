@@ -129,15 +129,9 @@ model Hostel {
   academicYearId String
   academicYear   AcademicYear @relation(fields: [academicYearId], references: [id])
 
-  name           String
+  name           HostelName
   code           String       // Short identifier e.g. "TGB" for Tagore Bhawan
   type           HostelType
-  wardenName     String
-  wardenContact  String
-  wardenEmail    String
-  messTimings    Json         // { breakfast: string, lunch: string, dinner: string }
-  rules          Json         // string[]
-  facilities     Json         // string[] e.g. ["Wi-Fi", "Laundry", "Gym"]
   isActive       Boolean      @default(true)
 
   rooms          Room[]
@@ -155,6 +149,23 @@ enum HostelType {
   BOYS
   GIRLS
   CO_ED
+}
+
+enum HostelName {
+  LOHIT_HOSTEL
+  DISANG_HOSTEL
+  SUBANSIRI_HOSTEL
+  UMIAM_HOSTEL
+  DHANSIRI_HOSTEL
+  MANAS_HOSTEL
+  KAMENG_HOSTEL
+  GAURANG_HOSTEL
+  BARAK_HOSTEL
+  BRAHMAPUTRA_HOSTEL
+  DIHING_HOSTEL
+  KAPILI_HOSTEL
+  SIANG_HOSTEL
+  MARRIED_SCHOLAR_HOSTEL
 }
 
 // ─── Room ─────────────────────────────────────────────────────────────────────
