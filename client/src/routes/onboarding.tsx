@@ -9,6 +9,7 @@ import { GeneralDetailsStep } from '@/components/onboarding/GeneralDetailsStep'
 import { MedicalDetailsStep } from '@/components/onboarding/MedicalDetailsStep'
 import { ReviewStep } from '@/components/onboarding/ReviewStep'
 import { initialOnboardingData, onboardingSchema, type OnboardingData } from '@/components/onboarding/types'
+import { Navbar } from '@/components/onboarding/Navbar'
 
 export const Route = createFileRoute('/onboarding')({
   beforeLoad: ({ context }) => {
@@ -25,6 +26,7 @@ export const Route = createFileRoute('/onboarding')({
 const STEPS = ["General Details", "Medical Details", "Review & Submit"];
 
 function OnboardingPage() {
+  const { user } = Route.useRouteContext();
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0);
   const [isConsented, setIsConsented] = useState(false);
@@ -70,12 +72,7 @@ function OnboardingPage() {
 
   return (
     <div className="flex flex-col min-h-screen pb-12">
-      <header className="flex items-center px-6 py-4 bg-white border-b sticky top-0 z-20">
-        <div className="flex items-center gap-2">
-          <img src="/logo.png" alt="IITG Logo" className="w-8 h-8 object-contain" />
-          <span className="font-bold text-lg text-slate-800">Fresher Onboarding</span>
-        </div>
-      </header>
+      <Navbar user={user} />
 
       <main className="flex-1 w-full max-w-5xl mx-auto px-4 mt-8">
         <div className="bg-white rounded-2xl shadow-sm border p-6 md:p-10">

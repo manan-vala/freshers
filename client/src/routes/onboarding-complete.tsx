@@ -2,6 +2,7 @@ import { createFileRoute, redirect } from '@tanstack/react-router'
 import { IconCheck, IconLogout } from '@tabler/icons-react'
 import { Button } from '@/components/ui/button'
 import { useLogout } from '@/lib/auth'
+import { Navbar } from '@/components/onboarding/Navbar'
 
 export const Route = createFileRoute('/onboarding-complete')({
   beforeLoad: ({ context }) => {
@@ -17,6 +18,7 @@ export const Route = createFileRoute('/onboarding-complete')({
 })
 
 function OnboardingCompletePage() {
+  const { user } = Route.useRouteContext()
   const logoutMutation = useLogout()
 
   const handleLogout = () => {
@@ -28,8 +30,11 @@ function OnboardingCompletePage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-slate-50">
-      <div className="w-full max-w-lg bg-white p-10 rounded-3xl shadow-xl border text-center animate-in fade-in zoom-in-95 duration-500">
+    <div className="min-h-screen flex flex-col bg-slate-50">
+      <Navbar user={user} />
+
+      <main className="flex-1 flex flex-col items-center justify-center p-6">
+        <div className="w-full max-w-lg bg-white p-10 rounded-3xl shadow-xl border text-center animate-in fade-in zoom-in-95 duration-500">
         
         <div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
           <IconCheck size={40} stroke={3} />
@@ -64,7 +69,9 @@ function OnboardingCompletePage() {
         </Button>
       </div>
 
-      <footer className="mt-12 text-center text-slate-500 text-sm">
+      </main>
+
+      <footer className="py-6 text-center text-slate-500 text-sm">
         &copy; {new Date().getFullYear()} Indian Institute of Technology Guwahati
       </footer>
     </div>
