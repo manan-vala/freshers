@@ -94,6 +94,7 @@ export const UserScalarFieldEnum = {
   loginId: 'loginId',
   email: 'email',
   passwordHash: 'passwordHash',
+  microsoftId: 'microsoftId',
   role: 'role',
   isActive: 'isActive',
   mustChangePassword: 'mustChangePassword',
@@ -130,6 +131,8 @@ export const StudentScalarFieldEnum = {
   onboardingSubmittedAt: 'onboardingSubmittedAt',
   consentGiven: 'consentGiven',
   editAllowedByAdmin: 'editAllowedByAdmin',
+  isVerified: 'isVerified',
+  needsReview: 'needsReview',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -143,12 +146,6 @@ export const HostelScalarFieldEnum = {
   name: 'name',
   code: 'code',
   type: 'type',
-  wardenName: 'wardenName',
-  wardenContact: 'wardenContact',
-  wardenEmail: 'wardenEmail',
-  messTimings: 'messTimings',
-  rules: 'rules',
-  facilities: 'facilities',
   isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

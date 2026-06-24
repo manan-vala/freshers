@@ -13,7 +13,7 @@ export async function login(input: LoginInput) {
     where: { email: input.email, deletedAt: null },
   });
 
-  if (!user || !user.isActive) {
+  if (!user || !user.isActive || !user.passwordHash) {
     throw new AppError(401, 'Invalid credentials');
   }
 
@@ -34,6 +34,37 @@ export async function login(input: LoginInput) {
     user: {
       role: user.role,
       mustChangePassword: user.mustChangePassword,
+    },
+    accessToken,
+    refreshToken,
+  };
+}
+
+export async function adminLogin(input: LoginInput) {
+  if (input.email !== env.SUPERADMIN_EMAIL || input.password !== env.SUPERADMIN_PASSWORD) {
+    throw new AppError(401, 'Invalid admin credentials');
+  }
+
+  const adminUser = await prisma.user.upsert({
+    where: { email: input.email },
+    update: { role: 'ADMIN', lastLoginAt: new Date() },
+    create: {
+      loginId: input.email,
+      email: input.email,
+      passwordHash: await hashPassword(input.password),
+      role: 'ADMIN',
+      mustChangePassword: false,
+      isActive: true,
+    }
+  });
+
+  const accessToken = signAccessToken({ sub: adminUser.id, role: adminUser.role });
+  const refreshToken = signRefreshToken(adminUser.id);
+
+  return {
+    user: {
+      role: adminUser.role,
+      mustChangePassword: adminUser.mustChangePassword,
     },
     accessToken,
     refreshToken,
@@ -82,8 +113,8 @@ export async function changePassword(userId: string, input: ChangePasswordInput)
     where: { id: userId, deletedAt: null },
   });
 
-  if (!user) {
-    throw new AppError(404, 'User not found');
+  if (!user || !user.passwordHash) {
+    throw new AppError(404, 'User not found or cannot change password');
   }
 
   const isValidPassword = await verifyPassword(input.currentPassword, user.passwordHash);

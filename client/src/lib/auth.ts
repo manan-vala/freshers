@@ -53,6 +53,21 @@ export function useLogin() {
   });
 }
 
+// Admin Login Mutation
+export function useAdminLogin() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (credentials: LoginInput) => {
+      const { data } = await api.post('/v1/auth/admin-login', credentials);
+      return data.data; // The user object returned from login
+    },
+    onSuccess: (data) => {
+      queryClient.setQueryData(authKeys.me, data);
+    },
+  });
+}
+
 // Logout Mutation
 export function useLogout() {
   const queryClient = useQueryClient();

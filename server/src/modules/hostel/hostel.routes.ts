@@ -1,10 +1,9 @@
 import { Router } from 'express'
+import { getHostelsHandler } from './hostel.controller'
+import { authenticate } from '@/middleware/auth.middleware'
 
 const router = Router()
 
-// Stub route
-router.get('/', (_req, res) => {
-  res.json({ message: 'Hostel routes stub' })
-})
+router.get('/', authenticate, getHostelsHandler)
 
 export default router

@@ -15,6 +15,15 @@ const envSchema = z.object({
   SMTP_PASS: z.string(),
   SMTP_FROM: z.string(),
   RESET_TOKEN_EXPIRES_MINUTES: z.coerce.number().default(15),
+  
+  // MS Auth & Admin Config
+  MICROSOFT_TENANT_ID: z.string(),
+  MICROSOFT_CLIENT_ID: z.string(),
+  MICROSOFT_CLIENT_SECRET: z.string(),
+  MICROSOFT_REDIRECT_URI: z.string().url(),
+  ALLOWED_EMAIL_DOMAIN: z.string(),
+  SUPERADMIN_EMAIL: z.string().email(),
+  SUPERADMIN_PASSWORD: z.string().min(8),
 })
 
 export type Env = z.infer<typeof envSchema>

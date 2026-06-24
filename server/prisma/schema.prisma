@@ -34,7 +34,8 @@ model User {
   id                   String    @id @default(cuid())
   loginId              String    @unique  // Admin-provisioned (e.g. JEE roll number or custom ID)
   email                String    @unique  // Institute email; used for forgot-password flow
-  passwordHash         String
+  passwordHash         String?
+  microsoftId          String?   @unique
   role                 UserRole  @default(STUDENT)
   isActive             Boolean   @default(true)
   mustChangePassword   Boolean   @default(true)   // true until first-login password reset is done
@@ -94,6 +95,8 @@ model Student {
   onboardingSubmittedAt DateTime?
   consentGiven          Boolean          @default(false)
   editAllowedByAdmin    Boolean          @default(false)  // Admin can re-open the form for correction
+  isVerified            Boolean          @default(false)
+  needsReview           Boolean          @default(false)
 
   allocation            Allocation?
 

@@ -1207,6 +1207,7 @@ export const UserScalarFieldEnum = {
   loginId: 'loginId',
   email: 'email',
   passwordHash: 'passwordHash',
+  microsoftId: 'microsoftId',
   role: 'role',
   isActive: 'isActive',
   mustChangePassword: 'mustChangePassword',
@@ -1243,6 +1244,8 @@ export const StudentScalarFieldEnum = {
   onboardingSubmittedAt: 'onboardingSubmittedAt',
   consentGiven: 'consentGiven',
   editAllowedByAdmin: 'editAllowedByAdmin',
+  isVerified: 'isVerified',
+  needsReview: 'needsReview',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1256,12 +1259,6 @@ export const HostelScalarFieldEnum = {
   name: 'name',
   code: 'code',
   type: 'type',
-  wardenName: 'wardenName',
-  wardenContact: 'wardenContact',
-  wardenEmail: 'wardenEmail',
-  messTimings: 'messTimings',
-  rules: 'rules',
-  facilities: 'facilities',
   isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -1482,6 +1479,20 @@ export type ListEnumOnboardingStatusFieldRefInput<$PrismaModel> = FieldRefInputT
 
 
 /**
+ * Reference to a field of type 'HostelName'
+ */
+export type EnumHostelNameFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'HostelName'>
+    
+
+
+/**
+ * Reference to a field of type 'HostelName[]'
+ */
+export type ListEnumHostelNameFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'HostelName[]'>
+    
+
+
+/**
  * Reference to a field of type 'HostelType'
  */
 export type EnumHostelTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'HostelType'>
@@ -1492,20 +1503,6 @@ export type EnumHostelTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$Prism
  * Reference to a field of type 'HostelType[]'
  */
 export type ListEnumHostelTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'HostelType[]'>
-    
-
-
-/**
- * Reference to a field of type 'Json'
- */
-export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
-    
-
-
-/**
- * Reference to a field of type 'QueryMode'
- */
-export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
 
 
@@ -1548,6 +1545,20 @@ export type EnumBulkUploadTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$P
  * Reference to a field of type 'BulkUploadType[]'
  */
 export type ListEnumBulkUploadTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BulkUploadType[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Json'
+ */
+export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+/**
+ * Reference to a field of type 'QueryMode'
+ */
+export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
 
 

@@ -7,7 +7,11 @@ import { AppError } from '@/utils/errors'
 // Express 5 automatically catches async throws and forwards them to the
 // error middleware — no try/catch needed here.
 export async function authenticate(req: Request, _res: Response, next: NextFunction) {
-  const token = req.cookies.access_token as string | undefined
+  let token = req.cookies.access_token as string | undefined
+  if (!token && req.headers.authorization?.startsWith('Bearer ')) {
+    token = req.headers.authorization.split(' ')[1]
+  }
+
   if (!token) {
     next(new AppError(401, 'Unauthenticated'))
     return

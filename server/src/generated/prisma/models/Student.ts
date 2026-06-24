@@ -47,6 +47,8 @@ export type StudentMinAggregateOutputType = {
   onboardingSubmittedAt: Date | null
   consentGiven: boolean | null
   editAllowedByAdmin: boolean | null
+  isVerified: boolean | null
+  needsReview: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -74,6 +76,8 @@ export type StudentMaxAggregateOutputType = {
   onboardingSubmittedAt: Date | null
   consentGiven: boolean | null
   editAllowedByAdmin: boolean | null
+  isVerified: boolean | null
+  needsReview: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -101,6 +105,8 @@ export type StudentCountAggregateOutputType = {
   onboardingSubmittedAt: number
   consentGiven: number
   editAllowedByAdmin: number
+  isVerified: number
+  needsReview: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -130,6 +136,8 @@ export type StudentMinAggregateInputType = {
   onboardingSubmittedAt?: true
   consentGiven?: true
   editAllowedByAdmin?: true
+  isVerified?: true
+  needsReview?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -157,6 +165,8 @@ export type StudentMaxAggregateInputType = {
   onboardingSubmittedAt?: true
   consentGiven?: true
   editAllowedByAdmin?: true
+  isVerified?: true
+  needsReview?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -184,6 +194,8 @@ export type StudentCountAggregateInputType = {
   onboardingSubmittedAt?: true
   consentGiven?: true
   editAllowedByAdmin?: true
+  isVerified?: true
+  needsReview?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -284,6 +296,8 @@ export type StudentGroupByOutputType = {
   onboardingSubmittedAt: Date | null
   consentGiven: boolean
   editAllowedByAdmin: boolean
+  isVerified: boolean
+  needsReview: boolean
   createdAt: Date
   updatedAt: Date
   _count: StudentCountAggregateOutputType | null
@@ -332,6 +346,8 @@ export type StudentWhereInput = {
   onboardingSubmittedAt?: Prisma.DateTimeNullableFilter<"Student"> | Date | string | null
   consentGiven?: Prisma.BoolFilter<"Student"> | boolean
   editAllowedByAdmin?: Prisma.BoolFilter<"Student"> | boolean
+  isVerified?: Prisma.BoolFilter<"Student"> | boolean
+  needsReview?: Prisma.BoolFilter<"Student"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Student"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Student"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -362,6 +378,8 @@ export type StudentOrderByWithRelationInput = {
   onboardingSubmittedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   consentGiven?: Prisma.SortOrder
   editAllowedByAdmin?: Prisma.SortOrder
+  isVerified?: Prisma.SortOrder
+  needsReview?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
@@ -396,6 +414,8 @@ export type StudentWhereUniqueInput = Prisma.AtLeast<{
   onboardingSubmittedAt?: Prisma.DateTimeNullableFilter<"Student"> | Date | string | null
   consentGiven?: Prisma.BoolFilter<"Student"> | boolean
   editAllowedByAdmin?: Prisma.BoolFilter<"Student"> | boolean
+  isVerified?: Prisma.BoolFilter<"Student"> | boolean
+  needsReview?: Prisma.BoolFilter<"Student"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Student"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Student"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -426,6 +446,8 @@ export type StudentOrderByWithAggregationInput = {
   onboardingSubmittedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   consentGiven?: Prisma.SortOrder
   editAllowedByAdmin?: Prisma.SortOrder
+  isVerified?: Prisma.SortOrder
+  needsReview?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.StudentCountOrderByAggregateInput
@@ -459,6 +481,8 @@ export type StudentScalarWhereWithAggregatesInput = {
   onboardingSubmittedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Student"> | Date | string | null
   consentGiven?: Prisma.BoolWithAggregatesFilter<"Student"> | boolean
   editAllowedByAdmin?: Prisma.BoolWithAggregatesFilter<"Student"> | boolean
+  isVerified?: Prisma.BoolWithAggregatesFilter<"Student"> | boolean
+  needsReview?: Prisma.BoolWithAggregatesFilter<"Student"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Student"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Student"> | Date | string
 }
@@ -484,6 +508,8 @@ export type StudentCreateInput = {
   onboardingSubmittedAt?: Date | string | null
   consentGiven?: boolean
   editAllowedByAdmin?: boolean
+  isVerified?: boolean
+  needsReview?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutStudentInput
@@ -514,6 +540,8 @@ export type StudentUncheckedCreateInput = {
   onboardingSubmittedAt?: Date | string | null
   consentGiven?: boolean
   editAllowedByAdmin?: boolean
+  isVerified?: boolean
+  needsReview?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   allocation?: Prisma.AllocationUncheckedCreateNestedOneWithoutStudentInput
@@ -540,6 +568,8 @@ export type StudentUpdateInput = {
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   consentGiven?: Prisma.BoolFieldUpdateOperationsInput | boolean
   editAllowedByAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  needsReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutStudentNestedInput
@@ -570,6 +600,8 @@ export type StudentUncheckedUpdateInput = {
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   consentGiven?: Prisma.BoolFieldUpdateOperationsInput | boolean
   editAllowedByAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  needsReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allocation?: Prisma.AllocationUncheckedUpdateOneWithoutStudentNestedInput
@@ -598,6 +630,8 @@ export type StudentCreateManyInput = {
   onboardingSubmittedAt?: Date | string | null
   consentGiven?: boolean
   editAllowedByAdmin?: boolean
+  isVerified?: boolean
+  needsReview?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -623,6 +657,8 @@ export type StudentUpdateManyMutationInput = {
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   consentGiven?: Prisma.BoolFieldUpdateOperationsInput | boolean
   editAllowedByAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  needsReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -650,6 +686,8 @@ export type StudentUncheckedUpdateManyInput = {
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   consentGiven?: Prisma.BoolFieldUpdateOperationsInput | boolean
   editAllowedByAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  needsReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -697,6 +735,8 @@ export type StudentCountOrderByAggregateInput = {
   onboardingSubmittedAt?: Prisma.SortOrder
   consentGiven?: Prisma.SortOrder
   editAllowedByAdmin?: Prisma.SortOrder
+  isVerified?: Prisma.SortOrder
+  needsReview?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -724,6 +764,8 @@ export type StudentMaxOrderByAggregateInput = {
   onboardingSubmittedAt?: Prisma.SortOrder
   consentGiven?: Prisma.SortOrder
   editAllowedByAdmin?: Prisma.SortOrder
+  isVerified?: Prisma.SortOrder
+  needsReview?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -751,6 +793,8 @@ export type StudentMinOrderByAggregateInput = {
   onboardingSubmittedAt?: Prisma.SortOrder
   consentGiven?: Prisma.SortOrder
   editAllowedByAdmin?: Prisma.SortOrder
+  isVerified?: Prisma.SortOrder
+  needsReview?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -834,10 +878,6 @@ export type StudentUncheckedUpdateOneWithoutUserNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.StudentUpdateToOneWithWhereWithoutUserInput, Prisma.StudentUpdateWithoutUserInput>, Prisma.StudentUncheckedUpdateWithoutUserInput>
 }
 
-export type NullableStringFieldUpdateOperationsInput = {
-  set?: string | null
-}
-
 export type NullableEnumBloodGroupFieldUpdateOperationsInput = {
   set?: $Enums.BloodGroup | null
 }
@@ -881,6 +921,8 @@ export type StudentCreateWithoutAcademicYearInput = {
   onboardingSubmittedAt?: Date | string | null
   consentGiven?: boolean
   editAllowedByAdmin?: boolean
+  isVerified?: boolean
+  needsReview?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutStudentInput
@@ -909,6 +951,8 @@ export type StudentUncheckedCreateWithoutAcademicYearInput = {
   onboardingSubmittedAt?: Date | string | null
   consentGiven?: boolean
   editAllowedByAdmin?: boolean
+  isVerified?: boolean
+  needsReview?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   allocation?: Prisma.AllocationUncheckedCreateNestedOneWithoutStudentInput
@@ -966,6 +1010,8 @@ export type StudentScalarWhereInput = {
   onboardingSubmittedAt?: Prisma.DateTimeNullableFilter<"Student"> | Date | string | null
   consentGiven?: Prisma.BoolFilter<"Student"> | boolean
   editAllowedByAdmin?: Prisma.BoolFilter<"Student"> | boolean
+  isVerified?: Prisma.BoolFilter<"Student"> | boolean
+  needsReview?: Prisma.BoolFilter<"Student"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Student"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Student"> | Date | string
 }
@@ -991,6 +1037,8 @@ export type StudentCreateWithoutUserInput = {
   onboardingSubmittedAt?: Date | string | null
   consentGiven?: boolean
   editAllowedByAdmin?: boolean
+  isVerified?: boolean
+  needsReview?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   academicYear: Prisma.AcademicYearCreateNestedOneWithoutStudentsInput
@@ -1019,6 +1067,8 @@ export type StudentUncheckedCreateWithoutUserInput = {
   onboardingSubmittedAt?: Date | string | null
   consentGiven?: boolean
   editAllowedByAdmin?: boolean
+  isVerified?: boolean
+  needsReview?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   allocation?: Prisma.AllocationUncheckedCreateNestedOneWithoutStudentInput
@@ -1061,6 +1111,8 @@ export type StudentUpdateWithoutUserInput = {
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   consentGiven?: Prisma.BoolFieldUpdateOperationsInput | boolean
   editAllowedByAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  needsReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutStudentsNestedInput
@@ -1089,6 +1141,8 @@ export type StudentUncheckedUpdateWithoutUserInput = {
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   consentGiven?: Prisma.BoolFieldUpdateOperationsInput | boolean
   editAllowedByAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  needsReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allocation?: Prisma.AllocationUncheckedUpdateOneWithoutStudentNestedInput
@@ -1115,6 +1169,8 @@ export type StudentCreateWithoutAllocationInput = {
   onboardingSubmittedAt?: Date | string | null
   consentGiven?: boolean
   editAllowedByAdmin?: boolean
+  isVerified?: boolean
+  needsReview?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutStudentInput
@@ -1144,6 +1200,8 @@ export type StudentUncheckedCreateWithoutAllocationInput = {
   onboardingSubmittedAt?: Date | string | null
   consentGiven?: boolean
   editAllowedByAdmin?: boolean
+  isVerified?: boolean
+  needsReview?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1185,6 +1243,8 @@ export type StudentUpdateWithoutAllocationInput = {
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   consentGiven?: Prisma.BoolFieldUpdateOperationsInput | boolean
   editAllowedByAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  needsReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutStudentNestedInput
@@ -1214,6 +1274,8 @@ export type StudentUncheckedUpdateWithoutAllocationInput = {
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   consentGiven?: Prisma.BoolFieldUpdateOperationsInput | boolean
   editAllowedByAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  needsReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1240,6 +1302,8 @@ export type StudentCreateManyAcademicYearInput = {
   onboardingSubmittedAt?: Date | string | null
   consentGiven?: boolean
   editAllowedByAdmin?: boolean
+  isVerified?: boolean
+  needsReview?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1265,6 +1329,8 @@ export type StudentUpdateWithoutAcademicYearInput = {
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   consentGiven?: Prisma.BoolFieldUpdateOperationsInput | boolean
   editAllowedByAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  needsReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutStudentNestedInput
@@ -1293,6 +1359,8 @@ export type StudentUncheckedUpdateWithoutAcademicYearInput = {
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   consentGiven?: Prisma.BoolFieldUpdateOperationsInput | boolean
   editAllowedByAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  needsReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allocation?: Prisma.AllocationUncheckedUpdateOneWithoutStudentNestedInput
@@ -1320,6 +1388,8 @@ export type StudentUncheckedUpdateManyWithoutAcademicYearInput = {
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   consentGiven?: Prisma.BoolFieldUpdateOperationsInput | boolean
   editAllowedByAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  needsReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1349,6 +1419,8 @@ export type StudentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   onboardingSubmittedAt?: boolean
   consentGiven?: boolean
   editAllowedByAdmin?: boolean
+  isVerified?: boolean
+  needsReview?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1379,6 +1451,8 @@ export type StudentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   onboardingSubmittedAt?: boolean
   consentGiven?: boolean
   editAllowedByAdmin?: boolean
+  isVerified?: boolean
+  needsReview?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1408,6 +1482,8 @@ export type StudentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   onboardingSubmittedAt?: boolean
   consentGiven?: boolean
   editAllowedByAdmin?: boolean
+  isVerified?: boolean
+  needsReview?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1437,11 +1513,13 @@ export type StudentSelectScalar = {
   onboardingSubmittedAt?: boolean
   consentGiven?: boolean
   editAllowedByAdmin?: boolean
+  isVerified?: boolean
+  needsReview?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type StudentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "academicYearId" | "name" | "rollNumber" | "branch" | "email" | "contactNumber" | "alternateContactNumber" | "permanentAddress" | "state" | "emergencyContactName" | "emergencyContactNumber" | "emergencyContactRelation" | "bloodGroup" | "medicalConditions" | "allergies" | "physicalAccessibilityRequirements" | "onboardingStatus" | "onboardingSubmittedAt" | "consentGiven" | "editAllowedByAdmin" | "createdAt" | "updatedAt", ExtArgs["result"]["student"]>
+export type StudentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "academicYearId" | "name" | "rollNumber" | "branch" | "email" | "contactNumber" | "alternateContactNumber" | "permanentAddress" | "state" | "emergencyContactName" | "emergencyContactNumber" | "emergencyContactRelation" | "bloodGroup" | "medicalConditions" | "allergies" | "physicalAccessibilityRequirements" | "onboardingStatus" | "onboardingSubmittedAt" | "consentGiven" | "editAllowedByAdmin" | "isVerified" | "needsReview" | "createdAt" | "updatedAt", ExtArgs["result"]["student"]>
 export type StudentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   academicYear?: boolean | Prisma.AcademicYearDefaultArgs<ExtArgs>
@@ -1486,6 +1564,8 @@ export type $StudentPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     onboardingSubmittedAt: Date | null
     consentGiven: boolean
     editAllowedByAdmin: boolean
+    isVerified: boolean
+    needsReview: boolean
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["student"]>
@@ -1936,6 +2016,8 @@ export interface StudentFieldRefs {
   readonly onboardingSubmittedAt: Prisma.FieldRef<"Student", 'DateTime'>
   readonly consentGiven: Prisma.FieldRef<"Student", 'Boolean'>
   readonly editAllowedByAdmin: Prisma.FieldRef<"Student", 'Boolean'>
+  readonly isVerified: Prisma.FieldRef<"Student", 'Boolean'>
+  readonly needsReview: Prisma.FieldRef<"Student", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Student", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Student", 'DateTime'>
 }

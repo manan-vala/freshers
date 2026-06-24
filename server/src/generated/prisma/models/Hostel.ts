@@ -27,12 +27,9 @@ export type AggregateHostel = {
 export type HostelMinAggregateOutputType = {
   id: string | null
   academicYearId: string | null
-  name: string | null
+  name: $Enums.HostelName | null
   code: string | null
   type: $Enums.HostelType | null
-  wardenName: string | null
-  wardenContact: string | null
-  wardenEmail: string | null
   isActive: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -41,12 +38,9 @@ export type HostelMinAggregateOutputType = {
 export type HostelMaxAggregateOutputType = {
   id: string | null
   academicYearId: string | null
-  name: string | null
+  name: $Enums.HostelName | null
   code: string | null
   type: $Enums.HostelType | null
-  wardenName: string | null
-  wardenContact: string | null
-  wardenEmail: string | null
   isActive: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -58,12 +52,6 @@ export type HostelCountAggregateOutputType = {
   name: number
   code: number
   type: number
-  wardenName: number
-  wardenContact: number
-  wardenEmail: number
-  messTimings: number
-  rules: number
-  facilities: number
   isActive: number
   createdAt: number
   updatedAt: number
@@ -77,9 +65,6 @@ export type HostelMinAggregateInputType = {
   name?: true
   code?: true
   type?: true
-  wardenName?: true
-  wardenContact?: true
-  wardenEmail?: true
   isActive?: true
   createdAt?: true
   updatedAt?: true
@@ -91,9 +76,6 @@ export type HostelMaxAggregateInputType = {
   name?: true
   code?: true
   type?: true
-  wardenName?: true
-  wardenContact?: true
-  wardenEmail?: true
   isActive?: true
   createdAt?: true
   updatedAt?: true
@@ -105,12 +87,6 @@ export type HostelCountAggregateInputType = {
   name?: true
   code?: true
   type?: true
-  wardenName?: true
-  wardenContact?: true
-  wardenEmail?: true
-  messTimings?: true
-  rules?: true
-  facilities?: true
   isActive?: true
   createdAt?: true
   updatedAt?: true
@@ -192,15 +168,9 @@ export type HostelGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalA
 export type HostelGroupByOutputType = {
   id: string
   academicYearId: string
-  name: string
+  name: $Enums.HostelName
   code: string
   type: $Enums.HostelType
-  wardenName: string
-  wardenContact: string
-  wardenEmail: string
-  messTimings: runtime.JsonValue
-  rules: runtime.JsonValue
-  facilities: runtime.JsonValue
   isActive: boolean
   createdAt: Date
   updatedAt: Date
@@ -230,15 +200,9 @@ export type HostelWhereInput = {
   NOT?: Prisma.HostelWhereInput | Prisma.HostelWhereInput[]
   id?: Prisma.StringFilter<"Hostel"> | string
   academicYearId?: Prisma.StringFilter<"Hostel"> | string
-  name?: Prisma.StringFilter<"Hostel"> | string
+  name?: Prisma.EnumHostelNameFilter<"Hostel"> | $Enums.HostelName
   code?: Prisma.StringFilter<"Hostel"> | string
   type?: Prisma.EnumHostelTypeFilter<"Hostel"> | $Enums.HostelType
-  wardenName?: Prisma.StringFilter<"Hostel"> | string
-  wardenContact?: Prisma.StringFilter<"Hostel"> | string
-  wardenEmail?: Prisma.StringFilter<"Hostel"> | string
-  messTimings?: Prisma.JsonFilter<"Hostel">
-  rules?: Prisma.JsonFilter<"Hostel">
-  facilities?: Prisma.JsonFilter<"Hostel">
   isActive?: Prisma.BoolFilter<"Hostel"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Hostel"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Hostel"> | Date | string
@@ -253,12 +217,6 @@ export type HostelOrderByWithRelationInput = {
   name?: Prisma.SortOrder
   code?: Prisma.SortOrder
   type?: Prisma.SortOrder
-  wardenName?: Prisma.SortOrder
-  wardenContact?: Prisma.SortOrder
-  wardenEmail?: Prisma.SortOrder
-  messTimings?: Prisma.SortOrder
-  rules?: Prisma.SortOrder
-  facilities?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -274,15 +232,9 @@ export type HostelWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.HostelWhereInput[]
   NOT?: Prisma.HostelWhereInput | Prisma.HostelWhereInput[]
   academicYearId?: Prisma.StringFilter<"Hostel"> | string
-  name?: Prisma.StringFilter<"Hostel"> | string
+  name?: Prisma.EnumHostelNameFilter<"Hostel"> | $Enums.HostelName
   code?: Prisma.StringFilter<"Hostel"> | string
   type?: Prisma.EnumHostelTypeFilter<"Hostel"> | $Enums.HostelType
-  wardenName?: Prisma.StringFilter<"Hostel"> | string
-  wardenContact?: Prisma.StringFilter<"Hostel"> | string
-  wardenEmail?: Prisma.StringFilter<"Hostel"> | string
-  messTimings?: Prisma.JsonFilter<"Hostel">
-  rules?: Prisma.JsonFilter<"Hostel">
-  facilities?: Prisma.JsonFilter<"Hostel">
   isActive?: Prisma.BoolFilter<"Hostel"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Hostel"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Hostel"> | Date | string
@@ -297,12 +249,6 @@ export type HostelOrderByWithAggregationInput = {
   name?: Prisma.SortOrder
   code?: Prisma.SortOrder
   type?: Prisma.SortOrder
-  wardenName?: Prisma.SortOrder
-  wardenContact?: Prisma.SortOrder
-  wardenEmail?: Prisma.SortOrder
-  messTimings?: Prisma.SortOrder
-  rules?: Prisma.SortOrder
-  facilities?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -317,15 +263,9 @@ export type HostelScalarWhereWithAggregatesInput = {
   NOT?: Prisma.HostelScalarWhereWithAggregatesInput | Prisma.HostelScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Hostel"> | string
   academicYearId?: Prisma.StringWithAggregatesFilter<"Hostel"> | string
-  name?: Prisma.StringWithAggregatesFilter<"Hostel"> | string
+  name?: Prisma.EnumHostelNameWithAggregatesFilter<"Hostel"> | $Enums.HostelName
   code?: Prisma.StringWithAggregatesFilter<"Hostel"> | string
   type?: Prisma.EnumHostelTypeWithAggregatesFilter<"Hostel"> | $Enums.HostelType
-  wardenName?: Prisma.StringWithAggregatesFilter<"Hostel"> | string
-  wardenContact?: Prisma.StringWithAggregatesFilter<"Hostel"> | string
-  wardenEmail?: Prisma.StringWithAggregatesFilter<"Hostel"> | string
-  messTimings?: Prisma.JsonWithAggregatesFilter<"Hostel">
-  rules?: Prisma.JsonWithAggregatesFilter<"Hostel">
-  facilities?: Prisma.JsonWithAggregatesFilter<"Hostel">
   isActive?: Prisma.BoolWithAggregatesFilter<"Hostel"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Hostel"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Hostel"> | Date | string
@@ -333,15 +273,9 @@ export type HostelScalarWhereWithAggregatesInput = {
 
 export type HostelCreateInput = {
   id?: string
-  name: string
+  name: $Enums.HostelName
   code: string
   type: $Enums.HostelType
-  wardenName: string
-  wardenContact: string
-  wardenEmail: string
-  messTimings: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  rules: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  facilities: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -353,15 +287,9 @@ export type HostelCreateInput = {
 export type HostelUncheckedCreateInput = {
   id?: string
   academicYearId: string
-  name: string
+  name: $Enums.HostelName
   code: string
   type: $Enums.HostelType
-  wardenName: string
-  wardenContact: string
-  wardenEmail: string
-  messTimings: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  rules: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  facilities: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -371,15 +299,9 @@ export type HostelUncheckedCreateInput = {
 
 export type HostelUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.EnumHostelNameFieldUpdateOperationsInput | $Enums.HostelName
   code?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumHostelTypeFieldUpdateOperationsInput | $Enums.HostelType
-  wardenName?: Prisma.StringFieldUpdateOperationsInput | string
-  wardenContact?: Prisma.StringFieldUpdateOperationsInput | string
-  wardenEmail?: Prisma.StringFieldUpdateOperationsInput | string
-  messTimings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  rules?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  facilities?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -391,15 +313,9 @@ export type HostelUpdateInput = {
 export type HostelUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.EnumHostelNameFieldUpdateOperationsInput | $Enums.HostelName
   code?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumHostelTypeFieldUpdateOperationsInput | $Enums.HostelType
-  wardenName?: Prisma.StringFieldUpdateOperationsInput | string
-  wardenContact?: Prisma.StringFieldUpdateOperationsInput | string
-  wardenEmail?: Prisma.StringFieldUpdateOperationsInput | string
-  messTimings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  rules?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  facilities?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -410,15 +326,9 @@ export type HostelUncheckedUpdateInput = {
 export type HostelCreateManyInput = {
   id?: string
   academicYearId: string
-  name: string
+  name: $Enums.HostelName
   code: string
   type: $Enums.HostelType
-  wardenName: string
-  wardenContact: string
-  wardenEmail: string
-  messTimings: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  rules: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  facilities: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -426,15 +336,9 @@ export type HostelCreateManyInput = {
 
 export type HostelUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.EnumHostelNameFieldUpdateOperationsInput | $Enums.HostelName
   code?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumHostelTypeFieldUpdateOperationsInput | $Enums.HostelType
-  wardenName?: Prisma.StringFieldUpdateOperationsInput | string
-  wardenContact?: Prisma.StringFieldUpdateOperationsInput | string
-  wardenEmail?: Prisma.StringFieldUpdateOperationsInput | string
-  messTimings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  rules?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  facilities?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -443,15 +347,9 @@ export type HostelUpdateManyMutationInput = {
 export type HostelUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.EnumHostelNameFieldUpdateOperationsInput | $Enums.HostelName
   code?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumHostelTypeFieldUpdateOperationsInput | $Enums.HostelType
-  wardenName?: Prisma.StringFieldUpdateOperationsInput | string
-  wardenContact?: Prisma.StringFieldUpdateOperationsInput | string
-  wardenEmail?: Prisma.StringFieldUpdateOperationsInput | string
-  messTimings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  rules?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  facilities?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -478,12 +376,6 @@ export type HostelCountOrderByAggregateInput = {
   name?: Prisma.SortOrder
   code?: Prisma.SortOrder
   type?: Prisma.SortOrder
-  wardenName?: Prisma.SortOrder
-  wardenContact?: Prisma.SortOrder
-  wardenEmail?: Prisma.SortOrder
-  messTimings?: Prisma.SortOrder
-  rules?: Prisma.SortOrder
-  facilities?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -495,9 +387,6 @@ export type HostelMaxOrderByAggregateInput = {
   name?: Prisma.SortOrder
   code?: Prisma.SortOrder
   type?: Prisma.SortOrder
-  wardenName?: Prisma.SortOrder
-  wardenContact?: Prisma.SortOrder
-  wardenEmail?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -509,9 +398,6 @@ export type HostelMinOrderByAggregateInput = {
   name?: Prisma.SortOrder
   code?: Prisma.SortOrder
   type?: Prisma.SortOrder
-  wardenName?: Prisma.SortOrder
-  wardenContact?: Prisma.SortOrder
-  wardenEmail?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -564,6 +450,10 @@ export type HostelUncheckedUpdateManyWithoutAcademicYearNestedInput = {
   deleteMany?: Prisma.HostelScalarWhereInput | Prisma.HostelScalarWhereInput[]
 }
 
+export type EnumHostelNameFieldUpdateOperationsInput = {
+  set?: $Enums.HostelName
+}
+
 export type EnumHostelTypeFieldUpdateOperationsInput = {
   set?: $Enums.HostelType
 }
@@ -598,15 +488,9 @@ export type HostelUpdateOneRequiredWithoutHmcAdminsNestedInput = {
 
 export type HostelCreateWithoutAcademicYearInput = {
   id?: string
-  name: string
+  name: $Enums.HostelName
   code: string
   type: $Enums.HostelType
-  wardenName: string
-  wardenContact: string
-  wardenEmail: string
-  messTimings: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  rules: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  facilities: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -616,15 +500,9 @@ export type HostelCreateWithoutAcademicYearInput = {
 
 export type HostelUncheckedCreateWithoutAcademicYearInput = {
   id?: string
-  name: string
+  name: $Enums.HostelName
   code: string
   type: $Enums.HostelType
-  wardenName: string
-  wardenContact: string
-  wardenEmail: string
-  messTimings: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  rules: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  facilities: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -664,15 +542,9 @@ export type HostelScalarWhereInput = {
   NOT?: Prisma.HostelScalarWhereInput | Prisma.HostelScalarWhereInput[]
   id?: Prisma.StringFilter<"Hostel"> | string
   academicYearId?: Prisma.StringFilter<"Hostel"> | string
-  name?: Prisma.StringFilter<"Hostel"> | string
+  name?: Prisma.EnumHostelNameFilter<"Hostel"> | $Enums.HostelName
   code?: Prisma.StringFilter<"Hostel"> | string
   type?: Prisma.EnumHostelTypeFilter<"Hostel"> | $Enums.HostelType
-  wardenName?: Prisma.StringFilter<"Hostel"> | string
-  wardenContact?: Prisma.StringFilter<"Hostel"> | string
-  wardenEmail?: Prisma.StringFilter<"Hostel"> | string
-  messTimings?: Prisma.JsonFilter<"Hostel">
-  rules?: Prisma.JsonFilter<"Hostel">
-  facilities?: Prisma.JsonFilter<"Hostel">
   isActive?: Prisma.BoolFilter<"Hostel"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Hostel"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Hostel"> | Date | string
@@ -680,15 +552,9 @@ export type HostelScalarWhereInput = {
 
 export type HostelCreateWithoutRoomsInput = {
   id?: string
-  name: string
+  name: $Enums.HostelName
   code: string
   type: $Enums.HostelType
-  wardenName: string
-  wardenContact: string
-  wardenEmail: string
-  messTimings: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  rules: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  facilities: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -699,15 +565,9 @@ export type HostelCreateWithoutRoomsInput = {
 export type HostelUncheckedCreateWithoutRoomsInput = {
   id?: string
   academicYearId: string
-  name: string
+  name: $Enums.HostelName
   code: string
   type: $Enums.HostelType
-  wardenName: string
-  wardenContact: string
-  wardenEmail: string
-  messTimings: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  rules: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  facilities: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -732,15 +592,9 @@ export type HostelUpdateToOneWithWhereWithoutRoomsInput = {
 
 export type HostelUpdateWithoutRoomsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.EnumHostelNameFieldUpdateOperationsInput | $Enums.HostelName
   code?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumHostelTypeFieldUpdateOperationsInput | $Enums.HostelType
-  wardenName?: Prisma.StringFieldUpdateOperationsInput | string
-  wardenContact?: Prisma.StringFieldUpdateOperationsInput | string
-  wardenEmail?: Prisma.StringFieldUpdateOperationsInput | string
-  messTimings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  rules?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  facilities?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -751,15 +605,9 @@ export type HostelUpdateWithoutRoomsInput = {
 export type HostelUncheckedUpdateWithoutRoomsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.EnumHostelNameFieldUpdateOperationsInput | $Enums.HostelName
   code?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumHostelTypeFieldUpdateOperationsInput | $Enums.HostelType
-  wardenName?: Prisma.StringFieldUpdateOperationsInput | string
-  wardenContact?: Prisma.StringFieldUpdateOperationsInput | string
-  wardenEmail?: Prisma.StringFieldUpdateOperationsInput | string
-  messTimings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  rules?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  facilities?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -768,15 +616,9 @@ export type HostelUncheckedUpdateWithoutRoomsInput = {
 
 export type HostelCreateWithoutHmcAdminsInput = {
   id?: string
-  name: string
+  name: $Enums.HostelName
   code: string
   type: $Enums.HostelType
-  wardenName: string
-  wardenContact: string
-  wardenEmail: string
-  messTimings: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  rules: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  facilities: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -787,15 +629,9 @@ export type HostelCreateWithoutHmcAdminsInput = {
 export type HostelUncheckedCreateWithoutHmcAdminsInput = {
   id?: string
   academicYearId: string
-  name: string
+  name: $Enums.HostelName
   code: string
   type: $Enums.HostelType
-  wardenName: string
-  wardenContact: string
-  wardenEmail: string
-  messTimings: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  rules: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  facilities: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -820,15 +656,9 @@ export type HostelUpdateToOneWithWhereWithoutHmcAdminsInput = {
 
 export type HostelUpdateWithoutHmcAdminsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.EnumHostelNameFieldUpdateOperationsInput | $Enums.HostelName
   code?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumHostelTypeFieldUpdateOperationsInput | $Enums.HostelType
-  wardenName?: Prisma.StringFieldUpdateOperationsInput | string
-  wardenContact?: Prisma.StringFieldUpdateOperationsInput | string
-  wardenEmail?: Prisma.StringFieldUpdateOperationsInput | string
-  messTimings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  rules?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  facilities?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -839,15 +669,9 @@ export type HostelUpdateWithoutHmcAdminsInput = {
 export type HostelUncheckedUpdateWithoutHmcAdminsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.EnumHostelNameFieldUpdateOperationsInput | $Enums.HostelName
   code?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumHostelTypeFieldUpdateOperationsInput | $Enums.HostelType
-  wardenName?: Prisma.StringFieldUpdateOperationsInput | string
-  wardenContact?: Prisma.StringFieldUpdateOperationsInput | string
-  wardenEmail?: Prisma.StringFieldUpdateOperationsInput | string
-  messTimings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  rules?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  facilities?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -856,15 +680,9 @@ export type HostelUncheckedUpdateWithoutHmcAdminsInput = {
 
 export type HostelCreateManyAcademicYearInput = {
   id?: string
-  name: string
+  name: $Enums.HostelName
   code: string
   type: $Enums.HostelType
-  wardenName: string
-  wardenContact: string
-  wardenEmail: string
-  messTimings: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  rules: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  facilities: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -872,15 +690,9 @@ export type HostelCreateManyAcademicYearInput = {
 
 export type HostelUpdateWithoutAcademicYearInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.EnumHostelNameFieldUpdateOperationsInput | $Enums.HostelName
   code?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumHostelTypeFieldUpdateOperationsInput | $Enums.HostelType
-  wardenName?: Prisma.StringFieldUpdateOperationsInput | string
-  wardenContact?: Prisma.StringFieldUpdateOperationsInput | string
-  wardenEmail?: Prisma.StringFieldUpdateOperationsInput | string
-  messTimings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  rules?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  facilities?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -890,15 +702,9 @@ export type HostelUpdateWithoutAcademicYearInput = {
 
 export type HostelUncheckedUpdateWithoutAcademicYearInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.EnumHostelNameFieldUpdateOperationsInput | $Enums.HostelName
   code?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumHostelTypeFieldUpdateOperationsInput | $Enums.HostelType
-  wardenName?: Prisma.StringFieldUpdateOperationsInput | string
-  wardenContact?: Prisma.StringFieldUpdateOperationsInput | string
-  wardenEmail?: Prisma.StringFieldUpdateOperationsInput | string
-  messTimings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  rules?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  facilities?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -908,15 +714,9 @@ export type HostelUncheckedUpdateWithoutAcademicYearInput = {
 
 export type HostelUncheckedUpdateManyWithoutAcademicYearInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.EnumHostelNameFieldUpdateOperationsInput | $Enums.HostelName
   code?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumHostelTypeFieldUpdateOperationsInput | $Enums.HostelType
-  wardenName?: Prisma.StringFieldUpdateOperationsInput | string
-  wardenContact?: Prisma.StringFieldUpdateOperationsInput | string
-  wardenEmail?: Prisma.StringFieldUpdateOperationsInput | string
-  messTimings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  rules?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  facilities?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -968,12 +768,6 @@ export type HostelSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   name?: boolean
   code?: boolean
   type?: boolean
-  wardenName?: boolean
-  wardenContact?: boolean
-  wardenEmail?: boolean
-  messTimings?: boolean
-  rules?: boolean
-  facilities?: boolean
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -989,12 +783,6 @@ export type HostelSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   name?: boolean
   code?: boolean
   type?: boolean
-  wardenName?: boolean
-  wardenContact?: boolean
-  wardenEmail?: boolean
-  messTimings?: boolean
-  rules?: boolean
-  facilities?: boolean
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1007,12 +795,6 @@ export type HostelSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   name?: boolean
   code?: boolean
   type?: boolean
-  wardenName?: boolean
-  wardenContact?: boolean
-  wardenEmail?: boolean
-  messTimings?: boolean
-  rules?: boolean
-  facilities?: boolean
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1025,18 +807,12 @@ export type HostelSelectScalar = {
   name?: boolean
   code?: boolean
   type?: boolean
-  wardenName?: boolean
-  wardenContact?: boolean
-  wardenEmail?: boolean
-  messTimings?: boolean
-  rules?: boolean
-  facilities?: boolean
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type HostelOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "academicYearId" | "name" | "code" | "type" | "wardenName" | "wardenContact" | "wardenEmail" | "messTimings" | "rules" | "facilities" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["hostel"]>
+export type HostelOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "academicYearId" | "name" | "code" | "type" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["hostel"]>
 export type HostelInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   academicYear?: boolean | Prisma.AcademicYearDefaultArgs<ExtArgs>
   rooms?: boolean | Prisma.Hostel$roomsArgs<ExtArgs>
@@ -1060,15 +836,9 @@ export type $HostelPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     academicYearId: string
-    name: string
+    name: $Enums.HostelName
     code: string
     type: $Enums.HostelType
-    wardenName: string
-    wardenContact: string
-    wardenEmail: string
-    messTimings: runtime.JsonValue
-    rules: runtime.JsonValue
-    facilities: runtime.JsonValue
     isActive: boolean
     createdAt: Date
     updatedAt: Date
@@ -1500,15 +1270,9 @@ export interface Prisma__HostelClient<T, Null = never, ExtArgs extends runtime.T
 export interface HostelFieldRefs {
   readonly id: Prisma.FieldRef<"Hostel", 'String'>
   readonly academicYearId: Prisma.FieldRef<"Hostel", 'String'>
-  readonly name: Prisma.FieldRef<"Hostel", 'String'>
+  readonly name: Prisma.FieldRef<"Hostel", 'HostelName'>
   readonly code: Prisma.FieldRef<"Hostel", 'String'>
   readonly type: Prisma.FieldRef<"Hostel", 'HostelType'>
-  readonly wardenName: Prisma.FieldRef<"Hostel", 'String'>
-  readonly wardenContact: Prisma.FieldRef<"Hostel", 'String'>
-  readonly wardenEmail: Prisma.FieldRef<"Hostel", 'String'>
-  readonly messTimings: Prisma.FieldRef<"Hostel", 'Json'>
-  readonly rules: Prisma.FieldRef<"Hostel", 'Json'>
-  readonly facilities: Prisma.FieldRef<"Hostel", 'Json'>
   readonly isActive: Prisma.FieldRef<"Hostel", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Hostel", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Hostel", 'DateTime'>

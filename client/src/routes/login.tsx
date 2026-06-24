@@ -177,6 +177,28 @@ function LoginPage() {
               </Button>
             </form>
           </Form>
+
+          <div className="mt-8">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t border-slate-200" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-white px-2 text-slate-500">Hostel Administration</span>
+              </div>
+            </div>
+
+            <Button 
+              variant="outline" 
+              className="w-full h-11 text-base mt-6 text-slate-700 font-medium"
+              onClick={() => {
+                window.location.href = `${import.meta.env.VITE_API_URL || '/api'}/v1/auth/microsoft`;
+              }}
+            >
+              <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" alt="MS Logo" className="w-5 h-5 mr-3" />
+              Login as Hostel Admin
+            </Button>
+          </div>
         </div>
       </div>
     </div>

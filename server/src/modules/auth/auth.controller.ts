@@ -3,7 +3,7 @@ import { env } from '@/config/env';
 import * as authService from './auth.service';
 import type { LoginInput, ChangePasswordInput, ForgotPasswordInput, ResetPasswordInput } from '@shared/auth';
 
-function setAuthCookies(res: Response, accessToken: string, refreshToken: string) {
+export function setAuthCookies(res: Response, accessToken: string, refreshToken: string) {
   const secure = env.NODE_ENV === 'production';
   const cookieBase = { httpOnly: true, sameSite: 'strict' as const, secure };
 
@@ -35,6 +35,20 @@ export async function loginHandler(req: Request, res: Response) {
   res.status(200).json({
     success: true,
     data: result.user,
+  });
+}
+
+export async function adminLoginHandler(req: Request, res: Response) {
+  const input = req.body as LoginInput;
+  const result = await authService.adminLogin(input);
+
+  // Super Admin does NOT use cookies, it returns the token directly
+  res.status(200).json({
+    success: true,
+    data: {
+      ...result.user,
+      accessToken: result.accessToken, // send token in payload
+    },
   });
 }
 

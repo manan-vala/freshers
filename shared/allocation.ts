@@ -3,7 +3,7 @@ import { z } from 'zod';
 export const allocationSchema = z.object({
   studentId: z.string().min(1, 'Student ID is required'),
   hostelId: z.string().min(1, 'Hostel ID is required'),
-  roomId: z.string().min(1, 'Room ID is required'),
+  roomNumber: z.string().min(1, 'Room Number is required'),
   notes: z.string().optional().nullable(),
 });
 

@@ -12,7 +12,13 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as OnboardingCompleteRouteImport } from './routes/onboarding-complete'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as SuperadminRouteRouteImport } from './routes/superadmin/route'
+import { Route as HostelRouteRouteImport } from './routes/hostel/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SuperadminLoginRouteImport } from './routes/superadmin/login'
+import { Route as SuperadminDashboardRouteImport } from './routes/superadmin/dashboard'
+import { Route as HostelDashboardRouteImport } from './routes/hostel/dashboard'
+import { Route as HostelVerifyStudentIdRouteImport } from './routes/hostel/verify.$studentId'
 
 const OnboardingCompleteRoute = OnboardingCompleteRouteImport.update({
   id: '/onboarding-complete',
@@ -29,41 +35,122 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SuperadminRouteRoute = SuperadminRouteRouteImport.update({
+  id: '/superadmin',
+  path: '/superadmin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HostelRouteRoute = HostelRouteRouteImport.update({
+  id: '/hostel',
+  path: '/hostel',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SuperadminLoginRoute = SuperadminLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => SuperadminRouteRoute,
+} as any)
+const SuperadminDashboardRoute = SuperadminDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => SuperadminRouteRoute,
+} as any)
+const HostelDashboardRoute = HostelDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => HostelRouteRoute,
+} as any)
+const HostelVerifyStudentIdRoute = HostelVerifyStudentIdRouteImport.update({
+  id: '/verify/$studentId',
+  path: '/verify/$studentId',
+  getParentRoute: () => HostelRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/hostel': typeof HostelRouteRouteWithChildren
+  '/superadmin': typeof SuperadminRouteRouteWithChildren
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/onboarding-complete': typeof OnboardingCompleteRoute
+  '/hostel/dashboard': typeof HostelDashboardRoute
+  '/superadmin/dashboard': typeof SuperadminDashboardRoute
+  '/superadmin/login': typeof SuperadminLoginRoute
+  '/hostel/verify/$studentId': typeof HostelVerifyStudentIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/hostel': typeof HostelRouteRouteWithChildren
+  '/superadmin': typeof SuperadminRouteRouteWithChildren
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/onboarding-complete': typeof OnboardingCompleteRoute
+  '/hostel/dashboard': typeof HostelDashboardRoute
+  '/superadmin/dashboard': typeof SuperadminDashboardRoute
+  '/superadmin/login': typeof SuperadminLoginRoute
+  '/hostel/verify/$studentId': typeof HostelVerifyStudentIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/hostel': typeof HostelRouteRouteWithChildren
+  '/superadmin': typeof SuperadminRouteRouteWithChildren
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/onboarding-complete': typeof OnboardingCompleteRoute
+  '/hostel/dashboard': typeof HostelDashboardRoute
+  '/superadmin/dashboard': typeof SuperadminDashboardRoute
+  '/superadmin/login': typeof SuperadminLoginRoute
+  '/hostel/verify/$studentId': typeof HostelVerifyStudentIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/onboarding' | '/onboarding-complete'
+  fullPaths:
+    | '/'
+    | '/hostel'
+    | '/superadmin'
+    | '/login'
+    | '/onboarding'
+    | '/onboarding-complete'
+    | '/hostel/dashboard'
+    | '/superadmin/dashboard'
+    | '/superadmin/login'
+    | '/hostel/verify/$studentId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/onboarding' | '/onboarding-complete'
-  id: '__root__' | '/' | '/login' | '/onboarding' | '/onboarding-complete'
+  to:
+    | '/'
+    | '/hostel'
+    | '/superadmin'
+    | '/login'
+    | '/onboarding'
+    | '/onboarding-complete'
+    | '/hostel/dashboard'
+    | '/superadmin/dashboard'
+    | '/superadmin/login'
+    | '/hostel/verify/$studentId'
+  id:
+    | '__root__'
+    | '/'
+    | '/hostel'
+    | '/superadmin'
+    | '/login'
+    | '/onboarding'
+    | '/onboarding-complete'
+    | '/hostel/dashboard'
+    | '/superadmin/dashboard'
+    | '/superadmin/login'
+    | '/hostel/verify/$studentId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  HostelRouteRoute: typeof HostelRouteRouteWithChildren
+  SuperadminRouteRoute: typeof SuperadminRouteRouteWithChildren
   LoginRoute: typeof LoginRoute
   OnboardingRoute: typeof OnboardingRoute
   OnboardingCompleteRoute: typeof OnboardingCompleteRoute
@@ -92,6 +179,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/superadmin': {
+      id: '/superadmin'
+      path: '/superadmin'
+      fullPath: '/superadmin'
+      preLoaderRoute: typeof SuperadminRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hostel': {
+      id: '/hostel'
+      path: '/hostel'
+      fullPath: '/hostel'
+      preLoaderRoute: typeof HostelRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -99,11 +200,69 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/superadmin/login': {
+      id: '/superadmin/login'
+      path: '/login'
+      fullPath: '/superadmin/login'
+      preLoaderRoute: typeof SuperadminLoginRouteImport
+      parentRoute: typeof SuperadminRouteRoute
+    }
+    '/superadmin/dashboard': {
+      id: '/superadmin/dashboard'
+      path: '/dashboard'
+      fullPath: '/superadmin/dashboard'
+      preLoaderRoute: typeof SuperadminDashboardRouteImport
+      parentRoute: typeof SuperadminRouteRoute
+    }
+    '/hostel/dashboard': {
+      id: '/hostel/dashboard'
+      path: '/dashboard'
+      fullPath: '/hostel/dashboard'
+      preLoaderRoute: typeof HostelDashboardRouteImport
+      parentRoute: typeof HostelRouteRoute
+    }
+    '/hostel/verify/$studentId': {
+      id: '/hostel/verify/$studentId'
+      path: '/verify/$studentId'
+      fullPath: '/hostel/verify/$studentId'
+      preLoaderRoute: typeof HostelVerifyStudentIdRouteImport
+      parentRoute: typeof HostelRouteRoute
+    }
   }
 }
 
+interface HostelRouteRouteChildren {
+  HostelDashboardRoute: typeof HostelDashboardRoute
+  HostelVerifyStudentIdRoute: typeof HostelVerifyStudentIdRoute
+}
+
+const HostelRouteRouteChildren: HostelRouteRouteChildren = {
+  HostelDashboardRoute: HostelDashboardRoute,
+  HostelVerifyStudentIdRoute: HostelVerifyStudentIdRoute,
+}
+
+const HostelRouteRouteWithChildren = HostelRouteRoute._addFileChildren(
+  HostelRouteRouteChildren,
+)
+
+interface SuperadminRouteRouteChildren {
+  SuperadminDashboardRoute: typeof SuperadminDashboardRoute
+  SuperadminLoginRoute: typeof SuperadminLoginRoute
+}
+
+const SuperadminRouteRouteChildren: SuperadminRouteRouteChildren = {
+  SuperadminDashboardRoute: SuperadminDashboardRoute,
+  SuperadminLoginRoute: SuperadminLoginRoute,
+}
+
+const SuperadminRouteRouteWithChildren = SuperadminRouteRoute._addFileChildren(
+  SuperadminRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  HostelRouteRoute: HostelRouteRouteWithChildren,
+  SuperadminRouteRoute: SuperadminRouteRouteWithChildren,
   LoginRoute: LoginRoute,
   OnboardingRoute: OnboardingRoute,
   OnboardingCompleteRoute: OnboardingCompleteRoute,

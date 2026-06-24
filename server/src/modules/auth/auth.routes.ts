@@ -9,6 +9,7 @@ import {
 } from '@shared/auth';
 import {
   loginHandler,
+  adminLoginHandler,
   refreshHandler,
   logoutHandler,
   changePasswordHandler,
@@ -17,9 +18,18 @@ import {
   getMeHandler,
 } from './auth.controller';
 
+import {
+  redirectToMicrosoftHandler,
+  handleMicrosoftCallbackHandler,
+} from './auth.microsoft.controller';
+
 const router = Router();
 
+router.get('/microsoft', redirectToMicrosoftHandler);
+router.get('/microsoft/callback', handleMicrosoftCallbackHandler);
+
 router.post('/login', validateBody(loginSchema), loginHandler);
+router.post('/admin-login', validateBody(loginSchema), adminLoginHandler);
 router.post('/refresh', refreshHandler);
 router.post('/logout', authenticate, logoutHandler);
 router.post('/change-password', authenticate, validateBody(changePasswordSchema), changePasswordHandler);
