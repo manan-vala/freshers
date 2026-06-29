@@ -1,7 +1,7 @@
 import { createFileRoute, redirect, Outlet, Link } from '@tanstack/react-router'
 import { useLogout } from '@/lib/auth'
 import { Button } from '@/components/ui/button'
-import { LogOut } from 'lucide-react'
+import { IconLogout } from '@tabler/icons-react'
 
 export const Route = createFileRoute('/hostel')({
   beforeLoad: ({ context }) => {
@@ -26,7 +26,7 @@ function HostelLayout() {
           </div>
           <div className="flex items-center gap-4">
             <Button variant="ghost" size="sm" onClick={() => logout.mutate()} disabled={logout.isPending}>
-              <LogOut className="h-4 w-4 mr-2" />
+              <IconLogout className="h-4 w-4 mr-2" />
               {logout.isPending ? 'Logging out...' : 'Logout'}
             </Button>
           </div>

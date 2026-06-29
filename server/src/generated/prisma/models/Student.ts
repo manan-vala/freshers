@@ -49,6 +49,7 @@ export type StudentMinAggregateOutputType = {
   editAllowedByAdmin: boolean | null
   isVerified: boolean | null
   needsReview: boolean | null
+  hostelId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -78,6 +79,7 @@ export type StudentMaxAggregateOutputType = {
   editAllowedByAdmin: boolean | null
   isVerified: boolean | null
   needsReview: boolean | null
+  hostelId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -107,6 +109,7 @@ export type StudentCountAggregateOutputType = {
   editAllowedByAdmin: number
   isVerified: number
   needsReview: number
+  hostelId: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -138,6 +141,7 @@ export type StudentMinAggregateInputType = {
   editAllowedByAdmin?: true
   isVerified?: true
   needsReview?: true
+  hostelId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -167,6 +171,7 @@ export type StudentMaxAggregateInputType = {
   editAllowedByAdmin?: true
   isVerified?: true
   needsReview?: true
+  hostelId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -196,6 +201,7 @@ export type StudentCountAggregateInputType = {
   editAllowedByAdmin?: true
   isVerified?: true
   needsReview?: true
+  hostelId?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -298,6 +304,7 @@ export type StudentGroupByOutputType = {
   editAllowedByAdmin: boolean
   isVerified: boolean
   needsReview: boolean
+  hostelId: string
   createdAt: Date
   updatedAt: Date
   _count: StudentCountAggregateOutputType | null
@@ -348,11 +355,13 @@ export type StudentWhereInput = {
   editAllowedByAdmin?: Prisma.BoolFilter<"Student"> | boolean
   isVerified?: Prisma.BoolFilter<"Student"> | boolean
   needsReview?: Prisma.BoolFilter<"Student"> | boolean
+  hostelId?: Prisma.StringFilter<"Student"> | string
   createdAt?: Prisma.DateTimeFilter<"Student"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Student"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   academicYear?: Prisma.XOR<Prisma.AcademicYearScalarRelationFilter, Prisma.AcademicYearWhereInput>
   allocation?: Prisma.XOR<Prisma.AllocationNullableScalarRelationFilter, Prisma.AllocationWhereInput> | null
+  hostel?: Prisma.XOR<Prisma.HostelScalarRelationFilter, Prisma.HostelWhereInput>
 }
 
 export type StudentOrderByWithRelationInput = {
@@ -380,11 +389,13 @@ export type StudentOrderByWithRelationInput = {
   editAllowedByAdmin?: Prisma.SortOrder
   isVerified?: Prisma.SortOrder
   needsReview?: Prisma.SortOrder
+  hostelId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
   academicYear?: Prisma.AcademicYearOrderByWithRelationInput
   allocation?: Prisma.AllocationOrderByWithRelationInput
+  hostel?: Prisma.HostelOrderByWithRelationInput
 }
 
 export type StudentWhereUniqueInput = Prisma.AtLeast<{
@@ -416,11 +427,13 @@ export type StudentWhereUniqueInput = Prisma.AtLeast<{
   editAllowedByAdmin?: Prisma.BoolFilter<"Student"> | boolean
   isVerified?: Prisma.BoolFilter<"Student"> | boolean
   needsReview?: Prisma.BoolFilter<"Student"> | boolean
+  hostelId?: Prisma.StringFilter<"Student"> | string
   createdAt?: Prisma.DateTimeFilter<"Student"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Student"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   academicYear?: Prisma.XOR<Prisma.AcademicYearScalarRelationFilter, Prisma.AcademicYearWhereInput>
   allocation?: Prisma.XOR<Prisma.AllocationNullableScalarRelationFilter, Prisma.AllocationWhereInput> | null
+  hostel?: Prisma.XOR<Prisma.HostelScalarRelationFilter, Prisma.HostelWhereInput>
 }, "id" | "userId" | "academicYearId_rollNumber">
 
 export type StudentOrderByWithAggregationInput = {
@@ -448,6 +461,7 @@ export type StudentOrderByWithAggregationInput = {
   editAllowedByAdmin?: Prisma.SortOrder
   isVerified?: Prisma.SortOrder
   needsReview?: Prisma.SortOrder
+  hostelId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.StudentCountOrderByAggregateInput
@@ -483,6 +497,7 @@ export type StudentScalarWhereWithAggregatesInput = {
   editAllowedByAdmin?: Prisma.BoolWithAggregatesFilter<"Student"> | boolean
   isVerified?: Prisma.BoolWithAggregatesFilter<"Student"> | boolean
   needsReview?: Prisma.BoolWithAggregatesFilter<"Student"> | boolean
+  hostelId?: Prisma.StringWithAggregatesFilter<"Student"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Student"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Student"> | Date | string
 }
@@ -515,6 +530,7 @@ export type StudentCreateInput = {
   user: Prisma.UserCreateNestedOneWithoutStudentInput
   academicYear: Prisma.AcademicYearCreateNestedOneWithoutStudentsInput
   allocation?: Prisma.AllocationCreateNestedOneWithoutStudentInput
+  hostel: Prisma.HostelCreateNestedOneWithoutStudentsInput
 }
 
 export type StudentUncheckedCreateInput = {
@@ -542,6 +558,7 @@ export type StudentUncheckedCreateInput = {
   editAllowedByAdmin?: boolean
   isVerified?: boolean
   needsReview?: boolean
+  hostelId: string
   createdAt?: Date | string
   updatedAt?: Date | string
   allocation?: Prisma.AllocationUncheckedCreateNestedOneWithoutStudentInput
@@ -575,6 +592,7 @@ export type StudentUpdateInput = {
   user?: Prisma.UserUpdateOneRequiredWithoutStudentNestedInput
   academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutStudentsNestedInput
   allocation?: Prisma.AllocationUpdateOneWithoutStudentNestedInput
+  hostel?: Prisma.HostelUpdateOneRequiredWithoutStudentsNestedInput
 }
 
 export type StudentUncheckedUpdateInput = {
@@ -602,6 +620,7 @@ export type StudentUncheckedUpdateInput = {
   editAllowedByAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   needsReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hostelId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allocation?: Prisma.AllocationUncheckedUpdateOneWithoutStudentNestedInput
@@ -632,6 +651,7 @@ export type StudentCreateManyInput = {
   editAllowedByAdmin?: boolean
   isVerified?: boolean
   needsReview?: boolean
+  hostelId: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -688,6 +708,7 @@ export type StudentUncheckedUpdateManyInput = {
   editAllowedByAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   needsReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hostelId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -737,6 +758,7 @@ export type StudentCountOrderByAggregateInput = {
   editAllowedByAdmin?: Prisma.SortOrder
   isVerified?: Prisma.SortOrder
   needsReview?: Prisma.SortOrder
+  hostelId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -766,6 +788,7 @@ export type StudentMaxOrderByAggregateInput = {
   editAllowedByAdmin?: Prisma.SortOrder
   isVerified?: Prisma.SortOrder
   needsReview?: Prisma.SortOrder
+  hostelId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -795,6 +818,7 @@ export type StudentMinOrderByAggregateInput = {
   editAllowedByAdmin?: Prisma.SortOrder
   isVerified?: Prisma.SortOrder
   needsReview?: Prisma.SortOrder
+  hostelId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -886,6 +910,48 @@ export type EnumOnboardingStatusFieldUpdateOperationsInput = {
   set?: $Enums.OnboardingStatus
 }
 
+export type StudentCreateNestedManyWithoutHostelInput = {
+  create?: Prisma.XOR<Prisma.StudentCreateWithoutHostelInput, Prisma.StudentUncheckedCreateWithoutHostelInput> | Prisma.StudentCreateWithoutHostelInput[] | Prisma.StudentUncheckedCreateWithoutHostelInput[]
+  connectOrCreate?: Prisma.StudentCreateOrConnectWithoutHostelInput | Prisma.StudentCreateOrConnectWithoutHostelInput[]
+  createMany?: Prisma.StudentCreateManyHostelInputEnvelope
+  connect?: Prisma.StudentWhereUniqueInput | Prisma.StudentWhereUniqueInput[]
+}
+
+export type StudentUncheckedCreateNestedManyWithoutHostelInput = {
+  create?: Prisma.XOR<Prisma.StudentCreateWithoutHostelInput, Prisma.StudentUncheckedCreateWithoutHostelInput> | Prisma.StudentCreateWithoutHostelInput[] | Prisma.StudentUncheckedCreateWithoutHostelInput[]
+  connectOrCreate?: Prisma.StudentCreateOrConnectWithoutHostelInput | Prisma.StudentCreateOrConnectWithoutHostelInput[]
+  createMany?: Prisma.StudentCreateManyHostelInputEnvelope
+  connect?: Prisma.StudentWhereUniqueInput | Prisma.StudentWhereUniqueInput[]
+}
+
+export type StudentUpdateManyWithoutHostelNestedInput = {
+  create?: Prisma.XOR<Prisma.StudentCreateWithoutHostelInput, Prisma.StudentUncheckedCreateWithoutHostelInput> | Prisma.StudentCreateWithoutHostelInput[] | Prisma.StudentUncheckedCreateWithoutHostelInput[]
+  connectOrCreate?: Prisma.StudentCreateOrConnectWithoutHostelInput | Prisma.StudentCreateOrConnectWithoutHostelInput[]
+  upsert?: Prisma.StudentUpsertWithWhereUniqueWithoutHostelInput | Prisma.StudentUpsertWithWhereUniqueWithoutHostelInput[]
+  createMany?: Prisma.StudentCreateManyHostelInputEnvelope
+  set?: Prisma.StudentWhereUniqueInput | Prisma.StudentWhereUniqueInput[]
+  disconnect?: Prisma.StudentWhereUniqueInput | Prisma.StudentWhereUniqueInput[]
+  delete?: Prisma.StudentWhereUniqueInput | Prisma.StudentWhereUniqueInput[]
+  connect?: Prisma.StudentWhereUniqueInput | Prisma.StudentWhereUniqueInput[]
+  update?: Prisma.StudentUpdateWithWhereUniqueWithoutHostelInput | Prisma.StudentUpdateWithWhereUniqueWithoutHostelInput[]
+  updateMany?: Prisma.StudentUpdateManyWithWhereWithoutHostelInput | Prisma.StudentUpdateManyWithWhereWithoutHostelInput[]
+  deleteMany?: Prisma.StudentScalarWhereInput | Prisma.StudentScalarWhereInput[]
+}
+
+export type StudentUncheckedUpdateManyWithoutHostelNestedInput = {
+  create?: Prisma.XOR<Prisma.StudentCreateWithoutHostelInput, Prisma.StudentUncheckedCreateWithoutHostelInput> | Prisma.StudentCreateWithoutHostelInput[] | Prisma.StudentUncheckedCreateWithoutHostelInput[]
+  connectOrCreate?: Prisma.StudentCreateOrConnectWithoutHostelInput | Prisma.StudentCreateOrConnectWithoutHostelInput[]
+  upsert?: Prisma.StudentUpsertWithWhereUniqueWithoutHostelInput | Prisma.StudentUpsertWithWhereUniqueWithoutHostelInput[]
+  createMany?: Prisma.StudentCreateManyHostelInputEnvelope
+  set?: Prisma.StudentWhereUniqueInput | Prisma.StudentWhereUniqueInput[]
+  disconnect?: Prisma.StudentWhereUniqueInput | Prisma.StudentWhereUniqueInput[]
+  delete?: Prisma.StudentWhereUniqueInput | Prisma.StudentWhereUniqueInput[]
+  connect?: Prisma.StudentWhereUniqueInput | Prisma.StudentWhereUniqueInput[]
+  update?: Prisma.StudentUpdateWithWhereUniqueWithoutHostelInput | Prisma.StudentUpdateWithWhereUniqueWithoutHostelInput[]
+  updateMany?: Prisma.StudentUpdateManyWithWhereWithoutHostelInput | Prisma.StudentUpdateManyWithWhereWithoutHostelInput[]
+  deleteMany?: Prisma.StudentScalarWhereInput | Prisma.StudentScalarWhereInput[]
+}
+
 export type StudentCreateNestedOneWithoutAllocationInput = {
   create?: Prisma.XOR<Prisma.StudentCreateWithoutAllocationInput, Prisma.StudentUncheckedCreateWithoutAllocationInput>
   connectOrCreate?: Prisma.StudentCreateOrConnectWithoutAllocationInput
@@ -927,6 +993,7 @@ export type StudentCreateWithoutAcademicYearInput = {
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutStudentInput
   allocation?: Prisma.AllocationCreateNestedOneWithoutStudentInput
+  hostel: Prisma.HostelCreateNestedOneWithoutStudentsInput
 }
 
 export type StudentUncheckedCreateWithoutAcademicYearInput = {
@@ -953,6 +1020,7 @@ export type StudentUncheckedCreateWithoutAcademicYearInput = {
   editAllowedByAdmin?: boolean
   isVerified?: boolean
   needsReview?: boolean
+  hostelId: string
   createdAt?: Date | string
   updatedAt?: Date | string
   allocation?: Prisma.AllocationUncheckedCreateNestedOneWithoutStudentInput
@@ -1012,6 +1080,7 @@ export type StudentScalarWhereInput = {
   editAllowedByAdmin?: Prisma.BoolFilter<"Student"> | boolean
   isVerified?: Prisma.BoolFilter<"Student"> | boolean
   needsReview?: Prisma.BoolFilter<"Student"> | boolean
+  hostelId?: Prisma.StringFilter<"Student"> | string
   createdAt?: Prisma.DateTimeFilter<"Student"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Student"> | Date | string
 }
@@ -1043,6 +1112,7 @@ export type StudentCreateWithoutUserInput = {
   updatedAt?: Date | string
   academicYear: Prisma.AcademicYearCreateNestedOneWithoutStudentsInput
   allocation?: Prisma.AllocationCreateNestedOneWithoutStudentInput
+  hostel: Prisma.HostelCreateNestedOneWithoutStudentsInput
 }
 
 export type StudentUncheckedCreateWithoutUserInput = {
@@ -1069,6 +1139,7 @@ export type StudentUncheckedCreateWithoutUserInput = {
   editAllowedByAdmin?: boolean
   isVerified?: boolean
   needsReview?: boolean
+  hostelId: string
   createdAt?: Date | string
   updatedAt?: Date | string
   allocation?: Prisma.AllocationUncheckedCreateNestedOneWithoutStudentInput
@@ -1117,6 +1188,7 @@ export type StudentUpdateWithoutUserInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutStudentsNestedInput
   allocation?: Prisma.AllocationUpdateOneWithoutStudentNestedInput
+  hostel?: Prisma.HostelUpdateOneRequiredWithoutStudentsNestedInput
 }
 
 export type StudentUncheckedUpdateWithoutUserInput = {
@@ -1143,9 +1215,96 @@ export type StudentUncheckedUpdateWithoutUserInput = {
   editAllowedByAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   needsReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hostelId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allocation?: Prisma.AllocationUncheckedUpdateOneWithoutStudentNestedInput
+}
+
+export type StudentCreateWithoutHostelInput = {
+  id?: string
+  name: string
+  rollNumber: string
+  branch: string
+  email: string
+  contactNumber?: string | null
+  alternateContactNumber?: string | null
+  permanentAddress?: string | null
+  state?: string | null
+  emergencyContactName?: string | null
+  emergencyContactNumber?: string | null
+  emergencyContactRelation?: string | null
+  bloodGroup?: $Enums.BloodGroup | null
+  medicalConditions?: string | null
+  allergies?: string | null
+  physicalAccessibilityRequirements?: string | null
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  consentGiven?: boolean
+  editAllowedByAdmin?: boolean
+  isVerified?: boolean
+  needsReview?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutStudentInput
+  academicYear: Prisma.AcademicYearCreateNestedOneWithoutStudentsInput
+  allocation?: Prisma.AllocationCreateNestedOneWithoutStudentInput
+}
+
+export type StudentUncheckedCreateWithoutHostelInput = {
+  id?: string
+  userId: string
+  academicYearId: string
+  name: string
+  rollNumber: string
+  branch: string
+  email: string
+  contactNumber?: string | null
+  alternateContactNumber?: string | null
+  permanentAddress?: string | null
+  state?: string | null
+  emergencyContactName?: string | null
+  emergencyContactNumber?: string | null
+  emergencyContactRelation?: string | null
+  bloodGroup?: $Enums.BloodGroup | null
+  medicalConditions?: string | null
+  allergies?: string | null
+  physicalAccessibilityRequirements?: string | null
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  consentGiven?: boolean
+  editAllowedByAdmin?: boolean
+  isVerified?: boolean
+  needsReview?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  allocation?: Prisma.AllocationUncheckedCreateNestedOneWithoutStudentInput
+}
+
+export type StudentCreateOrConnectWithoutHostelInput = {
+  where: Prisma.StudentWhereUniqueInput
+  create: Prisma.XOR<Prisma.StudentCreateWithoutHostelInput, Prisma.StudentUncheckedCreateWithoutHostelInput>
+}
+
+export type StudentCreateManyHostelInputEnvelope = {
+  data: Prisma.StudentCreateManyHostelInput | Prisma.StudentCreateManyHostelInput[]
+  skipDuplicates?: boolean
+}
+
+export type StudentUpsertWithWhereUniqueWithoutHostelInput = {
+  where: Prisma.StudentWhereUniqueInput
+  update: Prisma.XOR<Prisma.StudentUpdateWithoutHostelInput, Prisma.StudentUncheckedUpdateWithoutHostelInput>
+  create: Prisma.XOR<Prisma.StudentCreateWithoutHostelInput, Prisma.StudentUncheckedCreateWithoutHostelInput>
+}
+
+export type StudentUpdateWithWhereUniqueWithoutHostelInput = {
+  where: Prisma.StudentWhereUniqueInput
+  data: Prisma.XOR<Prisma.StudentUpdateWithoutHostelInput, Prisma.StudentUncheckedUpdateWithoutHostelInput>
+}
+
+export type StudentUpdateManyWithWhereWithoutHostelInput = {
+  where: Prisma.StudentScalarWhereInput
+  data: Prisma.XOR<Prisma.StudentUpdateManyMutationInput, Prisma.StudentUncheckedUpdateManyWithoutHostelInput>
 }
 
 export type StudentCreateWithoutAllocationInput = {
@@ -1175,6 +1334,7 @@ export type StudentCreateWithoutAllocationInput = {
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutStudentInput
   academicYear: Prisma.AcademicYearCreateNestedOneWithoutStudentsInput
+  hostel: Prisma.HostelCreateNestedOneWithoutStudentsInput
 }
 
 export type StudentUncheckedCreateWithoutAllocationInput = {
@@ -1202,6 +1362,7 @@ export type StudentUncheckedCreateWithoutAllocationInput = {
   editAllowedByAdmin?: boolean
   isVerified?: boolean
   needsReview?: boolean
+  hostelId: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1249,6 +1410,7 @@ export type StudentUpdateWithoutAllocationInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutStudentNestedInput
   academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutStudentsNestedInput
+  hostel?: Prisma.HostelUpdateOneRequiredWithoutStudentsNestedInput
 }
 
 export type StudentUncheckedUpdateWithoutAllocationInput = {
@@ -1276,6 +1438,7 @@ export type StudentUncheckedUpdateWithoutAllocationInput = {
   editAllowedByAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   needsReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hostelId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1304,6 +1467,7 @@ export type StudentCreateManyAcademicYearInput = {
   editAllowedByAdmin?: boolean
   isVerified?: boolean
   needsReview?: boolean
+  hostelId: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1335,6 +1499,7 @@ export type StudentUpdateWithoutAcademicYearInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutStudentNestedInput
   allocation?: Prisma.AllocationUpdateOneWithoutStudentNestedInput
+  hostel?: Prisma.HostelUpdateOneRequiredWithoutStudentsNestedInput
 }
 
 export type StudentUncheckedUpdateWithoutAcademicYearInput = {
@@ -1361,6 +1526,7 @@ export type StudentUncheckedUpdateWithoutAcademicYearInput = {
   editAllowedByAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   needsReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hostelId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allocation?: Prisma.AllocationUncheckedUpdateOneWithoutStudentNestedInput
@@ -1369,6 +1535,125 @@ export type StudentUncheckedUpdateWithoutAcademicYearInput = {
 export type StudentUncheckedUpdateManyWithoutAcademicYearInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  branch?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alternateContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  permanentAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactRelation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bloodGroup?: Prisma.NullableEnumBloodGroupFieldUpdateOperationsInput | $Enums.BloodGroup | null
+  medicalConditions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAccessibilityRequirements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  consentGiven?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  editAllowedByAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  needsReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hostelId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type StudentCreateManyHostelInput = {
+  id?: string
+  userId: string
+  academicYearId: string
+  name: string
+  rollNumber: string
+  branch: string
+  email: string
+  contactNumber?: string | null
+  alternateContactNumber?: string | null
+  permanentAddress?: string | null
+  state?: string | null
+  emergencyContactName?: string | null
+  emergencyContactNumber?: string | null
+  emergencyContactRelation?: string | null
+  bloodGroup?: $Enums.BloodGroup | null
+  medicalConditions?: string | null
+  allergies?: string | null
+  physicalAccessibilityRequirements?: string | null
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  consentGiven?: boolean
+  editAllowedByAdmin?: boolean
+  isVerified?: boolean
+  needsReview?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type StudentUpdateWithoutHostelInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  branch?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alternateContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  permanentAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactRelation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bloodGroup?: Prisma.NullableEnumBloodGroupFieldUpdateOperationsInput | $Enums.BloodGroup | null
+  medicalConditions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAccessibilityRequirements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  consentGiven?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  editAllowedByAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  needsReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutStudentNestedInput
+  academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutStudentsNestedInput
+  allocation?: Prisma.AllocationUpdateOneWithoutStudentNestedInput
+}
+
+export type StudentUncheckedUpdateWithoutHostelInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  branch?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alternateContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  permanentAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactRelation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bloodGroup?: Prisma.NullableEnumBloodGroupFieldUpdateOperationsInput | $Enums.BloodGroup | null
+  medicalConditions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAccessibilityRequirements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  consentGiven?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  editAllowedByAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  needsReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  allocation?: Prisma.AllocationUncheckedUpdateOneWithoutStudentNestedInput
+}
+
+export type StudentUncheckedUpdateManyWithoutHostelInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
   branch?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1421,11 +1706,13 @@ export type StudentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   editAllowedByAdmin?: boolean
   isVerified?: boolean
   needsReview?: boolean
+  hostelId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   academicYear?: boolean | Prisma.AcademicYearDefaultArgs<ExtArgs>
   allocation?: boolean | Prisma.Student$allocationArgs<ExtArgs>
+  hostel?: boolean | Prisma.HostelDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["student"]>
 
 export type StudentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1453,10 +1740,12 @@ export type StudentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   editAllowedByAdmin?: boolean
   isVerified?: boolean
   needsReview?: boolean
+  hostelId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   academicYear?: boolean | Prisma.AcademicYearDefaultArgs<ExtArgs>
+  hostel?: boolean | Prisma.HostelDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["student"]>
 
 export type StudentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1484,10 +1773,12 @@ export type StudentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   editAllowedByAdmin?: boolean
   isVerified?: boolean
   needsReview?: boolean
+  hostelId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   academicYear?: boolean | Prisma.AcademicYearDefaultArgs<ExtArgs>
+  hostel?: boolean | Prisma.HostelDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["student"]>
 
 export type StudentSelectScalar = {
@@ -1515,23 +1806,27 @@ export type StudentSelectScalar = {
   editAllowedByAdmin?: boolean
   isVerified?: boolean
   needsReview?: boolean
+  hostelId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type StudentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "academicYearId" | "name" | "rollNumber" | "branch" | "email" | "contactNumber" | "alternateContactNumber" | "permanentAddress" | "state" | "emergencyContactName" | "emergencyContactNumber" | "emergencyContactRelation" | "bloodGroup" | "medicalConditions" | "allergies" | "physicalAccessibilityRequirements" | "onboardingStatus" | "onboardingSubmittedAt" | "consentGiven" | "editAllowedByAdmin" | "isVerified" | "needsReview" | "createdAt" | "updatedAt", ExtArgs["result"]["student"]>
+export type StudentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "academicYearId" | "name" | "rollNumber" | "branch" | "email" | "contactNumber" | "alternateContactNumber" | "permanentAddress" | "state" | "emergencyContactName" | "emergencyContactNumber" | "emergencyContactRelation" | "bloodGroup" | "medicalConditions" | "allergies" | "physicalAccessibilityRequirements" | "onboardingStatus" | "onboardingSubmittedAt" | "consentGiven" | "editAllowedByAdmin" | "isVerified" | "needsReview" | "hostelId" | "createdAt" | "updatedAt", ExtArgs["result"]["student"]>
 export type StudentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   academicYear?: boolean | Prisma.AcademicYearDefaultArgs<ExtArgs>
   allocation?: boolean | Prisma.Student$allocationArgs<ExtArgs>
+  hostel?: boolean | Prisma.HostelDefaultArgs<ExtArgs>
 }
 export type StudentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   academicYear?: boolean | Prisma.AcademicYearDefaultArgs<ExtArgs>
+  hostel?: boolean | Prisma.HostelDefaultArgs<ExtArgs>
 }
 export type StudentIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   academicYear?: boolean | Prisma.AcademicYearDefaultArgs<ExtArgs>
+  hostel?: boolean | Prisma.HostelDefaultArgs<ExtArgs>
 }
 
 export type $StudentPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1540,6 +1835,7 @@ export type $StudentPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     user: Prisma.$UserPayload<ExtArgs>
     academicYear: Prisma.$AcademicYearPayload<ExtArgs>
     allocation: Prisma.$AllocationPayload<ExtArgs> | null
+    hostel: Prisma.$HostelPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1566,6 +1862,7 @@ export type $StudentPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     editAllowedByAdmin: boolean
     isVerified: boolean
     needsReview: boolean
+    hostelId: string
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["student"]>
@@ -1965,6 +2262,7 @@ export interface Prisma__StudentClient<T, Null = never, ExtArgs extends runtime.
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   academicYear<T extends Prisma.AcademicYearDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AcademicYearDefaultArgs<ExtArgs>>): Prisma.Prisma__AcademicYearClient<runtime.Types.Result.GetResult<Prisma.$AcademicYearPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   allocation<T extends Prisma.Student$allocationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Student$allocationArgs<ExtArgs>>): Prisma.Prisma__AllocationClient<runtime.Types.Result.GetResult<Prisma.$AllocationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  hostel<T extends Prisma.HostelDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.HostelDefaultArgs<ExtArgs>>): Prisma.Prisma__HostelClient<runtime.Types.Result.GetResult<Prisma.$HostelPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2018,6 +2316,7 @@ export interface StudentFieldRefs {
   readonly editAllowedByAdmin: Prisma.FieldRef<"Student", 'Boolean'>
   readonly isVerified: Prisma.FieldRef<"Student", 'Boolean'>
   readonly needsReview: Prisma.FieldRef<"Student", 'Boolean'>
+  readonly hostelId: Prisma.FieldRef<"Student", 'String'>
   readonly createdAt: Prisma.FieldRef<"Student", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Student", 'DateTime'>
 }

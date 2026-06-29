@@ -15,6 +15,10 @@ export async function allocateRoom(input: AllocationInput, allocatedBy: string) 
     throw new AppError(400, 'Student must be verified before allocation');
   }
 
+  if (student.hostelId !== input.hostelId) {
+    throw new AppError(400, 'Hostel ID does not match student\'s pre-assigned hostel', 'HOSTEL_MISMATCH');
+  }
+
   const existing = await prisma.allocation.findFirst({
     where: { studentId: input.studentId, isActive: true },
   });

@@ -90,7 +90,7 @@ function LoginPage() {
         </div>
         
         <div className="mt-12 text-primary-foreground/60 text-sm">
-          &copy; {new Date().getFullYear()} Student Welfare Council. All rights reserved.
+          &copy; {new Date().getFullYear()} Students' Web Committee. All rights reserved.
         </div>
       </div>
 

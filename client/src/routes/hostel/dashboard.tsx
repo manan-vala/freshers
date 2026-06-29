@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
-import { Search } from 'lucide-react'
+import { IconSearch } from '@tabler/icons-react'
 
 export const Route = createFileRoute('/hostel/dashboard')({
   component: HostelDashboard,
@@ -67,7 +67,7 @@ function HostelDashboard() {
         <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <CardTitle>Onboarded Students</CardTitle>
           <div className="relative w-full sm:w-72">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-slate-400" />
+            <IconSearch className="absolute left-2.5 top-2.5 h-4 w-4 text-slate-400" />
             <Input
               type="search"
               placeholder="Search by name or phone..."

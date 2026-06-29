@@ -29,6 +29,14 @@ export function errorMiddleware(
     })
   }
 
+  // Prisma Unique Constraint Violation
+  if (typeof err === 'object' && err !== null && 'code' in err && (err as any).code === 'P2002') {
+    return res.status(400).json({
+      success: false,
+      message: 'A record with this exact email or login ID already exists.',
+    })
+  }
+
   // Unknown error — log and return 500
   console.error('[Unhandled error]', err)
   return res.status(500).json({
