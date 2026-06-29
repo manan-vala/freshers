@@ -33,7 +33,7 @@ model AcademicYear {
 model User {
   id                   String    @id @default(cuid())
   loginId              String    @unique  // Admin-provisioned (e.g. JEE roll number or custom ID)
-  email                String    @unique  // Institute email; used for forgot-password flow
+  email                String    @unique @db.VarChar(150) // Institute email; used for forgot-password flow
   passwordHash         String?
   microsoftId          String?   @unique
   role                 UserRole  @default(STUDENT)
@@ -73,10 +73,10 @@ model Student {
   academicYear   AcademicYear     @relation(fields: [academicYearId], references: [id])
 
   // Pre-filled from admin bulk upload
-  name           String
+  name           String  @db.VarChar(100)
   rollNumber     String
   branch         String
-  email          String  // mirrors user.email for convenience
+  email          String  @db.VarChar(150) // mirrors user.email for convenience
 
   // Filled by student during onboarding — null until submitted
   contactNumber                 String?
@@ -87,7 +87,8 @@ model Student {
   emergencyContactNumber        String?
   emergencyContactRelation      String?  // e.g. "Father", "Guardian"
   bloodGroup                    BloodGroup?
-  medicalConditions             String?
+  medicalConditions             String  @default("None") @db.VarChar(500)
+  identificationMark            String  @default("None") @db.VarChar(200)
   allergies                     String?
   physicalAccessibilityRequirements String?
 

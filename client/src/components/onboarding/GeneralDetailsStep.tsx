@@ -5,7 +5,27 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form"
 import { FieldSet } from "@/components/ui/field"
 import { STREAMS, BTECH_DEPARTMENTS } from "@/lib/constants"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import type { OnboardingData } from "./types"
+
+function RequiredLabel({ text, limitInfo }: { text: string; limitInfo?: string }) {
+  return (
+    <span className="flex items-center gap-1">
+      {text}
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <span className="text-destructive cursor-help font-bold text-base leading-none">*</span>
+        </TooltipTrigger>
+        <TooltipContent>
+          <div className="flex flex-col gap-0.5">
+            <p>This field is required</p>
+            {limitInfo && <p className="opacity-70">{limitInfo}</p>}
+          </div>
+        </TooltipContent>
+      </Tooltip>
+    </span>
+  )
+}
 
 export function GeneralDetailsStep() {
   const form = useFormContext<OnboardingData>();
@@ -19,7 +39,7 @@ export function GeneralDetailsStep() {
           name="fullName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Full Name (same as allotment sheet)</FormLabel>
+              <FormLabel><RequiredLabel text="Full Name (same as allotment sheet)" limitInfo="Max 100 characters" /></FormLabel>
               <FormControl>
                 <Input placeholder="John Doe" {...field} />
               </FormControl>
@@ -33,7 +53,7 @@ export function GeneralDetailsStep() {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Gmail ID</FormLabel>
+              <FormLabel><RequiredLabel text="Gmail ID" limitInfo="Max 150 characters" /></FormLabel>
               <FormControl>
                 <Input type="email" placeholder="john.doe@gmail.com" {...field} />
               </FormControl>
@@ -48,7 +68,7 @@ export function GeneralDetailsStep() {
             name="phone"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Phone Number</FormLabel>
+                <FormLabel><RequiredLabel text="Phone Number" /></FormLabel>
                 <FormControl>
                   <div className="flex gap-2">
                     <Input className="w-16 md:w-20 text-center px-1" defaultValue="+91" aria-label="Country code" />
@@ -65,7 +85,7 @@ export function GeneralDetailsStep() {
             name="emergencyPhone"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Emergency Phone Number</FormLabel>
+                <FormLabel><RequiredLabel text="Emergency Phone Number" /></FormLabel>
                 <FormControl>
                   <div className="flex gap-2">
                     <Input className="w-16 md:w-20 text-center px-1" defaultValue="+91" aria-label="Country code" />
@@ -83,7 +103,7 @@ export function GeneralDetailsStep() {
           name="stream"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Stream</FormLabel>
+              <FormLabel><RequiredLabel text="Stream" /></FormLabel>
               <Select 
                 onValueChange={(val) => {
                   field.onChange(val);
@@ -137,7 +157,7 @@ export function GeneralDetailsStep() {
           name="gender"
           render={({ field }) => (
             <FormItem className="space-y-3">
-              <FormLabel>Gender</FormLabel>
+              <FormLabel><RequiredLabel text="Gender" /></FormLabel>
               <FormControl>
                 <RadioGroup
                   onValueChange={field.onChange}

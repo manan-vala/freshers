@@ -11,7 +11,31 @@ import { format, parseISO } from "date-fns"
 import { IconCalendar } from "@tabler/icons-react"
 import { BLOOD_GROUPS } from "@/lib/constants"
 import { cn } from "@/lib/utils"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import type { OnboardingData } from "./types"
+
+function FieldLabel({ text, required, limitInfo }: { text: string; required: boolean; limitInfo?: string }) {
+  return (
+    <span className="flex items-center gap-1">
+      {text}
+      <Tooltip>
+        <TooltipTrigger asChild>
+          {required ? (
+            <span className="text-destructive cursor-help font-bold text-base leading-none">*</span>
+          ) : (
+            <span className="text-muted-foreground cursor-help text-xs leading-none">(Optional)</span>
+          )}
+        </TooltipTrigger>
+        <TooltipContent>
+          <div className="flex flex-col gap-0.5">
+            <p>{required ? "This field is required" : "This field is optional"}</p>
+            {limitInfo && <p className="opacity-70">{limitInfo}</p>}
+          </div>
+        </TooltipContent>
+      </Tooltip>
+    </span>
+  )
+}
 
 export function MedicalDetailsStep() {
   const form = useFormContext<OnboardingData>();
@@ -26,7 +50,7 @@ export function MedicalDetailsStep() {
             name="dob"
             render={({ field }) => (
               <FormItem className="flex flex-col">
-                <FormLabel className="mb-2">Date of Birth</FormLabel>
+                <FormLabel className="mb-2"><FieldLabel text="Date of Birth" required={true} /></FormLabel>
                 <Popover>
                   <PopoverTrigger asChild>
                     <FormControl>
@@ -62,7 +86,7 @@ export function MedicalDetailsStep() {
             name="bloodGroup"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Blood Group</FormLabel>
+                <FormLabel><FieldLabel text="Blood Group" required={true} /></FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
@@ -86,10 +110,10 @@ export function MedicalDetailsStep() {
           name="medicalConditions"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Any Medical Conditions</FormLabel>
+              <FormLabel><FieldLabel text="Any Medical Conditions" required={true} limitInfo="Max 500 characters" /></FormLabel>
               <FormControl>
                 <Textarea 
-                  placeholder="Please specify any chronic illnesses, allergies, etc. (Optional)" 
+                  placeholder="Please specify any chronic illnesses, allergies, etc. (Or type 'None')" 
                   className="min-h-[100px]"
                   {...field}
                   value={field.value || ''}
@@ -105,10 +129,10 @@ export function MedicalDetailsStep() {
           name="identificationMark"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Identification Mark</FormLabel>
+              <FormLabel><FieldLabel text="Identification Mark" required={true} limitInfo="Max 200 characters" /></FormLabel>
               <FormControl>
                 <Textarea 
-                  placeholder="E.g., A mole on the left cheek (Optional)" 
+                  placeholder="E.g., A mole on the left cheek (Or type 'None')" 
                   className="min-h-[80px]"
                   {...field}
                   value={field.value || ''}
