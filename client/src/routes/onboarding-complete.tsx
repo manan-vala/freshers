@@ -45,14 +45,26 @@ function OnboardingCompletePage() {
         </h1>
         
         <p className="text-lg text-slate-600 mb-8 leading-relaxed">
-          Thank you for providing your details. Your profile has been successfully submitted and is under review. You will be notified once your hostel allocation is confirmed.
+          Thank you for providing your details. Your profile has been successfully submitted and is under review.
         </p>
+
+        {user?.student?.hostel && (
+          <div className="bg-blue-50 border border-blue-100 rounded-2xl p-6 mb-8 text-center">
+            <p className="text-sm font-semibold text-blue-900 mb-1">Your Hostel Assignment</p>
+            <p className="text-2xl font-bold text-blue-700">
+              {user.student.hostel.name.replace(/_/g, ' ')}
+            </p>
+            <p className="text-xs text-blue-600 mt-1">
+              Report to your hostel on arrival. Room number will be assigned at the desk.
+            </p>
+          </div>
+        )}
 
         <div className="bg-slate-50 p-6 rounded-2xl mb-10 text-left border border-slate-100">
           <h3 className="font-semibold text-slate-800 mb-3 text-sm uppercase tracking-wider">Next Steps</h3>
           <ul className="space-y-3 text-slate-600 text-sm">
-            <li className="flex gap-2"><span className="text-primary font-bold">•</span> Await hostel allotment email</li>
-            <li className="flex gap-2"><span className="text-primary font-bold">•</span> Check the portal periodically for updates</li>
+            <li className="flex gap-2"><span className="text-primary font-bold">•</span> Report to {user?.student?.hostel ? user.student.hostel.name.replace(/_/g, ' ') : 'your assigned hostel'} on arrival</li>
+            <li className="flex gap-2"><span className="text-primary font-bold">•</span> Room number will be assigned at the hostel desk</li>
             <li className="flex gap-2"><span className="text-primary font-bold">•</span> Keep your original documents ready for physical verification</li>
           </ul>
         </div>

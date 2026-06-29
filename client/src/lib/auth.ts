@@ -11,6 +11,13 @@ export interface User {
   mustChangePassword: boolean;
   student?: {
     onboardingStatus: 'PENDING' | 'SUBMITTED';
+    hostelId: string | null;
+    hostel: {
+      id: string;
+      name: string;
+      code: string;
+      type: 'BOYS' | 'GIRLS' | 'CO_ED';
+    } | null;
   };
 }
 

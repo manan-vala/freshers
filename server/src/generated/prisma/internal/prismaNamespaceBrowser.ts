@@ -133,6 +133,7 @@ export const StudentScalarFieldEnum = {
   editAllowedByAdmin: 'editAllowedByAdmin',
   isVerified: 'isVerified',
   needsReview: 'needsReview',
+  hostelId: 'hostelId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

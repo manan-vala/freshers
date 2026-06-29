@@ -99,6 +99,8 @@ model Student {
   needsReview           Boolean          @default(false)
 
   allocation            Allocation?
+  hostelId              String
+  hostel                Hostel           @relation(fields: [hostelId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -107,6 +109,7 @@ model Student {
   @@index([academicYearId])
   @@index([onboardingStatus])
   @@index([branch])
+  @@index([hostelId])
 }
 
 enum OnboardingStatus {
@@ -139,6 +142,7 @@ model Hostel {
 
   rooms          Room[]
   hmcAdmins      HMCAdmin[]
+  students       Student[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

@@ -8,7 +8,7 @@ import { superAdminApi, useSuperAdminStore } from '@/lib/superadmin'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
-import { IconTrash, IconPlus, IconLoader2, IconLogout, IconShieldCheck } from '@tabler/icons-react'
+import { IconTrash, IconPlus, IconLoader2, IconLogout, IconShieldCheck, IconUpload } from '@tabler/icons-react'
 
 export const Route = createFileRoute('/superadmin/dashboard')({
   component: SuperAdminDashboard,
@@ -52,6 +52,13 @@ function SuperAdminDashboard() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['superadmin', 'hmc-users'] })
       form.reset()
+      form.clearErrors()
+    },
+    onError: (error: any) => {
+      form.setError('root', {
+        type: 'manual',
+        message: error.response?.data?.message || 'Failed to provision admin. Please try again.',
+      })
     }
   })
 
@@ -61,6 +68,27 @@ function SuperAdminDashboard() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['superadmin', 'hmc-users'] })
+    }
+  })
+
+  const [uploadFile, setUploadFile] = useState<File | null>(null)
+  const [uploadResult, setUploadResult] = useState<any>(null)
+
+  const bulkUploadMutation = useMutation({
+    mutationFn: async (file: File) => {
+      const formData = new FormData()
+      formData.append('file', file)
+      const { data } = await superAdminApi.post('/v1/users/bulk-upload', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      })
+      return data.data
+    },
+    onSuccess: (data) => {
+      setUploadResult(data)
+      setUploadFile(null)
+      // reset file input
+      const fileInput = document.getElementById('bulk-upload-file') as HTMLInputElement
+      if (fileInput) fileInput.value = ''
     }
   })
 
@@ -140,6 +168,12 @@ function SuperAdminDashboard() {
                 </FormItem>
               )} />
 
+              {form.formState.errors.root && (
+                <div className="md:col-span-4 p-3 bg-red-50 border border-red-100 rounded-md text-red-600 text-sm font-medium">
+                  {form.formState.errors.root.message}
+                </div>
+              )}
+
               <Button 
                 type="submit" 
                 className="w-full h-10 bg-emerald-600 hover:bg-emerald-700 text-white font-medium shadow-sm transition-colors" 
@@ -149,6 +183,54 @@ function SuperAdminDashboard() {
               </Button>
             </form>
           </Form>
+        </section>
+
+        {/* Bulk Upload Section */}
+        <section className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+          <h2 className="text-lg font-semibold text-slate-900 mb-6 flex items-center gap-2">
+            <IconUpload size={20} className="text-slate-500" />
+            Bulk Upload Students
+          </h2>
+          <div className="flex flex-col md:flex-row gap-4 items-end">
+            <div className="flex-1 w-full space-y-2">
+              <label htmlFor="bulk-upload-file" className="text-sm font-medium leading-none">Upload CSV File</label>
+              <Input 
+                id="bulk-upload-file" 
+                type="file" 
+                accept=".csv"
+                className="h-10 cursor-pointer" 
+                onChange={(e) => setUploadFile(e.target.files?.[0] || null)}
+              />
+              <p className="text-xs text-slate-500">
+                CSV must contain: name, rollNumber, branch, email, hostelCode
+              </p>
+            </div>
+            <Button 
+              onClick={() => uploadFile && bulkUploadMutation.mutate(uploadFile)}
+              disabled={!uploadFile || bulkUploadMutation.isPending}
+              className="h-10 px-8"
+            >
+              {bulkUploadMutation.isPending ? <IconLoader2 className="animate-spin mr-2" size={20} /> : null}
+              Upload & Provision
+            </Button>
+          </div>
+
+          {uploadResult && (
+            <div className="mt-6 p-4 bg-slate-50 border rounded-xl space-y-2 text-sm">
+              <p className="font-medium text-slate-800">Upload Results:</p>
+              <p className="text-emerald-600 font-medium">Successfully provisioned: {uploadResult.successCount}</p>
+              {uploadResult.failureCount > 0 && (
+                <div className="text-red-600">
+                  <p className="font-medium">Failed: {uploadResult.failureCount}</p>
+                  <ul className="list-disc pl-5 mt-2 space-y-1 max-h-40 overflow-y-auto">
+                    {uploadResult.errors.map((err: any, i: number) => (
+                      <li key={i}>Row {err.row}: {err.reason}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          )}
         </section>
 
         {/* User List */}

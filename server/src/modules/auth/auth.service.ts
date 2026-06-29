@@ -208,6 +208,10 @@ export async function getMe(userId: string) {
       student: {
         select: {
           onboardingStatus: true,
+          hostelId: true,
+          hostel: {
+            select: { id: true, name: true, code: true, type: true }
+          }
         }
       }
     },

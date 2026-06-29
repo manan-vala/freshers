@@ -209,6 +209,7 @@ export type HostelWhereInput = {
   academicYear?: Prisma.XOR<Prisma.AcademicYearScalarRelationFilter, Prisma.AcademicYearWhereInput>
   rooms?: Prisma.RoomListRelationFilter
   hmcAdmins?: Prisma.HMCAdminListRelationFilter
+  students?: Prisma.StudentListRelationFilter
 }
 
 export type HostelOrderByWithRelationInput = {
@@ -223,6 +224,7 @@ export type HostelOrderByWithRelationInput = {
   academicYear?: Prisma.AcademicYearOrderByWithRelationInput
   rooms?: Prisma.RoomOrderByRelationAggregateInput
   hmcAdmins?: Prisma.HMCAdminOrderByRelationAggregateInput
+  students?: Prisma.StudentOrderByRelationAggregateInput
 }
 
 export type HostelWhereUniqueInput = Prisma.AtLeast<{
@@ -241,6 +243,7 @@ export type HostelWhereUniqueInput = Prisma.AtLeast<{
   academicYear?: Prisma.XOR<Prisma.AcademicYearScalarRelationFilter, Prisma.AcademicYearWhereInput>
   rooms?: Prisma.RoomListRelationFilter
   hmcAdmins?: Prisma.HMCAdminListRelationFilter
+  students?: Prisma.StudentListRelationFilter
 }, "id" | "academicYearId_code">
 
 export type HostelOrderByWithAggregationInput = {
@@ -282,6 +285,7 @@ export type HostelCreateInput = {
   academicYear: Prisma.AcademicYearCreateNestedOneWithoutHostelsInput
   rooms?: Prisma.RoomCreateNestedManyWithoutHostelInput
   hmcAdmins?: Prisma.HMCAdminCreateNestedManyWithoutHostelInput
+  students?: Prisma.StudentCreateNestedManyWithoutHostelInput
 }
 
 export type HostelUncheckedCreateInput = {
@@ -295,6 +299,7 @@ export type HostelUncheckedCreateInput = {
   updatedAt?: Date | string
   rooms?: Prisma.RoomUncheckedCreateNestedManyWithoutHostelInput
   hmcAdmins?: Prisma.HMCAdminUncheckedCreateNestedManyWithoutHostelInput
+  students?: Prisma.StudentUncheckedCreateNestedManyWithoutHostelInput
 }
 
 export type HostelUpdateInput = {
@@ -308,6 +313,7 @@ export type HostelUpdateInput = {
   academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutHostelsNestedInput
   rooms?: Prisma.RoomUpdateManyWithoutHostelNestedInput
   hmcAdmins?: Prisma.HMCAdminUpdateManyWithoutHostelNestedInput
+  students?: Prisma.StudentUpdateManyWithoutHostelNestedInput
 }
 
 export type HostelUncheckedUpdateInput = {
@@ -321,6 +327,7 @@ export type HostelUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   rooms?: Prisma.RoomUncheckedUpdateManyWithoutHostelNestedInput
   hmcAdmins?: Prisma.HMCAdminUncheckedUpdateManyWithoutHostelNestedInput
+  students?: Prisma.StudentUncheckedUpdateManyWithoutHostelNestedInput
 }
 
 export type HostelCreateManyInput = {
@@ -365,6 +372,11 @@ export type HostelOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type HostelScalarRelationFilter = {
+  is?: Prisma.HostelWhereInput
+  isNot?: Prisma.HostelWhereInput
+}
+
 export type HostelAcademicYearIdCodeCompoundUniqueInput = {
   academicYearId: string
   code: string
@@ -401,11 +413,6 @@ export type HostelMinOrderByAggregateInput = {
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-}
-
-export type HostelScalarRelationFilter = {
-  is?: Prisma.HostelWhereInput
-  isNot?: Prisma.HostelWhereInput
 }
 
 export type HostelCreateNestedManyWithoutAcademicYearInput = {
@@ -448,6 +455,20 @@ export type HostelUncheckedUpdateManyWithoutAcademicYearNestedInput = {
   update?: Prisma.HostelUpdateWithWhereUniqueWithoutAcademicYearInput | Prisma.HostelUpdateWithWhereUniqueWithoutAcademicYearInput[]
   updateMany?: Prisma.HostelUpdateManyWithWhereWithoutAcademicYearInput | Prisma.HostelUpdateManyWithWhereWithoutAcademicYearInput[]
   deleteMany?: Prisma.HostelScalarWhereInput | Prisma.HostelScalarWhereInput[]
+}
+
+export type HostelCreateNestedOneWithoutStudentsInput = {
+  create?: Prisma.XOR<Prisma.HostelCreateWithoutStudentsInput, Prisma.HostelUncheckedCreateWithoutStudentsInput>
+  connectOrCreate?: Prisma.HostelCreateOrConnectWithoutStudentsInput
+  connect?: Prisma.HostelWhereUniqueInput
+}
+
+export type HostelUpdateOneRequiredWithoutStudentsNestedInput = {
+  create?: Prisma.XOR<Prisma.HostelCreateWithoutStudentsInput, Prisma.HostelUncheckedCreateWithoutStudentsInput>
+  connectOrCreate?: Prisma.HostelCreateOrConnectWithoutStudentsInput
+  upsert?: Prisma.HostelUpsertWithoutStudentsInput
+  connect?: Prisma.HostelWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.HostelUpdateToOneWithWhereWithoutStudentsInput, Prisma.HostelUpdateWithoutStudentsInput>, Prisma.HostelUncheckedUpdateWithoutStudentsInput>
 }
 
 export type EnumHostelNameFieldUpdateOperationsInput = {
@@ -496,6 +517,7 @@ export type HostelCreateWithoutAcademicYearInput = {
   updatedAt?: Date | string
   rooms?: Prisma.RoomCreateNestedManyWithoutHostelInput
   hmcAdmins?: Prisma.HMCAdminCreateNestedManyWithoutHostelInput
+  students?: Prisma.StudentCreateNestedManyWithoutHostelInput
 }
 
 export type HostelUncheckedCreateWithoutAcademicYearInput = {
@@ -508,6 +530,7 @@ export type HostelUncheckedCreateWithoutAcademicYearInput = {
   updatedAt?: Date | string
   rooms?: Prisma.RoomUncheckedCreateNestedManyWithoutHostelInput
   hmcAdmins?: Prisma.HMCAdminUncheckedCreateNestedManyWithoutHostelInput
+  students?: Prisma.StudentUncheckedCreateNestedManyWithoutHostelInput
 }
 
 export type HostelCreateOrConnectWithoutAcademicYearInput = {
@@ -550,6 +573,74 @@ export type HostelScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Hostel"> | Date | string
 }
 
+export type HostelCreateWithoutStudentsInput = {
+  id?: string
+  name: $Enums.HostelName
+  code: string
+  type: $Enums.HostelType
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  academicYear: Prisma.AcademicYearCreateNestedOneWithoutHostelsInput
+  rooms?: Prisma.RoomCreateNestedManyWithoutHostelInput
+  hmcAdmins?: Prisma.HMCAdminCreateNestedManyWithoutHostelInput
+}
+
+export type HostelUncheckedCreateWithoutStudentsInput = {
+  id?: string
+  academicYearId: string
+  name: $Enums.HostelName
+  code: string
+  type: $Enums.HostelType
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  rooms?: Prisma.RoomUncheckedCreateNestedManyWithoutHostelInput
+  hmcAdmins?: Prisma.HMCAdminUncheckedCreateNestedManyWithoutHostelInput
+}
+
+export type HostelCreateOrConnectWithoutStudentsInput = {
+  where: Prisma.HostelWhereUniqueInput
+  create: Prisma.XOR<Prisma.HostelCreateWithoutStudentsInput, Prisma.HostelUncheckedCreateWithoutStudentsInput>
+}
+
+export type HostelUpsertWithoutStudentsInput = {
+  update: Prisma.XOR<Prisma.HostelUpdateWithoutStudentsInput, Prisma.HostelUncheckedUpdateWithoutStudentsInput>
+  create: Prisma.XOR<Prisma.HostelCreateWithoutStudentsInput, Prisma.HostelUncheckedCreateWithoutStudentsInput>
+  where?: Prisma.HostelWhereInput
+}
+
+export type HostelUpdateToOneWithWhereWithoutStudentsInput = {
+  where?: Prisma.HostelWhereInput
+  data: Prisma.XOR<Prisma.HostelUpdateWithoutStudentsInput, Prisma.HostelUncheckedUpdateWithoutStudentsInput>
+}
+
+export type HostelUpdateWithoutStudentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.EnumHostelNameFieldUpdateOperationsInput | $Enums.HostelName
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumHostelTypeFieldUpdateOperationsInput | $Enums.HostelType
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutHostelsNestedInput
+  rooms?: Prisma.RoomUpdateManyWithoutHostelNestedInput
+  hmcAdmins?: Prisma.HMCAdminUpdateManyWithoutHostelNestedInput
+}
+
+export type HostelUncheckedUpdateWithoutStudentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.EnumHostelNameFieldUpdateOperationsInput | $Enums.HostelName
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumHostelTypeFieldUpdateOperationsInput | $Enums.HostelType
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  rooms?: Prisma.RoomUncheckedUpdateManyWithoutHostelNestedInput
+  hmcAdmins?: Prisma.HMCAdminUncheckedUpdateManyWithoutHostelNestedInput
+}
+
 export type HostelCreateWithoutRoomsInput = {
   id?: string
   name: $Enums.HostelName
@@ -560,6 +651,7 @@ export type HostelCreateWithoutRoomsInput = {
   updatedAt?: Date | string
   academicYear: Prisma.AcademicYearCreateNestedOneWithoutHostelsInput
   hmcAdmins?: Prisma.HMCAdminCreateNestedManyWithoutHostelInput
+  students?: Prisma.StudentCreateNestedManyWithoutHostelInput
 }
 
 export type HostelUncheckedCreateWithoutRoomsInput = {
@@ -572,6 +664,7 @@ export type HostelUncheckedCreateWithoutRoomsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   hmcAdmins?: Prisma.HMCAdminUncheckedCreateNestedManyWithoutHostelInput
+  students?: Prisma.StudentUncheckedCreateNestedManyWithoutHostelInput
 }
 
 export type HostelCreateOrConnectWithoutRoomsInput = {
@@ -600,6 +693,7 @@ export type HostelUpdateWithoutRoomsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutHostelsNestedInput
   hmcAdmins?: Prisma.HMCAdminUpdateManyWithoutHostelNestedInput
+  students?: Prisma.StudentUpdateManyWithoutHostelNestedInput
 }
 
 export type HostelUncheckedUpdateWithoutRoomsInput = {
@@ -612,6 +706,7 @@ export type HostelUncheckedUpdateWithoutRoomsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   hmcAdmins?: Prisma.HMCAdminUncheckedUpdateManyWithoutHostelNestedInput
+  students?: Prisma.StudentUncheckedUpdateManyWithoutHostelNestedInput
 }
 
 export type HostelCreateWithoutHmcAdminsInput = {
@@ -624,6 +719,7 @@ export type HostelCreateWithoutHmcAdminsInput = {
   updatedAt?: Date | string
   academicYear: Prisma.AcademicYearCreateNestedOneWithoutHostelsInput
   rooms?: Prisma.RoomCreateNestedManyWithoutHostelInput
+  students?: Prisma.StudentCreateNestedManyWithoutHostelInput
 }
 
 export type HostelUncheckedCreateWithoutHmcAdminsInput = {
@@ -636,6 +732,7 @@ export type HostelUncheckedCreateWithoutHmcAdminsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   rooms?: Prisma.RoomUncheckedCreateNestedManyWithoutHostelInput
+  students?: Prisma.StudentUncheckedCreateNestedManyWithoutHostelInput
 }
 
 export type HostelCreateOrConnectWithoutHmcAdminsInput = {
@@ -664,6 +761,7 @@ export type HostelUpdateWithoutHmcAdminsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutHostelsNestedInput
   rooms?: Prisma.RoomUpdateManyWithoutHostelNestedInput
+  students?: Prisma.StudentUpdateManyWithoutHostelNestedInput
 }
 
 export type HostelUncheckedUpdateWithoutHmcAdminsInput = {
@@ -676,6 +774,7 @@ export type HostelUncheckedUpdateWithoutHmcAdminsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   rooms?: Prisma.RoomUncheckedUpdateManyWithoutHostelNestedInput
+  students?: Prisma.StudentUncheckedUpdateManyWithoutHostelNestedInput
 }
 
 export type HostelCreateManyAcademicYearInput = {
@@ -698,6 +797,7 @@ export type HostelUpdateWithoutAcademicYearInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   rooms?: Prisma.RoomUpdateManyWithoutHostelNestedInput
   hmcAdmins?: Prisma.HMCAdminUpdateManyWithoutHostelNestedInput
+  students?: Prisma.StudentUpdateManyWithoutHostelNestedInput
 }
 
 export type HostelUncheckedUpdateWithoutAcademicYearInput = {
@@ -710,6 +810,7 @@ export type HostelUncheckedUpdateWithoutAcademicYearInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   rooms?: Prisma.RoomUncheckedUpdateManyWithoutHostelNestedInput
   hmcAdmins?: Prisma.HMCAdminUncheckedUpdateManyWithoutHostelNestedInput
+  students?: Prisma.StudentUncheckedUpdateManyWithoutHostelNestedInput
 }
 
 export type HostelUncheckedUpdateManyWithoutAcademicYearInput = {
@@ -730,11 +831,13 @@ export type HostelUncheckedUpdateManyWithoutAcademicYearInput = {
 export type HostelCountOutputType = {
   rooms: number
   hmcAdmins: number
+  students: number
 }
 
 export type HostelCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   rooms?: boolean | HostelCountOutputTypeCountRoomsArgs
   hmcAdmins?: boolean | HostelCountOutputTypeCountHmcAdminsArgs
+  students?: boolean | HostelCountOutputTypeCountStudentsArgs
 }
 
 /**
@@ -761,6 +864,13 @@ export type HostelCountOutputTypeCountHmcAdminsArgs<ExtArgs extends runtime.Type
   where?: Prisma.HMCAdminWhereInput
 }
 
+/**
+ * HostelCountOutputType without action
+ */
+export type HostelCountOutputTypeCountStudentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StudentWhereInput
+}
+
 
 export type HostelSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -774,6 +884,7 @@ export type HostelSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   academicYear?: boolean | Prisma.AcademicYearDefaultArgs<ExtArgs>
   rooms?: boolean | Prisma.Hostel$roomsArgs<ExtArgs>
   hmcAdmins?: boolean | Prisma.Hostel$hmcAdminsArgs<ExtArgs>
+  students?: boolean | Prisma.Hostel$studentsArgs<ExtArgs>
   _count?: boolean | Prisma.HostelCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["hostel"]>
 
@@ -817,6 +928,7 @@ export type HostelInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   academicYear?: boolean | Prisma.AcademicYearDefaultArgs<ExtArgs>
   rooms?: boolean | Prisma.Hostel$roomsArgs<ExtArgs>
   hmcAdmins?: boolean | Prisma.Hostel$hmcAdminsArgs<ExtArgs>
+  students?: boolean | Prisma.Hostel$studentsArgs<ExtArgs>
   _count?: boolean | Prisma.HostelCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type HostelIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -832,6 +944,7 @@ export type $HostelPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     academicYear: Prisma.$AcademicYearPayload<ExtArgs>
     rooms: Prisma.$RoomPayload<ExtArgs>[]
     hmcAdmins: Prisma.$HMCAdminPayload<ExtArgs>[]
+    students: Prisma.$StudentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1239,6 +1352,7 @@ export interface Prisma__HostelClient<T, Null = never, ExtArgs extends runtime.T
   academicYear<T extends Prisma.AcademicYearDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AcademicYearDefaultArgs<ExtArgs>>): Prisma.Prisma__AcademicYearClient<runtime.Types.Result.GetResult<Prisma.$AcademicYearPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   rooms<T extends Prisma.Hostel$roomsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Hostel$roomsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RoomPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   hmcAdmins<T extends Prisma.Hostel$hmcAdminsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Hostel$hmcAdminsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HMCAdminPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  students<T extends Prisma.Hostel$studentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Hostel$studentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1722,6 +1836,30 @@ export type Hostel$hmcAdminsArgs<ExtArgs extends runtime.Types.Extensions.Intern
   take?: number
   skip?: number
   distinct?: Prisma.HMCAdminScalarFieldEnum | Prisma.HMCAdminScalarFieldEnum[]
+}
+
+/**
+ * Hostel.students
+ */
+export type Hostel$studentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Student
+   */
+  select?: Prisma.StudentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Student
+   */
+  omit?: Prisma.StudentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StudentInclude<ExtArgs> | null
+  where?: Prisma.StudentWhereInput
+  orderBy?: Prisma.StudentOrderByWithRelationInput | Prisma.StudentOrderByWithRelationInput[]
+  cursor?: Prisma.StudentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StudentScalarFieldEnum | Prisma.StudentScalarFieldEnum[]
 }
 
 /**

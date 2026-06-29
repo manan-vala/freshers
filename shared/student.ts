@@ -46,3 +46,13 @@ export const onboardingSchema = z.object({
 })
 
 export type OnboardingInput = z.infer<typeof onboardingSchema>
+
+export const bulkUploadRowSchema = z.object({
+  name: z.string().min(1, 'Name is required'),
+  rollNumber: z.string().min(1, 'Roll number is required'),
+  branch: z.string().min(1, 'Branch is required'),
+  email: z.string().email('Invalid email address'),
+  hostelCode: z.string().min(1, 'Hostel code is required'),
+})
+
+export type BulkUploadRow = z.infer<typeof bulkUploadRowSchema>

@@ -195,14 +195,26 @@ function VerifyStudent() {
           <Card>
             <CardHeader>
               <CardTitle>Room Allocation</CardTitle>
-              {student.allocation && (
+              {student.allocation ? (
                 <CardDescription className="text-amber-600 font-medium">
                   Note: This student is currently allocated to {student.allocation.room.hostel.code}-{student.allocation.room.roomNumber}.
+                </CardDescription>
+              ) : (
+                <CardDescription>
+                  Pre-assigned Hostel:{' '}
+                  <span className="font-semibold text-slate-900">
+                    {student.hostel?.name?.replace(/_/g, ' ') || 'Unknown'}
+                  </span>
                 </CardDescription>
               )}
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleAllocate} className="space-y-4">
+              {student.hostelId && myHostel && student.hostelId !== myHostel.id ? (
+                <div className="p-4 bg-red-50 border border-red-200 text-red-700 rounded-md text-sm">
+                  <strong>Warning:</strong> This student is pre-assigned to a different hostel ({student.hostel?.code}). You cannot allocate a room for them here.
+                </div>
+              ) : (
+                <form onSubmit={handleAllocate} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="roomNumber">Room Number</Label>
                   <Input 
@@ -230,6 +242,7 @@ function VerifyStudent() {
                   {allocateMutation.isPending ? 'Allocating...' : 'Confirm Allocation'}
                 </Button>
               </form>
+              )}
             </CardContent>
           </Card>
         </div>
