@@ -1,5 +1,5 @@
 import { prisma } from '@/config/prisma';
-import { emailQueue } from '@/jobs/email.queue';
+import { emailQueue } from '@/modules/email/email.queue';
 import { hashPassword } from '@/utils/password.util';
 import { randomBytes } from 'crypto';
 

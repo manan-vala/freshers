@@ -106,7 +106,8 @@ export async function deleteHMCUserHandler(req: Request, res: Response, next: Ne
         deletedAt: new Date(), 
         isActive: false,
         email: `${user.email}_deleted_${timestamp}`,
-        loginId: `${user.loginId}_deleted_${timestamp}`
+        loginId: `${user.loginId}_deleted_${timestamp}`,
+        microsoftId: null
       }
     });
 

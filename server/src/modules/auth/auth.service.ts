@@ -4,7 +4,7 @@ import { env } from '@/config/env';
 import { AppError } from '@/utils/errors';
 import { signAccessToken, signRefreshToken, verifyToken } from '@/utils/jwt.util';
 import { verifyPassword, hashPassword } from '@/utils/password.util';
-import { emailQueue } from '@/jobs/email.queue';
+import { emailQueue } from '@/modules/email/email.queue';
 import { randomBytes, createHash } from 'crypto';
 import type { LoginInput, ChangePasswordInput, ForgotPasswordInput, ResetPasswordInput } from '@shared/auth';
 

@@ -1,6 +1,6 @@
 import { Queue } from 'bullmq';
 import { env } from '@/config/env';
-import type { EmailJob } from '@shared/email';
+import type { EmailJob } from './email.types';
 
 // BullMQ bundles its own ioredis internally. Passing the shared `redis` singleton
 // from @/config/redis causes a type conflict because the two ioredis copies diverge
