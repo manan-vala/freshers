@@ -1238,6 +1238,7 @@ export const StudentScalarFieldEnum = {
   emergencyContactRelation: 'emergencyContactRelation',
   bloodGroup: 'bloodGroup',
   medicalConditions: 'medicalConditions',
+  identificationMark: 'identificationMark',
   allergies: 'allergies',
   physicalAccessibilityRequirements: 'physicalAccessibilityRequirements',
   onboardingStatus: 'onboardingStatus',

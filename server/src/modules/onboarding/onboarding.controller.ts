@@ -9,13 +9,13 @@ export async function getOnboardedStudentsHandler(req: Request, res: Response, n
     let hostelId: string | undefined;
 
     if (req.user?.role === 'HMC') {
-      const hmcAdmin = await prisma.hMCAdmin.findUnique({ where: { userId: req.user.id } });
+      const hmcAdmin = await prisma.hMCAdmin.findUnique({ where: { userId: req.user!.sub } });
       if (hmcAdmin) {
         hostelId = hmcAdmin.hostelId;
       }
     }
 
-    const students = await getOnboardedStudents(search, hostelId)
+    const students = await getOnboardedStudents(search)
     res.json({ success: true, data: students })
   } catch (error) {
     next(error)
@@ -24,7 +24,7 @@ export async function getOnboardedStudentsHandler(req: Request, res: Response, n
 
 export async function verifyStudentHandler(req: Request, res: Response, next: NextFunction) {
   try {
-    const { studentId } = req.params
+    const { studentId } = req.body
     const { isVerified, needsReview } = req.body
     
     const result = await verifyStudent(studentId, Boolean(isVerified), Boolean(needsReview))

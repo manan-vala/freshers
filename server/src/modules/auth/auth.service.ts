@@ -2,10 +2,10 @@ import { prisma } from '@/config/prisma';
 import { redis } from '@/config/redis';
 import { env } from '@/config/env';
 import { AppError } from '@/utils/errors';
+import { generateOTP, storeOTP, verifyAndDeleteOTP } from '@/utils/otp.util';
 import { signAccessToken, signRefreshToken, verifyToken } from '@/utils/jwt.util';
 import { verifyPassword, hashPassword } from '@/utils/password.util';
 import { emailQueue } from '@/modules/email/email.queue';
-import { randomBytes, createHash } from 'crypto';
 import type { LoginInput, ChangePasswordInput, ForgotPasswordInput, ResetPasswordInput } from '@shared/auth';
 
 export async function login(input: LoginInput) {
@@ -21,7 +21,18 @@ export async function login(input: LoginInput) {
   if (!isValidPassword) {
     throw new AppError(401, 'Invalid credentials');
   }
-
+if (user.mustChangePassword) {
+    const otp = generateOTP();
+    await storeOTP('first-login', user.id, otp, 5); // 5 min expiry
+    
+    console.log(`\n[TESTING] The First-Login OTP for ${user.email} is: ${otp}\n`);
+    
+    await emailQueue.add('first-login-otp', {
+      to: user.email,
+      templateId: 'otp-email',
+      data: { otp },
+    });
+  }
   await prisma.user.update({
     where: { id: user.id },
     data: { lastLoginAt: new Date() },
@@ -108,18 +119,42 @@ export async function logout(jti: string, exp: number) {
   }
 }
 
+
+
+// ─── NEW: REQUEST FIRST LOGIN OTP ──────────────────────────────────────────
+export async function requestFirstLoginOtp(userId: string) {
+  const user = await prisma.user.findFirst({
+    where: { id: userId, deletedAt: null },
+  });
+
+  if (!user || !user.isActive || !user.mustChangePassword) {
+    throw new AppError(400, 'Invalid request or password already changed');
+  }
+
+  const otp = generateOTP();
+  await storeOTP('first-login', user.id, otp, 5); // 5 min expiry
+console.log(`[TESTING] The OTP is: ${otp}`);
+  await emailQueue.add('first-login-otp', {
+    to: user.email,
+    templateId: 'otp-email',
+    data: { otp },
+  });
+}
+
+// ─── UPDATED: CHANGE PASSWORD (FIRST LOGIN) ──────────────────────────────
 export async function changePassword(userId: string, input: ChangePasswordInput) {
   const user = await prisma.user.findFirst({
     where: { id: userId, deletedAt: null },
   });
 
-  if (!user || !user.passwordHash) {
-    throw new AppError(404, 'User not found or cannot change password');
+  if (!user || !user.isActive) {
+    throw new AppError(404, 'User not found');
   }
 
-  const isValidPassword = await verifyPassword(input.currentPassword, user.passwordHash);
-  if (!isValidPassword) {
-    throw new AppError(400, 'Current password is incorrect');
+  // O(1) lookup in Redis instead of checking DB
+  const isValid = await verifyAndDeleteOTP('first-login', user.id, input.otp);
+  if (!isValid) {
+    throw new AppError(400, 'Invalid or expired OTP');
   }
 
   const newPasswordHash = await hashPassword(input.newPassword);
@@ -134,67 +169,48 @@ export async function changePassword(userId: string, input: ChangePasswordInput)
   });
 }
 
+// ─── UPDATED: FORGOT PASSWORD ─────────────────────────────────────────────
 export async function forgotPassword(input: ForgotPasswordInput) {
   const user = await prisma.user.findFirst({
     where: { email: input.email, deletedAt: null },
   });
 
-  // Always return silently to prevent user enumeration (timing-safe early return is fine
-  // here because we don't do any DB work on the missing-user path).
-  if (!user || !user.isActive) {
-    return;
-  }
+  if (!user || !user.isActive) return;
 
-  const rawToken = randomBytes(32).toString('hex');
-  const tokenHash = createHash('sha256').update(rawToken).digest('hex');
-  // env.RESET_TOKEN_EXPIRES_MINUTES is already a number after Zod coercion — no need for Number()
-  const expiresAt = new Date(Date.now() + env.RESET_TOKEN_EXPIRES_MINUTES * 60_000);
-
-  await prisma.passwordResetToken.create({
-    data: {
-      userId: user.id,
-      tokenHash,
-      expiresAt,
-    },
-  });
-
+  const otp = generateOTP();
+  await storeOTP('forgot', user.email, otp, 5); // 5 min expiry
+console.log(`[TESTING] The OTP is: ${otp}`);
   await emailQueue.add('password-reset', {
     to: user.email,
-    templateId: 'password-reset',
-    data: { token: rawToken },
+    templateId: 'otp-email', 
+    data: { otp },
   });
 }
 
+// ─── UPDATED: RESET PASSWORD ──────────────────────────────────────────────
 export async function resetPassword(input: ResetPasswordInput) {
-  const tokenHash = createHash('sha256').update(input.token).digest('hex');
+  const isValid = await verifyAndDeleteOTP('forgot', input.email, input.otp);
+  if (!isValid) {
+    throw new AppError(400, 'Invalid or expired OTP');
+  }
 
-  const resetToken = await prisma.passwordResetToken.findUnique({
-    where: { tokenHash },
+  const user = await prisma.user.findFirst({
+    where: { email: input.email, deletedAt: null }
   });
 
-  if (!resetToken || resetToken.isUsed || resetToken.expiresAt < new Date()) {
-    throw new AppError(400, 'Invalid or expired reset token');
-  }
+  if (!user) throw new AppError(404, 'User not found');
 
   const newPasswordHash = await hashPassword(input.newPassword);
 
-  // Batch write: update the user's password and mark the token used atomically
-  await prisma.$transaction([
-    prisma.user.update({
-      where: { id: resetToken.userId },
-      data: {
-        passwordHash: newPasswordHash,
-        mustChangePassword: false,
-        sessionInvalidatedAt: new Date(),
-      },
-    }),
-    prisma.passwordResetToken.update({
-      where: { id: resetToken.id },
-      data: { isUsed: true },
-    }),
-  ]);
+  await prisma.user.update({
+    where: { id: user.id },
+    data: {
+      passwordHash: newPasswordHash,
+      mustChangePassword: false,
+      sessionInvalidatedAt: new Date(),
+    },
+  });
 }
-
 export async function getMe(userId: string) {
   const user = await prisma.user.findFirst({
     where: { id: userId, deletedAt: null },
@@ -205,9 +221,15 @@ export async function getMe(userId: string) {
       role: true,
       isActive: true,
       mustChangePassword: true,
+      // 1. If the user is a STUDENT, fetch their onboarding status
       student: {
         select: {
           onboardingStatus: true,
+        }
+      },
+      // 2. If the user is a HOSTEL ADMIN (HMC), fetch their hostel details
+      hmcAdmin: {
+        select: {
           hostelId: true,
           hostel: {
             select: { id: true, name: true, code: true, type: true }

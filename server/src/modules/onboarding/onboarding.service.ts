@@ -1,7 +1,7 @@
 import { prisma } from '@/config/prisma'
 import { AppError } from '@/utils/errors'
 
-export async function getOnboardedStudents(search?: string, hostelId?: string) {
+export async function getOnboardedStudents(search?: string) {
   const activeYear = await prisma.academicYear.findFirst({ where: { isActive: true } })
   if (!activeYear) throw new AppError(500, 'No active academic year found')
 
@@ -9,7 +9,6 @@ export async function getOnboardedStudents(search?: string, hostelId?: string) {
     where: {
       academicYearId: activeYear.id,
       onboardingStatus: 'SUBMITTED',
-      ...(hostelId ? { hostelId } : {}),
       OR: search ? [
         { name: { contains: search, mode: 'insensitive' } },
         { contactNumber: { contains: search } }

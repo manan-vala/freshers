@@ -41,6 +41,7 @@ export type StudentMinAggregateOutputType = {
   emergencyContactRelation: string | null
   bloodGroup: $Enums.BloodGroup | null
   medicalConditions: string | null
+  identificationMark: string | null
   allergies: string | null
   physicalAccessibilityRequirements: string | null
   onboardingStatus: $Enums.OnboardingStatus | null
@@ -71,6 +72,7 @@ export type StudentMaxAggregateOutputType = {
   emergencyContactRelation: string | null
   bloodGroup: $Enums.BloodGroup | null
   medicalConditions: string | null
+  identificationMark: string | null
   allergies: string | null
   physicalAccessibilityRequirements: string | null
   onboardingStatus: $Enums.OnboardingStatus | null
@@ -101,6 +103,7 @@ export type StudentCountAggregateOutputType = {
   emergencyContactRelation: number
   bloodGroup: number
   medicalConditions: number
+  identificationMark: number
   allergies: number
   physicalAccessibilityRequirements: number
   onboardingStatus: number
@@ -133,6 +136,7 @@ export type StudentMinAggregateInputType = {
   emergencyContactRelation?: true
   bloodGroup?: true
   medicalConditions?: true
+  identificationMark?: true
   allergies?: true
   physicalAccessibilityRequirements?: true
   onboardingStatus?: true
@@ -163,6 +167,7 @@ export type StudentMaxAggregateInputType = {
   emergencyContactRelation?: true
   bloodGroup?: true
   medicalConditions?: true
+  identificationMark?: true
   allergies?: true
   physicalAccessibilityRequirements?: true
   onboardingStatus?: true
@@ -193,6 +198,7 @@ export type StudentCountAggregateInputType = {
   emergencyContactRelation?: true
   bloodGroup?: true
   medicalConditions?: true
+  identificationMark?: true
   allergies?: true
   physicalAccessibilityRequirements?: true
   onboardingStatus?: true
@@ -295,7 +301,8 @@ export type StudentGroupByOutputType = {
   emergencyContactNumber: string | null
   emergencyContactRelation: string | null
   bloodGroup: $Enums.BloodGroup | null
-  medicalConditions: string | null
+  medicalConditions: string
+  identificationMark: string
   allergies: string | null
   physicalAccessibilityRequirements: string | null
   onboardingStatus: $Enums.OnboardingStatus
@@ -346,7 +353,8 @@ export type StudentWhereInput = {
   emergencyContactNumber?: Prisma.StringNullableFilter<"Student"> | string | null
   emergencyContactRelation?: Prisma.StringNullableFilter<"Student"> | string | null
   bloodGroup?: Prisma.EnumBloodGroupNullableFilter<"Student"> | $Enums.BloodGroup | null
-  medicalConditions?: Prisma.StringNullableFilter<"Student"> | string | null
+  medicalConditions?: Prisma.StringFilter<"Student"> | string
+  identificationMark?: Prisma.StringFilter<"Student"> | string
   allergies?: Prisma.StringNullableFilter<"Student"> | string | null
   physicalAccessibilityRequirements?: Prisma.StringNullableFilter<"Student"> | string | null
   onboardingStatus?: Prisma.EnumOnboardingStatusFilter<"Student"> | $Enums.OnboardingStatus
@@ -380,7 +388,8 @@ export type StudentOrderByWithRelationInput = {
   emergencyContactNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   emergencyContactRelation?: Prisma.SortOrderInput | Prisma.SortOrder
   bloodGroup?: Prisma.SortOrderInput | Prisma.SortOrder
-  medicalConditions?: Prisma.SortOrderInput | Prisma.SortOrder
+  medicalConditions?: Prisma.SortOrder
+  identificationMark?: Prisma.SortOrder
   allergies?: Prisma.SortOrderInput | Prisma.SortOrder
   physicalAccessibilityRequirements?: Prisma.SortOrderInput | Prisma.SortOrder
   onboardingStatus?: Prisma.SortOrder
@@ -418,7 +427,8 @@ export type StudentWhereUniqueInput = Prisma.AtLeast<{
   emergencyContactNumber?: Prisma.StringNullableFilter<"Student"> | string | null
   emergencyContactRelation?: Prisma.StringNullableFilter<"Student"> | string | null
   bloodGroup?: Prisma.EnumBloodGroupNullableFilter<"Student"> | $Enums.BloodGroup | null
-  medicalConditions?: Prisma.StringNullableFilter<"Student"> | string | null
+  medicalConditions?: Prisma.StringFilter<"Student"> | string
+  identificationMark?: Prisma.StringFilter<"Student"> | string
   allergies?: Prisma.StringNullableFilter<"Student"> | string | null
   physicalAccessibilityRequirements?: Prisma.StringNullableFilter<"Student"> | string | null
   onboardingStatus?: Prisma.EnumOnboardingStatusFilter<"Student"> | $Enums.OnboardingStatus
@@ -452,7 +462,8 @@ export type StudentOrderByWithAggregationInput = {
   emergencyContactNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   emergencyContactRelation?: Prisma.SortOrderInput | Prisma.SortOrder
   bloodGroup?: Prisma.SortOrderInput | Prisma.SortOrder
-  medicalConditions?: Prisma.SortOrderInput | Prisma.SortOrder
+  medicalConditions?: Prisma.SortOrder
+  identificationMark?: Prisma.SortOrder
   allergies?: Prisma.SortOrderInput | Prisma.SortOrder
   physicalAccessibilityRequirements?: Prisma.SortOrderInput | Prisma.SortOrder
   onboardingStatus?: Prisma.SortOrder
@@ -488,7 +499,8 @@ export type StudentScalarWhereWithAggregatesInput = {
   emergencyContactNumber?: Prisma.StringNullableWithAggregatesFilter<"Student"> | string | null
   emergencyContactRelation?: Prisma.StringNullableWithAggregatesFilter<"Student"> | string | null
   bloodGroup?: Prisma.EnumBloodGroupNullableWithAggregatesFilter<"Student"> | $Enums.BloodGroup | null
-  medicalConditions?: Prisma.StringNullableWithAggregatesFilter<"Student"> | string | null
+  medicalConditions?: Prisma.StringWithAggregatesFilter<"Student"> | string
+  identificationMark?: Prisma.StringWithAggregatesFilter<"Student"> | string
   allergies?: Prisma.StringNullableWithAggregatesFilter<"Student"> | string | null
   physicalAccessibilityRequirements?: Prisma.StringNullableWithAggregatesFilter<"Student"> | string | null
   onboardingStatus?: Prisma.EnumOnboardingStatusWithAggregatesFilter<"Student"> | $Enums.OnboardingStatus
@@ -516,7 +528,8 @@ export type StudentCreateInput = {
   emergencyContactNumber?: string | null
   emergencyContactRelation?: string | null
   bloodGroup?: $Enums.BloodGroup | null
-  medicalConditions?: string | null
+  medicalConditions?: string
+  identificationMark?: string
   allergies?: string | null
   physicalAccessibilityRequirements?: string | null
   onboardingStatus?: $Enums.OnboardingStatus
@@ -549,7 +562,8 @@ export type StudentUncheckedCreateInput = {
   emergencyContactNumber?: string | null
   emergencyContactRelation?: string | null
   bloodGroup?: $Enums.BloodGroup | null
-  medicalConditions?: string | null
+  medicalConditions?: string
+  identificationMark?: string
   allergies?: string | null
   physicalAccessibilityRequirements?: string | null
   onboardingStatus?: $Enums.OnboardingStatus
@@ -578,7 +592,8 @@ export type StudentUpdateInput = {
   emergencyContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyContactRelation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bloodGroup?: Prisma.NullableEnumBloodGroupFieldUpdateOperationsInput | $Enums.BloodGroup | null
-  medicalConditions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  medicalConditions?: Prisma.StringFieldUpdateOperationsInput | string
+  identificationMark?: Prisma.StringFieldUpdateOperationsInput | string
   allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   physicalAccessibilityRequirements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
@@ -611,7 +626,8 @@ export type StudentUncheckedUpdateInput = {
   emergencyContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyContactRelation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bloodGroup?: Prisma.NullableEnumBloodGroupFieldUpdateOperationsInput | $Enums.BloodGroup | null
-  medicalConditions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  medicalConditions?: Prisma.StringFieldUpdateOperationsInput | string
+  identificationMark?: Prisma.StringFieldUpdateOperationsInput | string
   allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   physicalAccessibilityRequirements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
@@ -642,7 +658,8 @@ export type StudentCreateManyInput = {
   emergencyContactNumber?: string | null
   emergencyContactRelation?: string | null
   bloodGroup?: $Enums.BloodGroup | null
-  medicalConditions?: string | null
+  medicalConditions?: string
+  identificationMark?: string
   allergies?: string | null
   physicalAccessibilityRequirements?: string | null
   onboardingStatus?: $Enums.OnboardingStatus
@@ -670,7 +687,8 @@ export type StudentUpdateManyMutationInput = {
   emergencyContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyContactRelation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bloodGroup?: Prisma.NullableEnumBloodGroupFieldUpdateOperationsInput | $Enums.BloodGroup | null
-  medicalConditions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  medicalConditions?: Prisma.StringFieldUpdateOperationsInput | string
+  identificationMark?: Prisma.StringFieldUpdateOperationsInput | string
   allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   physicalAccessibilityRequirements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
@@ -699,7 +717,8 @@ export type StudentUncheckedUpdateManyInput = {
   emergencyContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyContactRelation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bloodGroup?: Prisma.NullableEnumBloodGroupFieldUpdateOperationsInput | $Enums.BloodGroup | null
-  medicalConditions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  medicalConditions?: Prisma.StringFieldUpdateOperationsInput | string
+  identificationMark?: Prisma.StringFieldUpdateOperationsInput | string
   allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   physicalAccessibilityRequirements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
@@ -750,6 +769,7 @@ export type StudentCountOrderByAggregateInput = {
   emergencyContactRelation?: Prisma.SortOrder
   bloodGroup?: Prisma.SortOrder
   medicalConditions?: Prisma.SortOrder
+  identificationMark?: Prisma.SortOrder
   allergies?: Prisma.SortOrder
   physicalAccessibilityRequirements?: Prisma.SortOrder
   onboardingStatus?: Prisma.SortOrder
@@ -780,6 +800,7 @@ export type StudentMaxOrderByAggregateInput = {
   emergencyContactRelation?: Prisma.SortOrder
   bloodGroup?: Prisma.SortOrder
   medicalConditions?: Prisma.SortOrder
+  identificationMark?: Prisma.SortOrder
   allergies?: Prisma.SortOrder
   physicalAccessibilityRequirements?: Prisma.SortOrder
   onboardingStatus?: Prisma.SortOrder
@@ -810,6 +831,7 @@ export type StudentMinOrderByAggregateInput = {
   emergencyContactRelation?: Prisma.SortOrder
   bloodGroup?: Prisma.SortOrder
   medicalConditions?: Prisma.SortOrder
+  identificationMark?: Prisma.SortOrder
   allergies?: Prisma.SortOrder
   physicalAccessibilityRequirements?: Prisma.SortOrder
   onboardingStatus?: Prisma.SortOrder
@@ -980,7 +1002,8 @@ export type StudentCreateWithoutAcademicYearInput = {
   emergencyContactNumber?: string | null
   emergencyContactRelation?: string | null
   bloodGroup?: $Enums.BloodGroup | null
-  medicalConditions?: string | null
+  medicalConditions?: string
+  identificationMark?: string
   allergies?: string | null
   physicalAccessibilityRequirements?: string | null
   onboardingStatus?: $Enums.OnboardingStatus
@@ -1011,7 +1034,8 @@ export type StudentUncheckedCreateWithoutAcademicYearInput = {
   emergencyContactNumber?: string | null
   emergencyContactRelation?: string | null
   bloodGroup?: $Enums.BloodGroup | null
-  medicalConditions?: string | null
+  medicalConditions?: string
+  identificationMark?: string
   allergies?: string | null
   physicalAccessibilityRequirements?: string | null
   onboardingStatus?: $Enums.OnboardingStatus
@@ -1071,7 +1095,8 @@ export type StudentScalarWhereInput = {
   emergencyContactNumber?: Prisma.StringNullableFilter<"Student"> | string | null
   emergencyContactRelation?: Prisma.StringNullableFilter<"Student"> | string | null
   bloodGroup?: Prisma.EnumBloodGroupNullableFilter<"Student"> | $Enums.BloodGroup | null
-  medicalConditions?: Prisma.StringNullableFilter<"Student"> | string | null
+  medicalConditions?: Prisma.StringFilter<"Student"> | string
+  identificationMark?: Prisma.StringFilter<"Student"> | string
   allergies?: Prisma.StringNullableFilter<"Student"> | string | null
   physicalAccessibilityRequirements?: Prisma.StringNullableFilter<"Student"> | string | null
   onboardingStatus?: Prisma.EnumOnboardingStatusFilter<"Student"> | $Enums.OnboardingStatus
@@ -1099,7 +1124,8 @@ export type StudentCreateWithoutUserInput = {
   emergencyContactNumber?: string | null
   emergencyContactRelation?: string | null
   bloodGroup?: $Enums.BloodGroup | null
-  medicalConditions?: string | null
+  medicalConditions?: string
+  identificationMark?: string
   allergies?: string | null
   physicalAccessibilityRequirements?: string | null
   onboardingStatus?: $Enums.OnboardingStatus
@@ -1130,7 +1156,8 @@ export type StudentUncheckedCreateWithoutUserInput = {
   emergencyContactNumber?: string | null
   emergencyContactRelation?: string | null
   bloodGroup?: $Enums.BloodGroup | null
-  medicalConditions?: string | null
+  medicalConditions?: string
+  identificationMark?: string
   allergies?: string | null
   physicalAccessibilityRequirements?: string | null
   onboardingStatus?: $Enums.OnboardingStatus
@@ -1175,7 +1202,8 @@ export type StudentUpdateWithoutUserInput = {
   emergencyContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyContactRelation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bloodGroup?: Prisma.NullableEnumBloodGroupFieldUpdateOperationsInput | $Enums.BloodGroup | null
-  medicalConditions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  medicalConditions?: Prisma.StringFieldUpdateOperationsInput | string
+  identificationMark?: Prisma.StringFieldUpdateOperationsInput | string
   allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   physicalAccessibilityRequirements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
@@ -1206,7 +1234,8 @@ export type StudentUncheckedUpdateWithoutUserInput = {
   emergencyContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyContactRelation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bloodGroup?: Prisma.NullableEnumBloodGroupFieldUpdateOperationsInput | $Enums.BloodGroup | null
-  medicalConditions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  medicalConditions?: Prisma.StringFieldUpdateOperationsInput | string
+  identificationMark?: Prisma.StringFieldUpdateOperationsInput | string
   allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   physicalAccessibilityRequirements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
@@ -1235,7 +1264,8 @@ export type StudentCreateWithoutHostelInput = {
   emergencyContactNumber?: string | null
   emergencyContactRelation?: string | null
   bloodGroup?: $Enums.BloodGroup | null
-  medicalConditions?: string | null
+  medicalConditions?: string
+  identificationMark?: string
   allergies?: string | null
   physicalAccessibilityRequirements?: string | null
   onboardingStatus?: $Enums.OnboardingStatus
@@ -1267,7 +1297,8 @@ export type StudentUncheckedCreateWithoutHostelInput = {
   emergencyContactNumber?: string | null
   emergencyContactRelation?: string | null
   bloodGroup?: $Enums.BloodGroup | null
-  medicalConditions?: string | null
+  medicalConditions?: string
+  identificationMark?: string
   allergies?: string | null
   physicalAccessibilityRequirements?: string | null
   onboardingStatus?: $Enums.OnboardingStatus
@@ -1321,7 +1352,8 @@ export type StudentCreateWithoutAllocationInput = {
   emergencyContactNumber?: string | null
   emergencyContactRelation?: string | null
   bloodGroup?: $Enums.BloodGroup | null
-  medicalConditions?: string | null
+  medicalConditions?: string
+  identificationMark?: string
   allergies?: string | null
   physicalAccessibilityRequirements?: string | null
   onboardingStatus?: $Enums.OnboardingStatus
@@ -1353,7 +1385,8 @@ export type StudentUncheckedCreateWithoutAllocationInput = {
   emergencyContactNumber?: string | null
   emergencyContactRelation?: string | null
   bloodGroup?: $Enums.BloodGroup | null
-  medicalConditions?: string | null
+  medicalConditions?: string
+  identificationMark?: string
   allergies?: string | null
   physicalAccessibilityRequirements?: string | null
   onboardingStatus?: $Enums.OnboardingStatus
@@ -1397,7 +1430,8 @@ export type StudentUpdateWithoutAllocationInput = {
   emergencyContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyContactRelation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bloodGroup?: Prisma.NullableEnumBloodGroupFieldUpdateOperationsInput | $Enums.BloodGroup | null
-  medicalConditions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  medicalConditions?: Prisma.StringFieldUpdateOperationsInput | string
+  identificationMark?: Prisma.StringFieldUpdateOperationsInput | string
   allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   physicalAccessibilityRequirements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
@@ -1429,7 +1463,8 @@ export type StudentUncheckedUpdateWithoutAllocationInput = {
   emergencyContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyContactRelation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bloodGroup?: Prisma.NullableEnumBloodGroupFieldUpdateOperationsInput | $Enums.BloodGroup | null
-  medicalConditions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  medicalConditions?: Prisma.StringFieldUpdateOperationsInput | string
+  identificationMark?: Prisma.StringFieldUpdateOperationsInput | string
   allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   physicalAccessibilityRequirements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
@@ -1458,7 +1493,8 @@ export type StudentCreateManyAcademicYearInput = {
   emergencyContactNumber?: string | null
   emergencyContactRelation?: string | null
   bloodGroup?: $Enums.BloodGroup | null
-  medicalConditions?: string | null
+  medicalConditions?: string
+  identificationMark?: string
   allergies?: string | null
   physicalAccessibilityRequirements?: string | null
   onboardingStatus?: $Enums.OnboardingStatus
@@ -1486,7 +1522,8 @@ export type StudentUpdateWithoutAcademicYearInput = {
   emergencyContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyContactRelation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bloodGroup?: Prisma.NullableEnumBloodGroupFieldUpdateOperationsInput | $Enums.BloodGroup | null
-  medicalConditions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  medicalConditions?: Prisma.StringFieldUpdateOperationsInput | string
+  identificationMark?: Prisma.StringFieldUpdateOperationsInput | string
   allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   physicalAccessibilityRequirements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
@@ -1517,7 +1554,8 @@ export type StudentUncheckedUpdateWithoutAcademicYearInput = {
   emergencyContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyContactRelation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bloodGroup?: Prisma.NullableEnumBloodGroupFieldUpdateOperationsInput | $Enums.BloodGroup | null
-  medicalConditions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  medicalConditions?: Prisma.StringFieldUpdateOperationsInput | string
+  identificationMark?: Prisma.StringFieldUpdateOperationsInput | string
   allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   physicalAccessibilityRequirements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
@@ -1547,7 +1585,8 @@ export type StudentUncheckedUpdateManyWithoutAcademicYearInput = {
   emergencyContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyContactRelation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bloodGroup?: Prisma.NullableEnumBloodGroupFieldUpdateOperationsInput | $Enums.BloodGroup | null
-  medicalConditions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  medicalConditions?: Prisma.StringFieldUpdateOperationsInput | string
+  identificationMark?: Prisma.StringFieldUpdateOperationsInput | string
   allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   physicalAccessibilityRequirements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
@@ -1577,7 +1616,8 @@ export type StudentCreateManyHostelInput = {
   emergencyContactNumber?: string | null
   emergencyContactRelation?: string | null
   bloodGroup?: $Enums.BloodGroup | null
-  medicalConditions?: string | null
+  medicalConditions?: string
+  identificationMark?: string
   allergies?: string | null
   physicalAccessibilityRequirements?: string | null
   onboardingStatus?: $Enums.OnboardingStatus
@@ -1604,7 +1644,8 @@ export type StudentUpdateWithoutHostelInput = {
   emergencyContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyContactRelation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bloodGroup?: Prisma.NullableEnumBloodGroupFieldUpdateOperationsInput | $Enums.BloodGroup | null
-  medicalConditions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  medicalConditions?: Prisma.StringFieldUpdateOperationsInput | string
+  identificationMark?: Prisma.StringFieldUpdateOperationsInput | string
   allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   physicalAccessibilityRequirements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
@@ -1636,7 +1677,8 @@ export type StudentUncheckedUpdateWithoutHostelInput = {
   emergencyContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyContactRelation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bloodGroup?: Prisma.NullableEnumBloodGroupFieldUpdateOperationsInput | $Enums.BloodGroup | null
-  medicalConditions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  medicalConditions?: Prisma.StringFieldUpdateOperationsInput | string
+  identificationMark?: Prisma.StringFieldUpdateOperationsInput | string
   allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   physicalAccessibilityRequirements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
@@ -1666,7 +1708,8 @@ export type StudentUncheckedUpdateManyWithoutHostelInput = {
   emergencyContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyContactRelation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bloodGroup?: Prisma.NullableEnumBloodGroupFieldUpdateOperationsInput | $Enums.BloodGroup | null
-  medicalConditions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  medicalConditions?: Prisma.StringFieldUpdateOperationsInput | string
+  identificationMark?: Prisma.StringFieldUpdateOperationsInput | string
   allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   physicalAccessibilityRequirements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
@@ -1698,6 +1741,7 @@ export type StudentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   emergencyContactRelation?: boolean
   bloodGroup?: boolean
   medicalConditions?: boolean
+  identificationMark?: boolean
   allergies?: boolean
   physicalAccessibilityRequirements?: boolean
   onboardingStatus?: boolean
@@ -1732,6 +1776,7 @@ export type StudentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   emergencyContactRelation?: boolean
   bloodGroup?: boolean
   medicalConditions?: boolean
+  identificationMark?: boolean
   allergies?: boolean
   physicalAccessibilityRequirements?: boolean
   onboardingStatus?: boolean
@@ -1765,6 +1810,7 @@ export type StudentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   emergencyContactRelation?: boolean
   bloodGroup?: boolean
   medicalConditions?: boolean
+  identificationMark?: boolean
   allergies?: boolean
   physicalAccessibilityRequirements?: boolean
   onboardingStatus?: boolean
@@ -1798,6 +1844,7 @@ export type StudentSelectScalar = {
   emergencyContactRelation?: boolean
   bloodGroup?: boolean
   medicalConditions?: boolean
+  identificationMark?: boolean
   allergies?: boolean
   physicalAccessibilityRequirements?: boolean
   onboardingStatus?: boolean
@@ -1811,7 +1858,7 @@ export type StudentSelectScalar = {
   updatedAt?: boolean
 }
 
-export type StudentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "academicYearId" | "name" | "rollNumber" | "branch" | "email" | "contactNumber" | "alternateContactNumber" | "permanentAddress" | "state" | "emergencyContactName" | "emergencyContactNumber" | "emergencyContactRelation" | "bloodGroup" | "medicalConditions" | "allergies" | "physicalAccessibilityRequirements" | "onboardingStatus" | "onboardingSubmittedAt" | "consentGiven" | "editAllowedByAdmin" | "isVerified" | "needsReview" | "hostelId" | "createdAt" | "updatedAt", ExtArgs["result"]["student"]>
+export type StudentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "academicYearId" | "name" | "rollNumber" | "branch" | "email" | "contactNumber" | "alternateContactNumber" | "permanentAddress" | "state" | "emergencyContactName" | "emergencyContactNumber" | "emergencyContactRelation" | "bloodGroup" | "medicalConditions" | "identificationMark" | "allergies" | "physicalAccessibilityRequirements" | "onboardingStatus" | "onboardingSubmittedAt" | "consentGiven" | "editAllowedByAdmin" | "isVerified" | "needsReview" | "hostelId" | "createdAt" | "updatedAt", ExtArgs["result"]["student"]>
 export type StudentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   academicYear?: boolean | Prisma.AcademicYearDefaultArgs<ExtArgs>
@@ -1853,7 +1900,8 @@ export type $StudentPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     emergencyContactNumber: string | null
     emergencyContactRelation: string | null
     bloodGroup: $Enums.BloodGroup | null
-    medicalConditions: string | null
+    medicalConditions: string
+    identificationMark: string
     allergies: string | null
     physicalAccessibilityRequirements: string | null
     onboardingStatus: $Enums.OnboardingStatus
@@ -2308,6 +2356,7 @@ export interface StudentFieldRefs {
   readonly emergencyContactRelation: Prisma.FieldRef<"Student", 'String'>
   readonly bloodGroup: Prisma.FieldRef<"Student", 'BloodGroup'>
   readonly medicalConditions: Prisma.FieldRef<"Student", 'String'>
+  readonly identificationMark: Prisma.FieldRef<"Student", 'String'>
   readonly allergies: Prisma.FieldRef<"Student", 'String'>
   readonly physicalAccessibilityRequirements: Prisma.FieldRef<"Student", 'String'>
   readonly onboardingStatus: Prisma.FieldRef<"Student", 'OnboardingStatus'>

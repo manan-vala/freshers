@@ -30,15 +30,15 @@ export async function getHostelDashboardStats(userId: string) {
   // What about total verified students? Are verified students tied to a hostel BEFORE allocation? No.
   // We can just return global stats for verified and needing review.
   const totalVerified = await prisma.student.count({
-    where: { academicYearId: activeYear.id, isVerified: true, hostelId }
+    where: { academicYearId: activeYear.id, isVerified: true }
   });
 
   const totalNeedingReview = await prisma.student.count({
-    where: { academicYearId: activeYear.id, needsReview: true, hostelId }
+    where: { academicYearId: activeYear.id, needsReview: true }
   });
 
   const totalOnboarded = await prisma.student.count({
-    where: { academicYearId: activeYear.id, onboardingStatus: 'SUBMITTED', hostelId }
+    where: { academicYearId: activeYear.id, onboardingStatus: 'SUBMITTED' }
   });
 
   return {

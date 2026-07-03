@@ -5,6 +5,7 @@ export function getSubject(templateId: EmailJob['templateId']): string {
     credentials: 'IITG Fresher Onboarding — Your Login Credentials',
     allocation: 'IITG Fresher Onboarding — Room Allocation Confirmed',
     'password-reset': 'IITG Fresher Onboarding — Password Reset',
+    'otp-email': 'IITG Fresher Onboarding — Your Verification Code', // Added this!
   };
   return subjects[templateId];
 }
@@ -18,12 +19,12 @@ export function renderTemplate(templateId: EmailJob['templateId'], data: Record<
       <p><strong>Password:</strong> ${data['password']}</p>
       <p>Please login and change your password immediately.</p>
     `;
-  } else if (templateId === 'password-reset') {
+  } else if (templateId === 'password-reset' || templateId === 'otp-email') { // Handles both now!
     return `
-      <h2>Password Reset</h2>
-      <p>A password reset was requested for your account.</p>
-      <p>Your password reset token is: <strong>${data['token']}</strong></p>
-      <p>If you did not request this, please ignore this email.</p>
+      <h2>Verification Required</h2>
+      <p>Your one-time password (OTP) is:</p>
+      <h1 style="font-size: 32px; letter-spacing: 5px; color: #000;">${data['token'] || data['otp']}</h1>
+      <p>If you did not request this, please ignore this email. This code expires in 5 minutes.</p>
     `;
   } else if (templateId === 'allocation') {
     return `

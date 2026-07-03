@@ -1,28 +1,29 @@
 import { z } from 'zod';
 
+// ─── RESTORED LOGIN SCHEMA ──────────────────────────────────────────────
 export const loginSchema = z.object({
-  email: z.string().email('Please enter a valid email address'),
+  email: z.string().email('Invalid email address'),
   password: z.string().min(1, 'Password is required'),
 });
 
-export type LoginInput = z.infer<typeof loginSchema>;
-
+// ─── NEW OTP SCHEMAS ────────────────────────────────────────────────────
 export const changePasswordSchema = z.object({
-  currentPassword: z.string().min(1, 'Current password is required'),
-  newPassword: z.string().min(8, 'New password must be at least 8 characters'),
+  otp: z.string().length(6, 'OTP must be exactly 6 digits'),
+  newPassword: z.string().min(8, 'Password must be at least 8 characters'),
 });
-
-export type ChangePasswordInput = z.infer<typeof changePasswordSchema>;
 
 export const forgotPasswordSchema = z.object({
   email: z.string().email('Invalid email address'),
 });
 
-export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
-
 export const resetPasswordSchema = z.object({
-  token: z.string().min(1, 'Token is required'),
-  newPassword: z.string().min(8, 'New password must be at least 8 characters'),
+  email: z.string().email(),
+  otp: z.string().length(6, 'OTP must be exactly 6 digits'),
+  newPassword: z.string().min(8, 'Password must be at least 8 characters'),
 });
 
+// ─── EXPORTED TYPES ─────────────────────────────────────────────────────
+export type LoginInput = z.infer<typeof loginSchema>;
+export type ChangePasswordInput = z.infer<typeof changePasswordSchema>;
+export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
 export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;

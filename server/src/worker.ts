@@ -1,9 +1,9 @@
+import 'dotenv/config';                // ✅ Load the variables FIRST
 import { Worker } from 'bullmq';
-import { env } from '@/config/env';
+import { env } from '@/config/env';    // ✅ Now Zod can see them!
 import type { EmailJob } from '@/modules/email/email.types';
 import { transporter } from '@/modules/email/email.transporter';
 import { renderTemplate, getSubject } from '@/modules/email/email.templates';
-
 const worker = new Worker<EmailJob>(
   'emails',
   async (job) => {
