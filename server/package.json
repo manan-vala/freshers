@@ -13,7 +13,8 @@
     "db:studio": "prisma studio",
     "db:seed:personas": "tsx src/scripts/seed-personas.ts",
     "typecheck": "tsc --noEmit",
-    "worker:dev": "tsx watch src/worker.ts"
+    "worker:dev": "tsx watch src/worker.ts",
+    "db:clear-cache": "node -e \"const Redis = require('ioredis'); new Redis('redis://localhost:6379').flushall().then(() => { console.log('Redis cache cleared!'); process.exit(0); })\""
   },
   "keywords": [],
   "author": "",

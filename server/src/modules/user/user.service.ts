@@ -1,7 +1,9 @@
 import { prisma } from '@/config/prisma';
 import { emailQueue } from '@/modules/email/email.queue';
 import { hashPassword } from '@/utils/password.util';
+import { AppError } from '@/utils/errors';
 import { randomBytes } from 'crypto';
+import type { HostelName } from '../../../generated/prisma';
 
 export async function createUser(data: {
   email: string;
@@ -63,6 +65,70 @@ export async function createUser(data: {
   return user;
 }
 
+// ─── CREATE ADMIN / HMC USER ─────────────────────────────────────────────────
+// Wraps User creation + HMCAdmin linking in a single transaction.
+// If any step fails, the whole operation rolls back — no zombie User rows.
+export async function createAdminUser(data: {
+  email: string;
+  loginId: string;
+  role: 'HMC' | 'ADMIN';
+  hostelName?: HostelName;  // Required when role === 'HMC'
+}) {
+  const plainPassword = randomBytes(8).toString('hex');
+  const passwordHash = await hashPassword(plainPassword);
+
+  const user = await prisma.$transaction(async (tx) => {
+    // 1. Create the base User row
+    const newUser = await tx.user.create({
+      data: {
+        email: data.email,
+        loginId: data.loginId,
+        passwordHash,
+        role: data.role,
+        mustChangePassword: true,
+        isActive: true,
+      },
+    });
+
+    // 2. If HMC role, link to hostel atomically in the same transaction
+    if (data.role === 'HMC') {
+      if (!data.hostelName) {
+        throw new AppError(400, 'hostelName is required for HMC role');
+      }
+
+      const activeYear = await tx.academicYear.findFirst({ where: { isActive: true } });
+      if (!activeYear) {
+        throw new AppError(400, 'No active academic year found. Create one before provisioning HMC admins.');
+      }
+
+      const hostel = await tx.hostel.findFirst({
+        where: { name: data.hostelName, academicYearId: activeYear.id },
+      });
+      if (!hostel) {
+        throw new AppError(
+          404,
+          `Hostel "${data.hostelName}" not found for the active academic year. Create the hostel first.`
+        );
+      }
+
+      await tx.hMCAdmin.create({
+        data: { userId: newUser.id, hostelId: hostel.id },
+      });
+    }
+
+    return newUser;
+  });
+
+  // 3. Queue credential email AFTER transaction commits successfully
+  await emailQueue.add('credential', {
+    to: user.email,
+    templateId: 'credentials',
+    data: { loginId: user.loginId, password: plainPassword },
+  });
+
+  return user;
+}
+
 import type { BulkUploadRow } from '@shared/student';
 
 export async function bulkUploadStudents(rows: BulkUploadRow[], uploadedBy: string) {
@@ -96,4 +162,58 @@ export async function bulkUploadStudents(rows: BulkUploadRow[], uploadedBy: stri
   }
 
   return { successCount, failureCount, errors };
+}
+
+export async function getAllStudents(params: {
+  page: number;
+  limit: number;
+  search?: string;
+  status?: string;
+}) {
+  const activeYear = await prisma.academicYear.findFirst({ where: { isActive: true } });
+  if (!activeYear) {
+    throw new AppError(400, 'No active academic year found');
+  }
+
+  const { page, limit, search, status } = params;
+  const skip = (page - 1) * limit;
+
+  // Build the where clause
+  const where: any = {
+    academicYearId: activeYear.id,
+  };
+
+  if (status) {
+    where.onboardingStatus = status;
+  }
+
+  if (search) {
+    where.OR = [
+      { name: { contains: search, mode: 'insensitive' } },
+      { rollNumber: { contains: search, mode: 'insensitive' } },
+      { user: { email: { contains: search, mode: 'insensitive' } } },
+    ];
+  }
+
+  const [students, total] = await Promise.all([
+    prisma.student.findMany({
+      where,
+      include: {
+        user: { select: { email: true, isActive: true } },
+        hostel: { select: { name: true, code: true } },
+        allocation: { select: { id: true, isActive: true } },
+      },
+      skip,
+      take: limit,
+      orderBy: { createdAt: 'desc' },
+    }),
+    prisma.student.count({ where }),
+  ]);
+
+  return {
+    data: students,
+    total,
+    page,
+    limit,
+  };
 }

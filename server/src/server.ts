@@ -6,6 +6,15 @@ import { prisma } from '@/config/prisma'
 import { redis } from '@/config/redis'
 
 async function bootstrap() {
+  // Check Database connection
+  try {
+    await prisma.$queryRaw`SELECT 1`
+    console.log('✓ Database connected')
+  } catch (error) {
+    console.error('✗ Database connection failed:', error)
+    process.exit(1) // Fail fast if DB is down
+  }
+
   const app = createApp()
   const server = http.createServer(app)
 

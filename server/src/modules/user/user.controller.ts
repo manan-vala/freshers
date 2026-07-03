@@ -1,67 +1,35 @@
 import { Request, Response, NextFunction } from 'express';
 import { prisma } from '@/config/prisma';
-import { createUser } from './user.service';
+import { createUser, createAdminUser, bulkUploadStudents, getAllStudents } from './user.service';
 import { AppError } from '@/utils/errors';
+import type { HostelName } from '../../generated/prisma';
 
 export async function createAdminUserHandler(req: Request, res: Response, next: NextFunction) {
   try {
-    const { email, loginId, role, hostelId } = req.body;
+    const { email, loginId, role, hostelName } = req.body;
 
     if (role !== 'HMC' && role !== 'ADMIN') {
       throw new AppError(400, 'Invalid role for admin creation');
     }
 
-    if (role === 'HMC' && !hostelId) {
-      throw new AppError(400, 'hostelId is required for HMC role');
+    if (role === 'HMC' && !hostelName) {
+      throw new AppError(400, 'hostelName is required for HMC role');
     }
 
-    // Use the existing createUser service to set up the base user
-    const user = await createUser({ email, loginId, role });
-
-    // If HMC, link to hostel
-    if (role === 'HMC') {
-      // Find active academic year or create one
-      let academicYear = await prisma.academicYear.findFirst({
-        where: { isActive: true }
-      });
-      if (!academicYear) {
-        academicYear = await prisma.academicYear.create({
-          data: { year: 'Current', isActive: true }
-        });
-      }
-
-      // Map the string name to the enum name (e.g. "Married Scholar" -> "MARRIED_SCHOLAR_HOSTEL")
-      const formattedName = hostelId.toUpperCase().replace(/\s+/g, '_') + '_HOSTEL';
-      // Create or find hostel
-      let hostel = await prisma.hostel.findFirst({
-        where: { name: formattedName as any, academicYearId: academicYear.id }
-      });
-
-      if (!hostel) {
-        hostel = await prisma.hostel.create({
-          data: {
-            name: formattedName as any,
-            code: hostelId.substring(0, 3).toUpperCase(),
-            type: 'CO_ED', // Defaulting since we don't have this in the frontend request
-            academicYearId: academicYear.id,
-            isActive: true,
-          }
-        });
-      }
-
-      await prisma.hMCAdmin.create({
-        data: {
-          userId: user.id,
-          hostelId: hostel.id,
-        }
-      });
-    }
+    // Delegate entirely to the service — transaction guarantees no zombie User rows
+    const user = await createAdminUser({
+      email,
+      loginId,
+      role,
+      hostelName: hostelName as HostelName | undefined,
+    });
 
     res.status(201).json({ success: true, data: user });
   } catch (error) {
     next(error);
   }
 }
+
 
 export async function getHMCUsersHandler(req: Request, res: Response, next: NextFunction) {
   try {
@@ -119,7 +87,6 @@ export async function deleteHMCUserHandler(req: Request, res: Response, next: Ne
 
 import { parse } from 'csv-parse/sync';
 import { bulkUploadRowSchema } from '@shared/student';
-import { bulkUploadStudents } from './user.service';
 
 export async function bulkUploadStudentsHandler(req: Request, res: Response, next: NextFunction) {
   try {
@@ -151,6 +118,24 @@ export async function bulkUploadStudentsHandler(req: Request, res: Response, nex
     res.status(200).json({
       success: true,
       data: result
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getAllStudentsHandler(req: Request, res: Response, next: NextFunction) {
+  try {
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+    const search = req.query.search as string | undefined;
+    const status = req.query.status as string | undefined;
+
+    const result = await getAllStudents({ page, limit, search, status });
+
+    res.status(200).json({
+      success: true,
+      ...result, // spreads data, total, page, limit
     });
   } catch (error) {
     next(error);
