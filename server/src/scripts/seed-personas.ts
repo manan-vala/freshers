@@ -22,21 +22,21 @@ async function main() {
     console.log(`Using Academic Year: ${academicYear.year}`);
   }
 
-  const defaultPassword = 'Password123!';
+  const defaultPassword = 'Swc_password';
   const hashedPassword = await hashPassword(defaultPassword);
 
   const personas = [
-    { email: 'test1@iitg.ac.in', name: 'Test Persona 1', rollNumber: '26010001', hostelName: 'LOHIT_HOSTEL', hostelCode: 'LHT', hostelType: 'BOYS' },
-    { email: 'test2@iitg.ac.in', name: 'Test Persona 2', rollNumber: '26010002', hostelName: 'DISANG_HOSTEL', hostelCode: 'DSG', hostelType: 'BOYS' },
-    { email: 'test3@iitg.ac.in', name: 'Test Persona 3', rollNumber: '26010003', hostelName: 'SUBANSIRI_HOSTEL', hostelCode: 'SBN', hostelType: 'GIRLS' },
-    { email: 'test4@iitg.ac.in', name: 'Test Persona 4', rollNumber: '26010004', hostelName: 'UMIAM_HOSTEL', hostelCode: 'UMM', hostelType: 'BOYS' },
-    { email: 'test5@iitg.ac.in', name: 'Test Persona 5', rollNumber: '26010005', hostelName: 'DHANSIRI_HOSTEL', hostelCode: 'DHS', hostelType: 'GIRLS' },
-    { email: 'test6@iitg.ac.in', name: 'Test Persona 6', rollNumber: '26010006', hostelName: 'MANAS_HOSTEL', hostelCode: 'MNS', hostelType: 'BOYS' },
-    { email: 'test7@iitg.ac.in', name: 'Test Persona 7', rollNumber: '26010007', hostelName: 'KAMENG_HOSTEL', hostelCode: 'KMG', hostelType: 'BOYS' },
-    { email: 'test8@iitg.ac.in', name: 'Test Persona 8', rollNumber: '26010008', hostelName: 'GAURANG_HOSTEL', hostelCode: 'GRG', hostelType: 'BOYS' },
-    { email: 'test9@iitg.ac.in', name: 'Test Persona 9', rollNumber: '26010009', hostelName: 'BARAK_HOSTEL', hostelCode: 'BRK', hostelType: 'BOYS' },
-    { email: 'test10@iitg.ac.in', name: 'Test Persona 10', rollNumber: '26010010', hostelName: 'BRAHMAPUTRA_HOSTEL', hostelCode: 'BHP', hostelType: 'BOYS' },
-    // { email: 's.vala@iitg.ac.in', name: 'Vala Manan', rollNumber: '26010011', hostelName: 'LOHIT_HOSTEL', hostelCode: 'LHT', hostelType: 'BOYS' },
+    { email: 'test1@iitg.ac.in', name: 'Test Persona 1', rollNumber: '26010001', hostelName: 'LOHIT_HOSTEL', hostelCode: 'LHT', hostelType: 'BOYS', outlookEmail: 'test1@outlook.com' },
+    { email: 'test2@iitg.ac.in', name: 'Test Persona 2', rollNumber: '26010002', hostelName: 'DISANG_HOSTEL', hostelCode: 'DSG', hostelType: 'BOYS', outlookEmail: 'test2@outlook.com' },
+    { email: 'test3@iitg.ac.in', name: 'Test Persona 3', rollNumber: '26010003', hostelName: 'SUBANSIRI_HOSTEL', hostelCode: 'SBN', hostelType: 'GIRLS', outlookEmail: 'test3@outlook.com' },
+    { email: 'test4@iitg.ac.in', name: 'Test Persona 4', rollNumber: '26010004', hostelName: 'UMIAM_HOSTEL', hostelCode: 'UMM', hostelType: 'BOYS', outlookEmail: 'test4@outlook.com' },
+    { email: 'test5@iitg.ac.in', name: 'Test Persona 5', rollNumber: '26010005', hostelName: 'DHANSIRI_HOSTEL', hostelCode: 'DHS', hostelType: 'GIRLS', outlookEmail: 'test5@outlook.com' },
+    { email: 'test6@iitg.ac.in', name: 'Test Persona 6', rollNumber: '26010006', hostelName: 'MANAS_HOSTEL', hostelCode: 'MNS', hostelType: 'BOYS', outlookEmail: 'test6@outlook.com' },
+    { email: 'test7@iitg.ac.in', name: 'Test Persona 7', rollNumber: '26010007', hostelName: 'KAMENG_HOSTEL', hostelCode: 'KMG', hostelType: 'BOYS', outlookEmail: 'test7@outlook.com' },
+    { email: 'test8@iitg.ac.in', name: 'Test Persona 8', rollNumber: '26010008', hostelName: 'GAURANG_HOSTEL', hostelCode: 'GRG', hostelType: 'BOYS', outlookEmail: 'test8@outlook.com' },
+    { email: 'test9@iitg.ac.in', name: 'Test Persona 9', rollNumber: '26010009', hostelName: 'BARAK_HOSTEL', hostelCode: 'BRK', hostelType: 'BOYS', outlookEmail: 'test9@outlook.com' },
+    { email: 'test10@iitg.ac.in', name: 'Test Persona 10', rollNumber: '26010010', hostelName: 'BRAHMAPUTRA_HOSTEL', hostelCode: 'BHP', hostelType: 'BOYS', outlookEmail: 'test10@outlook.com' },
+    // { email: 's.vala@iitg.ac.in', name: 'Vala Manan', rollNumber: '26010011', hostelName: 'LOHIT_HOSTEL', hostelCode: 'LHT', hostelType: 'BOYS', outlookEmail: 's.vala@outlook.com' },
   ] as const;
 
   // Clean up old test data first (both @outlook.com and @iitg.ac.in)
@@ -96,6 +96,7 @@ async function main() {
         rollNumber: p.rollNumber,
         branch: 'Computer Science and Engineering',
         email: p.email,
+        outlookEmail: p.outlookEmail,
         academicYearId: academicYear.id,
         hostelId: hostel.id,
       },
@@ -105,6 +106,7 @@ async function main() {
         rollNumber: p.rollNumber,
         branch: 'Computer Science and Engineering',
         email: p.email,
+        outlookEmail: p.outlookEmail,
         academicYearId: academicYear.id,
         hostelId: hostel.id,
       },

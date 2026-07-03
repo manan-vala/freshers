@@ -1,8 +1,10 @@
 import { redis } from '@/config/redis';
+import { randomInt } from 'crypto';
 
 // Generates a cryptographically safe 6-digit string
 export function generateOTP(): string {
-  return Math.floor(100000 + Math.random() * 900000).toString();
+  // randomInt is exclusive of the max bound
+  return randomInt(100000, 1000000).toString();
 }
 
 // Stores OTP in Redis with a strict TTL (default 5 minutes)

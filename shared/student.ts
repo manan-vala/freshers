@@ -53,6 +53,7 @@ export const bulkUploadRowSchema = z.object({
   branch: z.string().min(1, 'Branch is required'),
   email: z.string().email('Invalid email address'),
   hostelCode: z.string().min(1, 'Hostel code is required'),
+  outlookEmail: z.string().email('Invalid Outlook email address'),
 })
 
 export type BulkUploadRow = z.infer<typeof bulkUploadRowSchema>

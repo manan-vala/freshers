@@ -347,7 +347,7 @@ function SuperAdminDashboard() {
                     onChange={(e) => setUploadFile(e.target.files?.[0] || null)}
                   />
                   <p className="text-xs text-slate-500">
-                    CSV must contain: name, rollNumber, branch, email, hostelCode
+                    CSV must contain: name, rollNumber, branch, email, hostelCode, outlookEmail
                   </p>
                 </div>
                 <div className="space-y-2 flex flex-col justify-start">
@@ -470,6 +470,7 @@ function StudentsDataView() {
                 <TableHead>Roll No.</TableHead>
                 <TableHead>Branch</TableHead>
                 <TableHead>Email</TableHead>
+                <TableHead>Outlook Email</TableHead>
                 <TableHead>Hostel</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Room</TableHead>
@@ -478,13 +479,13 @@ function StudentsDataView() {
             <TableBody>
               {isLoading ? (
                 <TableRow>
-                  <TableCell colSpan={7} className="h-32 text-center text-slate-500">
+                  <TableCell colSpan={8} className="h-32 text-center text-slate-500">
                     <IconLoader2 className="animate-spin mx-auto size-6 text-emerald-500" />
                   </TableCell>
                 </TableRow>
               ) : students.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={7} className="h-32 text-center text-slate-500">
+                  <TableCell colSpan={8} className="h-32 text-center text-slate-500">
                     No students found.
                   </TableCell>
                 </TableRow>
@@ -497,6 +498,7 @@ function StudentsDataView() {
                       <TableCell className="text-slate-500">{student.rollNumber}</TableCell>
                       <TableCell className="text-slate-600 max-w-[150px] truncate" title={student.branch}>{student.branch}</TableCell>
                       <TableCell className="text-slate-500">{student.user.email}</TableCell>
+                      <TableCell className="text-slate-500">{student.outlookEmail}</TableCell>
                       <TableCell>{readableHostel}</TableCell>
                       <TableCell>
                         <Badge variant={student.onboardingStatus === 'SUBMITTED' ? 'default' : 'secondary'} className={student.onboardingStatus === 'SUBMITTED' ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200' : 'bg-amber-100 text-amber-700 hover:bg-amber-200'}>

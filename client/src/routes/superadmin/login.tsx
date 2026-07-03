@@ -9,7 +9,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { loginSchema, type LoginInput } from '@shared/auth'
 import { superAdminApi } from '@/lib/superadmin'
 import { authKeys } from '@/lib/auth'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 export const Route = createFileRoute('/superadmin/login')({
   beforeLoad: async ({ context: { queryClient } }) => {
@@ -24,6 +24,7 @@ export const Route = createFileRoute('/superadmin/login')({
 })
 
 function SuperAdminLoginPage() {
+  const queryClient = useQueryClient()
   const [showPassword, setShowPassword] = useState(false)
   const navigate = Route.useNavigate()
   
@@ -41,6 +42,7 @@ function SuperAdminLoginPage() {
       return data.data; // Returns { role, mustChangePassword } — NO token
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: authKeys.me });
       // Cookie is already set by the server. Just navigate.
       navigate({ to: '/superadmin/dashboard' });
     },

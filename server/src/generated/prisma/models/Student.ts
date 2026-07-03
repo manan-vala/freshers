@@ -32,6 +32,7 @@ export type StudentMinAggregateOutputType = {
   rollNumber: string | null
   branch: string | null
   email: string | null
+  outlookEmail: string | null
   contactNumber: string | null
   alternateContactNumber: string | null
   permanentAddress: string | null
@@ -63,6 +64,7 @@ export type StudentMaxAggregateOutputType = {
   rollNumber: string | null
   branch: string | null
   email: string | null
+  outlookEmail: string | null
   contactNumber: string | null
   alternateContactNumber: string | null
   permanentAddress: string | null
@@ -94,6 +96,7 @@ export type StudentCountAggregateOutputType = {
   rollNumber: number
   branch: number
   email: number
+  outlookEmail: number
   contactNumber: number
   alternateContactNumber: number
   permanentAddress: number
@@ -127,6 +130,7 @@ export type StudentMinAggregateInputType = {
   rollNumber?: true
   branch?: true
   email?: true
+  outlookEmail?: true
   contactNumber?: true
   alternateContactNumber?: true
   permanentAddress?: true
@@ -158,6 +162,7 @@ export type StudentMaxAggregateInputType = {
   rollNumber?: true
   branch?: true
   email?: true
+  outlookEmail?: true
   contactNumber?: true
   alternateContactNumber?: true
   permanentAddress?: true
@@ -189,6 +194,7 @@ export type StudentCountAggregateInputType = {
   rollNumber?: true
   branch?: true
   email?: true
+  outlookEmail?: true
   contactNumber?: true
   alternateContactNumber?: true
   permanentAddress?: true
@@ -293,6 +299,7 @@ export type StudentGroupByOutputType = {
   rollNumber: string
   branch: string
   email: string
+  outlookEmail: string
   contactNumber: string | null
   alternateContactNumber: string | null
   permanentAddress: string | null
@@ -345,6 +352,7 @@ export type StudentWhereInput = {
   rollNumber?: Prisma.StringFilter<"Student"> | string
   branch?: Prisma.StringFilter<"Student"> | string
   email?: Prisma.StringFilter<"Student"> | string
+  outlookEmail?: Prisma.StringFilter<"Student"> | string
   contactNumber?: Prisma.StringNullableFilter<"Student"> | string | null
   alternateContactNumber?: Prisma.StringNullableFilter<"Student"> | string | null
   permanentAddress?: Prisma.StringNullableFilter<"Student"> | string | null
@@ -380,6 +388,7 @@ export type StudentOrderByWithRelationInput = {
   rollNumber?: Prisma.SortOrder
   branch?: Prisma.SortOrder
   email?: Prisma.SortOrder
+  outlookEmail?: Prisma.SortOrder
   contactNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   alternateContactNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   permanentAddress?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -419,6 +428,7 @@ export type StudentWhereUniqueInput = Prisma.AtLeast<{
   rollNumber?: Prisma.StringFilter<"Student"> | string
   branch?: Prisma.StringFilter<"Student"> | string
   email?: Prisma.StringFilter<"Student"> | string
+  outlookEmail?: Prisma.StringFilter<"Student"> | string
   contactNumber?: Prisma.StringNullableFilter<"Student"> | string | null
   alternateContactNumber?: Prisma.StringNullableFilter<"Student"> | string | null
   permanentAddress?: Prisma.StringNullableFilter<"Student"> | string | null
@@ -454,6 +464,7 @@ export type StudentOrderByWithAggregationInput = {
   rollNumber?: Prisma.SortOrder
   branch?: Prisma.SortOrder
   email?: Prisma.SortOrder
+  outlookEmail?: Prisma.SortOrder
   contactNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   alternateContactNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   permanentAddress?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -491,6 +502,7 @@ export type StudentScalarWhereWithAggregatesInput = {
   rollNumber?: Prisma.StringWithAggregatesFilter<"Student"> | string
   branch?: Prisma.StringWithAggregatesFilter<"Student"> | string
   email?: Prisma.StringWithAggregatesFilter<"Student"> | string
+  outlookEmail?: Prisma.StringWithAggregatesFilter<"Student"> | string
   contactNumber?: Prisma.StringNullableWithAggregatesFilter<"Student"> | string | null
   alternateContactNumber?: Prisma.StringNullableWithAggregatesFilter<"Student"> | string | null
   permanentAddress?: Prisma.StringNullableWithAggregatesFilter<"Student"> | string | null
@@ -520,6 +532,7 @@ export type StudentCreateInput = {
   rollNumber: string
   branch: string
   email: string
+  outlookEmail: string
   contactNumber?: string | null
   alternateContactNumber?: string | null
   permanentAddress?: string | null
@@ -554,6 +567,7 @@ export type StudentUncheckedCreateInput = {
   rollNumber: string
   branch: string
   email: string
+  outlookEmail: string
   contactNumber?: string | null
   alternateContactNumber?: string | null
   permanentAddress?: string | null
@@ -584,6 +598,7 @@ export type StudentUpdateInput = {
   rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
   branch?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  outlookEmail?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   alternateContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permanentAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -618,6 +633,7 @@ export type StudentUncheckedUpdateInput = {
   rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
   branch?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  outlookEmail?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   alternateContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permanentAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -650,6 +666,7 @@ export type StudentCreateManyInput = {
   rollNumber: string
   branch: string
   email: string
+  outlookEmail: string
   contactNumber?: string | null
   alternateContactNumber?: string | null
   permanentAddress?: string | null
@@ -679,6 +696,7 @@ export type StudentUpdateManyMutationInput = {
   rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
   branch?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  outlookEmail?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   alternateContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permanentAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -709,6 +727,7 @@ export type StudentUncheckedUpdateManyInput = {
   rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
   branch?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  outlookEmail?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   alternateContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permanentAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -760,6 +779,7 @@ export type StudentCountOrderByAggregateInput = {
   rollNumber?: Prisma.SortOrder
   branch?: Prisma.SortOrder
   email?: Prisma.SortOrder
+  outlookEmail?: Prisma.SortOrder
   contactNumber?: Prisma.SortOrder
   alternateContactNumber?: Prisma.SortOrder
   permanentAddress?: Prisma.SortOrder
@@ -791,6 +811,7 @@ export type StudentMaxOrderByAggregateInput = {
   rollNumber?: Prisma.SortOrder
   branch?: Prisma.SortOrder
   email?: Prisma.SortOrder
+  outlookEmail?: Prisma.SortOrder
   contactNumber?: Prisma.SortOrder
   alternateContactNumber?: Prisma.SortOrder
   permanentAddress?: Prisma.SortOrder
@@ -822,6 +843,7 @@ export type StudentMinOrderByAggregateInput = {
   rollNumber?: Prisma.SortOrder
   branch?: Prisma.SortOrder
   email?: Prisma.SortOrder
+  outlookEmail?: Prisma.SortOrder
   contactNumber?: Prisma.SortOrder
   alternateContactNumber?: Prisma.SortOrder
   permanentAddress?: Prisma.SortOrder
@@ -994,6 +1016,7 @@ export type StudentCreateWithoutAcademicYearInput = {
   rollNumber: string
   branch: string
   email: string
+  outlookEmail: string
   contactNumber?: string | null
   alternateContactNumber?: string | null
   permanentAddress?: string | null
@@ -1026,6 +1049,7 @@ export type StudentUncheckedCreateWithoutAcademicYearInput = {
   rollNumber: string
   branch: string
   email: string
+  outlookEmail: string
   contactNumber?: string | null
   alternateContactNumber?: string | null
   permanentAddress?: string | null
@@ -1087,6 +1111,7 @@ export type StudentScalarWhereInput = {
   rollNumber?: Prisma.StringFilter<"Student"> | string
   branch?: Prisma.StringFilter<"Student"> | string
   email?: Prisma.StringFilter<"Student"> | string
+  outlookEmail?: Prisma.StringFilter<"Student"> | string
   contactNumber?: Prisma.StringNullableFilter<"Student"> | string | null
   alternateContactNumber?: Prisma.StringNullableFilter<"Student"> | string | null
   permanentAddress?: Prisma.StringNullableFilter<"Student"> | string | null
@@ -1116,6 +1141,7 @@ export type StudentCreateWithoutUserInput = {
   rollNumber: string
   branch: string
   email: string
+  outlookEmail: string
   contactNumber?: string | null
   alternateContactNumber?: string | null
   permanentAddress?: string | null
@@ -1148,6 +1174,7 @@ export type StudentUncheckedCreateWithoutUserInput = {
   rollNumber: string
   branch: string
   email: string
+  outlookEmail: string
   contactNumber?: string | null
   alternateContactNumber?: string | null
   permanentAddress?: string | null
@@ -1194,6 +1221,7 @@ export type StudentUpdateWithoutUserInput = {
   rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
   branch?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  outlookEmail?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   alternateContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permanentAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1226,6 +1254,7 @@ export type StudentUncheckedUpdateWithoutUserInput = {
   rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
   branch?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  outlookEmail?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   alternateContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permanentAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1256,6 +1285,7 @@ export type StudentCreateWithoutHostelInput = {
   rollNumber: string
   branch: string
   email: string
+  outlookEmail: string
   contactNumber?: string | null
   alternateContactNumber?: string | null
   permanentAddress?: string | null
@@ -1289,6 +1319,7 @@ export type StudentUncheckedCreateWithoutHostelInput = {
   rollNumber: string
   branch: string
   email: string
+  outlookEmail: string
   contactNumber?: string | null
   alternateContactNumber?: string | null
   permanentAddress?: string | null
@@ -1344,6 +1375,7 @@ export type StudentCreateWithoutAllocationInput = {
   rollNumber: string
   branch: string
   email: string
+  outlookEmail: string
   contactNumber?: string | null
   alternateContactNumber?: string | null
   permanentAddress?: string | null
@@ -1377,6 +1409,7 @@ export type StudentUncheckedCreateWithoutAllocationInput = {
   rollNumber: string
   branch: string
   email: string
+  outlookEmail: string
   contactNumber?: string | null
   alternateContactNumber?: string | null
   permanentAddress?: string | null
@@ -1422,6 +1455,7 @@ export type StudentUpdateWithoutAllocationInput = {
   rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
   branch?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  outlookEmail?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   alternateContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permanentAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1455,6 +1489,7 @@ export type StudentUncheckedUpdateWithoutAllocationInput = {
   rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
   branch?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  outlookEmail?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   alternateContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permanentAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1485,6 +1520,7 @@ export type StudentCreateManyAcademicYearInput = {
   rollNumber: string
   branch: string
   email: string
+  outlookEmail: string
   contactNumber?: string | null
   alternateContactNumber?: string | null
   permanentAddress?: string | null
@@ -1514,6 +1550,7 @@ export type StudentUpdateWithoutAcademicYearInput = {
   rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
   branch?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  outlookEmail?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   alternateContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permanentAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1546,6 +1583,7 @@ export type StudentUncheckedUpdateWithoutAcademicYearInput = {
   rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
   branch?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  outlookEmail?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   alternateContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permanentAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1577,6 +1615,7 @@ export type StudentUncheckedUpdateManyWithoutAcademicYearInput = {
   rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
   branch?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  outlookEmail?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   alternateContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permanentAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1608,6 +1647,7 @@ export type StudentCreateManyHostelInput = {
   rollNumber: string
   branch: string
   email: string
+  outlookEmail: string
   contactNumber?: string | null
   alternateContactNumber?: string | null
   permanentAddress?: string | null
@@ -1636,6 +1676,7 @@ export type StudentUpdateWithoutHostelInput = {
   rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
   branch?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  outlookEmail?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   alternateContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permanentAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1669,6 +1710,7 @@ export type StudentUncheckedUpdateWithoutHostelInput = {
   rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
   branch?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  outlookEmail?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   alternateContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permanentAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1700,6 +1742,7 @@ export type StudentUncheckedUpdateManyWithoutHostelInput = {
   rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
   branch?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  outlookEmail?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   alternateContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permanentAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1732,6 +1775,7 @@ export type StudentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   rollNumber?: boolean
   branch?: boolean
   email?: boolean
+  outlookEmail?: boolean
   contactNumber?: boolean
   alternateContactNumber?: boolean
   permanentAddress?: boolean
@@ -1767,6 +1811,7 @@ export type StudentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   rollNumber?: boolean
   branch?: boolean
   email?: boolean
+  outlookEmail?: boolean
   contactNumber?: boolean
   alternateContactNumber?: boolean
   permanentAddress?: boolean
@@ -1801,6 +1846,7 @@ export type StudentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   rollNumber?: boolean
   branch?: boolean
   email?: boolean
+  outlookEmail?: boolean
   contactNumber?: boolean
   alternateContactNumber?: boolean
   permanentAddress?: boolean
@@ -1835,6 +1881,7 @@ export type StudentSelectScalar = {
   rollNumber?: boolean
   branch?: boolean
   email?: boolean
+  outlookEmail?: boolean
   contactNumber?: boolean
   alternateContactNumber?: boolean
   permanentAddress?: boolean
@@ -1858,7 +1905,7 @@ export type StudentSelectScalar = {
   updatedAt?: boolean
 }
 
-export type StudentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "academicYearId" | "name" | "rollNumber" | "branch" | "email" | "contactNumber" | "alternateContactNumber" | "permanentAddress" | "state" | "emergencyContactName" | "emergencyContactNumber" | "emergencyContactRelation" | "bloodGroup" | "medicalConditions" | "identificationMark" | "allergies" | "physicalAccessibilityRequirements" | "onboardingStatus" | "onboardingSubmittedAt" | "consentGiven" | "editAllowedByAdmin" | "isVerified" | "needsReview" | "hostelId" | "createdAt" | "updatedAt", ExtArgs["result"]["student"]>
+export type StudentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "academicYearId" | "name" | "rollNumber" | "branch" | "email" | "outlookEmail" | "contactNumber" | "alternateContactNumber" | "permanentAddress" | "state" | "emergencyContactName" | "emergencyContactNumber" | "emergencyContactRelation" | "bloodGroup" | "medicalConditions" | "identificationMark" | "allergies" | "physicalAccessibilityRequirements" | "onboardingStatus" | "onboardingSubmittedAt" | "consentGiven" | "editAllowedByAdmin" | "isVerified" | "needsReview" | "hostelId" | "createdAt" | "updatedAt", ExtArgs["result"]["student"]>
 export type StudentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   academicYear?: boolean | Prisma.AcademicYearDefaultArgs<ExtArgs>
@@ -1892,6 +1939,7 @@ export type $StudentPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     rollNumber: string
     branch: string
     email: string
+    outlookEmail: string
     contactNumber: string | null
     alternateContactNumber: string | null
     permanentAddress: string | null
@@ -2347,6 +2395,7 @@ export interface StudentFieldRefs {
   readonly rollNumber: Prisma.FieldRef<"Student", 'String'>
   readonly branch: Prisma.FieldRef<"Student", 'String'>
   readonly email: Prisma.FieldRef<"Student", 'String'>
+  readonly outlookEmail: Prisma.FieldRef<"Student", 'String'>
   readonly contactNumber: Prisma.FieldRef<"Student", 'String'>
   readonly alternateContactNumber: Prisma.FieldRef<"Student", 'String'>
   readonly permanentAddress: Prisma.FieldRef<"Student", 'String'>

@@ -14,6 +14,7 @@ export async function createUser(data: {
     rollNumber: string;
     branch: string;
     hostelCode: string;
+    outlookEmail: string;
     academicYearId: string;
   };
 }) {
@@ -46,6 +47,7 @@ export async function createUser(data: {
                 name: data.studentData.name,
                 rollNumber: data.studentData.rollNumber,
                 branch: data.studentData.branch,
+                outlookEmail: data.studentData.outlookEmail,
                 academicYearId: data.studentData.academicYearId,
                 hostelId: hostelId,
                 onboardingStatus: 'PENDING',
@@ -151,6 +153,7 @@ export async function bulkUploadStudents(rows: BulkUploadRow[], uploadedBy: stri
           rollNumber: row.rollNumber,
           branch: row.branch,
           hostelCode: row.hostelCode,
+          outlookEmail: row.outlookEmail,
           academicYearId: activeYear.id,
         },
       });
