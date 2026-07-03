@@ -28,8 +28,11 @@
     "zod": "^3.25.76"
   },
   "devDependencies": {
+    "@types/node": "^26.1.0",
     "concurrently": "^8.2.2",
+    "dotenv": "^17.4.2",
     "eslint": "^8.57.1",
+    "prisma": "^7.8.0",
     "typescript": "^5.9.3"
   }
 }

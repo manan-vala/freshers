@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as OnboardingCompleteRouteImport } from './routes/onboarding-complete'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as SuperadminRouteRouteImport } from './routes/superadmin/route'
 import { Route as HostelRouteRouteImport } from './routes/hostel/route'
 import { Route as IndexRouteImport } from './routes/index'
@@ -33,6 +34,11 @@ const OnboardingRoute = OnboardingRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SuperadminRouteRoute = SuperadminRouteRouteImport.update({
@@ -75,6 +81,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/hostel': typeof HostelRouteRouteWithChildren
   '/superadmin': typeof SuperadminRouteRouteWithChildren
+  '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/onboarding-complete': typeof OnboardingCompleteRoute
@@ -87,6 +94,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/hostel': typeof HostelRouteRouteWithChildren
   '/superadmin': typeof SuperadminRouteRouteWithChildren
+  '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/onboarding-complete': typeof OnboardingCompleteRoute
@@ -100,6 +108,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/hostel': typeof HostelRouteRouteWithChildren
   '/superadmin': typeof SuperadminRouteRouteWithChildren
+  '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/onboarding-complete': typeof OnboardingCompleteRoute
@@ -114,6 +123,7 @@ export interface FileRouteTypes {
     | '/'
     | '/hostel'
     | '/superadmin'
+    | '/forgot-password'
     | '/login'
     | '/onboarding'
     | '/onboarding-complete'
@@ -126,6 +136,7 @@ export interface FileRouteTypes {
     | '/'
     | '/hostel'
     | '/superadmin'
+    | '/forgot-password'
     | '/login'
     | '/onboarding'
     | '/onboarding-complete'
@@ -138,6 +149,7 @@ export interface FileRouteTypes {
     | '/'
     | '/hostel'
     | '/superadmin'
+    | '/forgot-password'
     | '/login'
     | '/onboarding'
     | '/onboarding-complete'
@@ -151,6 +163,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   HostelRouteRoute: typeof HostelRouteRouteWithChildren
   SuperadminRouteRoute: typeof SuperadminRouteRouteWithChildren
+  ForgotPasswordRoute: typeof ForgotPasswordRoute
   LoginRoute: typeof LoginRoute
   OnboardingRoute: typeof OnboardingRoute
   OnboardingCompleteRoute: typeof OnboardingCompleteRoute
@@ -177,6 +190,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forgot-password': {
+      id: '/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/superadmin': {
@@ -263,6 +283,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   HostelRouteRoute: HostelRouteRouteWithChildren,
   SuperadminRouteRoute: SuperadminRouteRouteWithChildren,
+  ForgotPasswordRoute: ForgotPasswordRoute,
   LoginRoute: LoginRoute,
   OnboardingRoute: OnboardingRoute,
   OnboardingCompleteRoute: OnboardingCompleteRoute,

@@ -96,7 +96,15 @@ export async function changePasswordHandler(req: Request, res: Response) {
     message: 'Password updated. Please log in again.',
   });
 }
+export async function requestFirstLoginOtpHandler(req: Request, res: Response) {
+  const userId = req.user!.sub;
+  await authService.requestFirstLoginOtp(userId);
 
+  res.status(200).json({
+    success: true,
+    message: 'OTP sent to your registered email.',
+  });
+}
 export async function forgotPasswordHandler(req: Request, res: Response) {
   const input = req.body as ForgotPasswordInput;
   

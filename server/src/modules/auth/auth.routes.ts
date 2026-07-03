@@ -1,4 +1,5 @@
 import { Router } from 'express';
+
 import { validateBody } from '@/middleware/validate.middleware';
 import { authenticate } from '@/middleware/auth.middleware';
 import {
@@ -16,6 +17,7 @@ import {
   forgotPasswordHandler,
   resetPasswordHandler,
   getMeHandler,
+  requestFirstLoginOtpHandler 
 } from './auth.controller';
 
 import {
@@ -32,10 +34,11 @@ router.post('/login', validateBody(loginSchema), loginHandler);
 router.post('/admin-login', validateBody(loginSchema), adminLoginHandler);
 router.post('/refresh', refreshHandler);
 router.post('/logout', authenticate, logoutHandler);
+// Inside auth.routes.ts
+router.post('/first-login/otp', authenticate, requestFirstLoginOtpHandler);
 router.post('/change-password', authenticate, validateBody(changePasswordSchema), changePasswordHandler);
 router.post('/forgot-password', validateBody(forgotPasswordSchema), forgotPasswordHandler);
 router.post('/reset-password', validateBody(resetPasswordSchema), resetPasswordHandler);
-
 router.get('/me', authenticate, getMeHandler);
 
 export default router;

@@ -1,5 +1,5 @@
-export interface EmailJob {
+export type EmailJob = {
   to: string;
-  templateId: 'credentials' | 'allocation' | 'password-reset';
-  data: Record<string, string>;
-}
+  templateId: 'password-reset' | 'otp-email' |'credentials'|'allocation';
+  data: Record<string, any>; 
+};
