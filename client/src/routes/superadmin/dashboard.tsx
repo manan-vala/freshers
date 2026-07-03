@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { superAdminApi, useSuperAdminStore } from '@/lib/superadmin'
+import { superAdminApi } from '@/lib/superadmin'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
@@ -60,7 +60,6 @@ const HOSTEL_OPTIONS: { value: string; label: string }[] = [
 
 function SuperAdminDashboard() {
   const queryClient = useQueryClient()
-  const clearAccessToken = useSuperAdminStore((state) => state.clearAccessToken)
   const navigate = Route.useNavigate()
   const [activeView, setActiveView] = useState<'hostel-admin' | 'upload-data' | 'students-data'>('hostel-admin')
 
@@ -129,8 +128,9 @@ function SuperAdminDashboard() {
     createMutation.mutate(data)
   }
 
-  const handleLogout = () => {
-    clearAccessToken()
+  const handleLogout = async () => {
+    await superAdminApi.post('/v1/auth/logout')
+    queryClient.clear()
     navigate({ to: '/superadmin/login' })
   }
 

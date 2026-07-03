@@ -7,21 +7,23 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { loginSchema, type LoginInput } from '@shared/auth'
-import { useSuperAdminStore, superAdminApi } from '@/lib/superadmin'
+import { superAdminApi } from '@/lib/superadmin'
+import { authKeys } from '@/lib/auth'
 import { useMutation } from '@tanstack/react-query'
 
 export const Route = createFileRoute('/superadmin/login')({
-  beforeLoad: ({ location }) => {
-    const token = useSuperAdminStore.getState().accessToken;
-    if (token) {
-      throw redirect({ to: '/superadmin/dashboard' })
-    }
+  beforeLoad: async ({ context: { queryClient } }) => {
+    // If a valid admin session cookie already exists, skip login
+    const user = await queryClient.fetchQuery({
+      queryKey: authKeys.me,
+      queryFn: () => superAdminApi.get('/v1/auth/me').then(r => r.data.data).catch(() => null),
+    }).catch(() => null);
+    if (user?.role === 'ADMIN') throw redirect({ to: '/superadmin/dashboard' });
   },
   component: SuperAdminLoginPage,
 })
 
 function SuperAdminLoginPage() {
-  const setAccessToken = useSuperAdminStore((state) => state.setAccessToken)
   const [showPassword, setShowPassword] = useState(false)
   const navigate = Route.useNavigate()
   
@@ -35,12 +37,11 @@ function SuperAdminLoginPage() {
 
   const loginMutation = useMutation({
     mutationFn: async (credentials: LoginInput) => {
-      // Intentionally using superAdminApi even without token to test login endpoint
       const { data } = await superAdminApi.post('/v1/auth/admin-login', credentials);
-      return data.data; // should contain { accessToken, role, etc }
+      return data.data; // Returns { role, mustChangePassword } — NO token
     },
-    onSuccess: (data) => {
-      setAccessToken(data.accessToken);
+    onSuccess: () => {
+      // Cookie is already set by the server. Just navigate.
       navigate({ to: '/superadmin/dashboard' });
     },
     onError: (error: any) => {

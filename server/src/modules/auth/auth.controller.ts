@@ -42,14 +42,10 @@ export async function adminLoginHandler(req: Request, res: Response) {
   const input = req.body as LoginInput;
   const result = await authService.adminLogin(input);
 
-  // Super Admin does NOT use cookies, it returns the token directly
-  res.status(200).json({
-    success: true,
-    data: {
-      ...result.user,
-      accessToken: result.accessToken, // send token in payload
-    },
-  });
+  // Super Admin now uses the same httpOnly cookie pattern as all other roles.
+  // The token is never sent to JavaScript — the browser attaches the cookie automatically.
+  setAuthCookies(res, result.accessToken, result.refreshToken);
+  res.status(200).json({ success: true, data: result.user });
 }
 
 export async function refreshHandler(req: Request, res: Response) {

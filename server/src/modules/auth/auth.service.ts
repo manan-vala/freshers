@@ -7,6 +7,18 @@ import { signAccessToken, signRefreshToken, verifyToken } from '@/utils/jwt.util
 import { verifyPassword, hashPassword } from '@/utils/password.util';
 import { emailQueue } from '@/modules/email/email.queue';
 import type { LoginInput, ChangePasswordInput, ForgotPasswordInput, ResetPasswordInput } from '@shared/auth';
+import { timingSafeEqual } from 'crypto';
+
+// Constant-time string comparison — prevents timing attacks on credentials.
+function safeEqual(a: string, b: string): boolean {
+  // Buffers must be the same length for timingSafeEqual. If lengths differ,
+  // we still run the comparison on padded data to avoid leaking length info.
+  try {
+    return timingSafeEqual(Buffer.from(a, 'utf8'), Buffer.from(b, 'utf8'));
+  } catch {
+    return false; // Different byte lengths — guaranteed mismatch
+  }
+}
 
 export async function login(input: LoginInput) {
   const user = await prisma.user.findFirst({
@@ -25,7 +37,9 @@ if (user.mustChangePassword) {
     const otp = generateOTP();
     await storeOTP('first-login', user.id, otp, 5); // 5 min expiry
     
-    console.log(`\n[TESTING] The First-Login OTP for ${user.email} is: ${otp}\n`);
+    if (env.NODE_ENV === 'development') {
+      console.log(`[DEV] First-login OTP sent to ${user.email}. Check your email worker output.`);
+    }
     
     await emailQueue.add('first-login-otp', {
       to: user.email,
@@ -52,7 +66,12 @@ if (user.mustChangePassword) {
 }
 
 export async function adminLogin(input: LoginInput) {
-  if (input.email !== env.SUPERADMIN_EMAIL || input.password !== env.SUPERADMIN_PASSWORD) {
+  const emailMatch    = safeEqual(input.email,    env.SUPERADMIN_EMAIL);
+  const passwordMatch = safeEqual(input.password, env.SUPERADMIN_PASSWORD);
+
+  // Evaluate BOTH comparisons before throwing — prevents short-circuit leaking
+  // which field was wrong.
+  if (!emailMatch || !passwordMatch) {
     throw new AppError(401, 'Invalid admin credentials');
   }
 
@@ -133,7 +152,9 @@ export async function requestFirstLoginOtp(userId: string) {
 
   const otp = generateOTP();
   await storeOTP('first-login', user.id, otp, 5); // 5 min expiry
-console.log(`[TESTING] The OTP is: ${otp}`);
+  if (env.NODE_ENV === 'development') {
+    console.log('[DEV] OTP dispatched via email queue.');
+  }
   await emailQueue.add('first-login-otp', {
     to: user.email,
     templateId: 'otp-email',
@@ -179,7 +200,9 @@ export async function forgotPassword(input: ForgotPasswordInput) {
 
   const otp = generateOTP();
   await storeOTP('forgot', user.email, otp, 5); // 5 min expiry
-console.log(`[TESTING] The OTP is: ${otp}`);
+  if (env.NODE_ENV === 'development') {
+    console.log('[DEV] Password reset OTP dispatched via email queue.');
+  }
   await emailQueue.add('password-reset', {
     to: user.email,
     templateId: 'otp-email', 

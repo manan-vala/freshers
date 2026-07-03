@@ -1,29 +1,21 @@
 import axios from 'axios';
-import { create } from 'zustand';
 
-interface SuperAdminState {
-  accessToken: string | null;
-  setAccessToken: (token: string | null) => void;
-  clearAccessToken: () => void;
-}
-
-// In-memory store for SuperAdmin
-export const useSuperAdminStore = create<SuperAdminState>((set) => ({
-  accessToken: null,
-  setAccessToken: (token) => set({ accessToken: token }),
-  clearAccessToken: () => set({ accessToken: null }),
-}));
-
-// API client that uses the in-memory token
+// superAdminApi is a separate Axios instance so its 401 handler redirects to
+// /superadmin/login instead of the regular /login page.
 export const superAdminApi = axios.create({
   baseURL: import.meta.env.VITE_API_URL || '/api',
-  withCredentials: true,
+  withCredentials: true, // Sends the httpOnly access_token cookie automatically
 });
 
-superAdminApi.interceptors.request.use((config) => {
-  const token = useSuperAdminStore.getState().accessToken;
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+// On 401: redirect to the super admin login. The cookie is cleared server-side
+// when the token expires or on logout.
+superAdminApi.interceptors.response.use(
+  (res) => res,
+  (error) => {
+    if (error.response?.status === 401) {
+      const base = import.meta.env.VITE_BASE_URL ?? '';
+      window.location.href = `${base}/superadmin/login`;
+    }
+    return Promise.reject(error);
   }
-  return config;
-});
+);
