@@ -115,7 +115,6 @@ export const StudentScalarFieldEnum = {
   name: 'name',
   rollNumber: 'rollNumber',
   branch: 'branch',
-  email: 'email',
   gmailId: 'gmailId',
   outlookId: 'outlookId',
   contactNumber: 'contactNumber',

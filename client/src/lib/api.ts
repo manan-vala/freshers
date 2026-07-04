@@ -3,7 +3,7 @@ import axios from 'axios';
 // DEPLOYMENT:
 // In development: VITE_BASE_URL is empty → baseURL = '/api'
 //   → Vite proxy intercepts '/api/*' and rewrites to 'http://localhost:5000/*'
-const BASE_URL = `${import.meta.env.VITE_BASE_URL ?? ''}/api`;
+const BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
 export const api = axios.create({
   baseURL: BASE_URL,

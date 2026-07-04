@@ -1,6 +1,7 @@
 import { IconLogout } from '@tabler/icons-react'
 import { Button } from '@/components/ui/button'
 import { useLogout, type User } from '@/lib/auth'
+import { useNavigate } from '@tanstack/react-router'
 
 interface NavbarProps {
   user: User | null;
@@ -8,6 +9,7 @@ interface NavbarProps {
 
 export function Navbar({ user }: NavbarProps) {
   const logoutMutation = useLogout();
+  const navigate = useNavigate();
 
   const emailPrefix = user?.email?.split('@')[0] || 'User';
   const initial = emailPrefix.charAt(0).toUpperCase();
@@ -15,7 +17,7 @@ export function Navbar({ user }: NavbarProps) {
   const handleLogout = () => {
     logoutMutation.mutate(undefined, {
       onSuccess: () => {
-        window.location.href = '/login';
+        navigate({ to: '/login' });
       }
     });
   };

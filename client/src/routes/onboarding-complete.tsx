@@ -1,4 +1,4 @@
-import { createFileRoute, redirect } from '@tanstack/react-router'
+import { createFileRoute, redirect, useNavigate } from '@tanstack/react-router'
 import { IconCheck, IconLogout } from '@tabler/icons-react'
 import { Button } from '@/components/ui/button'
 import { useLogout } from '@/lib/auth'
@@ -20,11 +20,12 @@ export const Route = createFileRoute('/onboarding-complete')({
 function OnboardingCompletePage() {
   const { user } = Route.useRouteContext()
   const logoutMutation = useLogout()
+  const navigate = useNavigate()
 
   const handleLogout = () => {
     logoutMutation.mutate(undefined, {
       onSuccess: () => {
-        window.location.href = '/login'
+        navigate({ to: '/login' })
       }
     })
   }

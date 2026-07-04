@@ -31,7 +31,6 @@ export type StudentMinAggregateOutputType = {
   name: string | null
   rollNumber: string | null
   branch: string | null
-  email: string | null
   gmailId: string | null
   outlookId: string | null
   contactNumber: string | null
@@ -64,7 +63,6 @@ export type StudentMaxAggregateOutputType = {
   name: string | null
   rollNumber: string | null
   branch: string | null
-  email: string | null
   gmailId: string | null
   outlookId: string | null
   contactNumber: string | null
@@ -97,7 +95,6 @@ export type StudentCountAggregateOutputType = {
   name: number
   rollNumber: number
   branch: number
-  email: number
   gmailId: number
   outlookId: number
   contactNumber: number
@@ -132,7 +129,6 @@ export type StudentMinAggregateInputType = {
   name?: true
   rollNumber?: true
   branch?: true
-  email?: true
   gmailId?: true
   outlookId?: true
   contactNumber?: true
@@ -165,7 +161,6 @@ export type StudentMaxAggregateInputType = {
   name?: true
   rollNumber?: true
   branch?: true
-  email?: true
   gmailId?: true
   outlookId?: true
   contactNumber?: true
@@ -198,7 +193,6 @@ export type StudentCountAggregateInputType = {
   name?: true
   rollNumber?: true
   branch?: true
-  email?: true
   gmailId?: true
   outlookId?: true
   contactNumber?: true
@@ -304,7 +298,6 @@ export type StudentGroupByOutputType = {
   name: string
   rollNumber: string
   branch: string
-  email: string
   gmailId: string
   outlookId: string
   contactNumber: string | null
@@ -358,7 +351,6 @@ export type StudentWhereInput = {
   name?: Prisma.StringFilter<"Student"> | string
   rollNumber?: Prisma.StringFilter<"Student"> | string
   branch?: Prisma.StringFilter<"Student"> | string
-  email?: Prisma.StringFilter<"Student"> | string
   gmailId?: Prisma.StringFilter<"Student"> | string
   outlookId?: Prisma.StringFilter<"Student"> | string
   contactNumber?: Prisma.StringNullableFilter<"Student"> | string | null
@@ -395,7 +387,6 @@ export type StudentOrderByWithRelationInput = {
   name?: Prisma.SortOrder
   rollNumber?: Prisma.SortOrder
   branch?: Prisma.SortOrder
-  email?: Prisma.SortOrder
   gmailId?: Prisma.SortOrder
   outlookId?: Prisma.SortOrder
   contactNumber?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -436,7 +427,6 @@ export type StudentWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringFilter<"Student"> | string
   rollNumber?: Prisma.StringFilter<"Student"> | string
   branch?: Prisma.StringFilter<"Student"> | string
-  email?: Prisma.StringFilter<"Student"> | string
   gmailId?: Prisma.StringFilter<"Student"> | string
   outlookId?: Prisma.StringFilter<"Student"> | string
   contactNumber?: Prisma.StringNullableFilter<"Student"> | string | null
@@ -473,7 +463,6 @@ export type StudentOrderByWithAggregationInput = {
   name?: Prisma.SortOrder
   rollNumber?: Prisma.SortOrder
   branch?: Prisma.SortOrder
-  email?: Prisma.SortOrder
   gmailId?: Prisma.SortOrder
   outlookId?: Prisma.SortOrder
   contactNumber?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -512,7 +501,6 @@ export type StudentScalarWhereWithAggregatesInput = {
   name?: Prisma.StringWithAggregatesFilter<"Student"> | string
   rollNumber?: Prisma.StringWithAggregatesFilter<"Student"> | string
   branch?: Prisma.StringWithAggregatesFilter<"Student"> | string
-  email?: Prisma.StringWithAggregatesFilter<"Student"> | string
   gmailId?: Prisma.StringWithAggregatesFilter<"Student"> | string
   outlookId?: Prisma.StringWithAggregatesFilter<"Student"> | string
   contactNumber?: Prisma.StringNullableWithAggregatesFilter<"Student"> | string | null
@@ -543,7 +531,6 @@ export type StudentCreateInput = {
   name: string
   rollNumber: string
   branch: string
-  email: string
   gmailId: string
   outlookId: string
   contactNumber?: string | null
@@ -579,7 +566,6 @@ export type StudentUncheckedCreateInput = {
   name: string
   rollNumber: string
   branch: string
-  email: string
   gmailId: string
   outlookId: string
   contactNumber?: string | null
@@ -611,7 +597,6 @@ export type StudentUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
   branch?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
   gmailId?: Prisma.StringFieldUpdateOperationsInput | string
   outlookId?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -647,7 +632,6 @@ export type StudentUncheckedUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
   branch?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
   gmailId?: Prisma.StringFieldUpdateOperationsInput | string
   outlookId?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -681,7 +665,6 @@ export type StudentCreateManyInput = {
   name: string
   rollNumber: string
   branch: string
-  email: string
   gmailId: string
   outlookId: string
   contactNumber?: string | null
@@ -712,7 +695,6 @@ export type StudentUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
   branch?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
   gmailId?: Prisma.StringFieldUpdateOperationsInput | string
   outlookId?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -744,7 +726,6 @@ export type StudentUncheckedUpdateManyInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
   branch?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
   gmailId?: Prisma.StringFieldUpdateOperationsInput | string
   outlookId?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -797,7 +778,6 @@ export type StudentCountOrderByAggregateInput = {
   name?: Prisma.SortOrder
   rollNumber?: Prisma.SortOrder
   branch?: Prisma.SortOrder
-  email?: Prisma.SortOrder
   gmailId?: Prisma.SortOrder
   outlookId?: Prisma.SortOrder
   contactNumber?: Prisma.SortOrder
@@ -830,7 +810,6 @@ export type StudentMaxOrderByAggregateInput = {
   name?: Prisma.SortOrder
   rollNumber?: Prisma.SortOrder
   branch?: Prisma.SortOrder
-  email?: Prisma.SortOrder
   gmailId?: Prisma.SortOrder
   outlookId?: Prisma.SortOrder
   contactNumber?: Prisma.SortOrder
@@ -863,7 +842,6 @@ export type StudentMinOrderByAggregateInput = {
   name?: Prisma.SortOrder
   rollNumber?: Prisma.SortOrder
   branch?: Prisma.SortOrder
-  email?: Prisma.SortOrder
   gmailId?: Prisma.SortOrder
   outlookId?: Prisma.SortOrder
   contactNumber?: Prisma.SortOrder
@@ -1037,7 +1015,6 @@ export type StudentCreateWithoutAcademicYearInput = {
   name: string
   rollNumber: string
   branch: string
-  email: string
   gmailId: string
   outlookId: string
   contactNumber?: string | null
@@ -1071,7 +1048,6 @@ export type StudentUncheckedCreateWithoutAcademicYearInput = {
   name: string
   rollNumber: string
   branch: string
-  email: string
   gmailId: string
   outlookId: string
   contactNumber?: string | null
@@ -1134,7 +1110,6 @@ export type StudentScalarWhereInput = {
   name?: Prisma.StringFilter<"Student"> | string
   rollNumber?: Prisma.StringFilter<"Student"> | string
   branch?: Prisma.StringFilter<"Student"> | string
-  email?: Prisma.StringFilter<"Student"> | string
   gmailId?: Prisma.StringFilter<"Student"> | string
   outlookId?: Prisma.StringFilter<"Student"> | string
   contactNumber?: Prisma.StringNullableFilter<"Student"> | string | null
@@ -1165,7 +1140,6 @@ export type StudentCreateWithoutUserInput = {
   name: string
   rollNumber: string
   branch: string
-  email: string
   gmailId: string
   outlookId: string
   contactNumber?: string | null
@@ -1199,7 +1173,6 @@ export type StudentUncheckedCreateWithoutUserInput = {
   name: string
   rollNumber: string
   branch: string
-  email: string
   gmailId: string
   outlookId: string
   contactNumber?: string | null
@@ -1247,7 +1220,6 @@ export type StudentUpdateWithoutUserInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
   branch?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
   gmailId?: Prisma.StringFieldUpdateOperationsInput | string
   outlookId?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1281,7 +1253,6 @@ export type StudentUncheckedUpdateWithoutUserInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
   branch?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
   gmailId?: Prisma.StringFieldUpdateOperationsInput | string
   outlookId?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1313,7 +1284,6 @@ export type StudentCreateWithoutHostelInput = {
   name: string
   rollNumber: string
   branch: string
-  email: string
   gmailId: string
   outlookId: string
   contactNumber?: string | null
@@ -1348,7 +1318,6 @@ export type StudentUncheckedCreateWithoutHostelInput = {
   name: string
   rollNumber: string
   branch: string
-  email: string
   gmailId: string
   outlookId: string
   contactNumber?: string | null
@@ -1405,7 +1374,6 @@ export type StudentCreateWithoutAllocationInput = {
   name: string
   rollNumber: string
   branch: string
-  email: string
   gmailId: string
   outlookId: string
   contactNumber?: string | null
@@ -1440,7 +1408,6 @@ export type StudentUncheckedCreateWithoutAllocationInput = {
   name: string
   rollNumber: string
   branch: string
-  email: string
   gmailId: string
   outlookId: string
   contactNumber?: string | null
@@ -1487,7 +1454,6 @@ export type StudentUpdateWithoutAllocationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
   branch?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
   gmailId?: Prisma.StringFieldUpdateOperationsInput | string
   outlookId?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1522,7 +1488,6 @@ export type StudentUncheckedUpdateWithoutAllocationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
   branch?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
   gmailId?: Prisma.StringFieldUpdateOperationsInput | string
   outlookId?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1554,7 +1519,6 @@ export type StudentCreateManyAcademicYearInput = {
   name: string
   rollNumber: string
   branch: string
-  email: string
   gmailId: string
   outlookId: string
   contactNumber?: string | null
@@ -1585,7 +1549,6 @@ export type StudentUpdateWithoutAcademicYearInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
   branch?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
   gmailId?: Prisma.StringFieldUpdateOperationsInput | string
   outlookId?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1619,7 +1582,6 @@ export type StudentUncheckedUpdateWithoutAcademicYearInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
   branch?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
   gmailId?: Prisma.StringFieldUpdateOperationsInput | string
   outlookId?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1652,7 +1614,6 @@ export type StudentUncheckedUpdateManyWithoutAcademicYearInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
   branch?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
   gmailId?: Prisma.StringFieldUpdateOperationsInput | string
   outlookId?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1685,7 +1646,6 @@ export type StudentCreateManyHostelInput = {
   name: string
   rollNumber: string
   branch: string
-  email: string
   gmailId: string
   outlookId: string
   contactNumber?: string | null
@@ -1715,7 +1675,6 @@ export type StudentUpdateWithoutHostelInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
   branch?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
   gmailId?: Prisma.StringFieldUpdateOperationsInput | string
   outlookId?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1750,7 +1709,6 @@ export type StudentUncheckedUpdateWithoutHostelInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
   branch?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
   gmailId?: Prisma.StringFieldUpdateOperationsInput | string
   outlookId?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1783,7 +1741,6 @@ export type StudentUncheckedUpdateManyWithoutHostelInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
   branch?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
   gmailId?: Prisma.StringFieldUpdateOperationsInput | string
   outlookId?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1817,7 +1774,6 @@ export type StudentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   name?: boolean
   rollNumber?: boolean
   branch?: boolean
-  email?: boolean
   gmailId?: boolean
   outlookId?: boolean
   contactNumber?: boolean
@@ -1854,7 +1810,6 @@ export type StudentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   name?: boolean
   rollNumber?: boolean
   branch?: boolean
-  email?: boolean
   gmailId?: boolean
   outlookId?: boolean
   contactNumber?: boolean
@@ -1890,7 +1845,6 @@ export type StudentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   name?: boolean
   rollNumber?: boolean
   branch?: boolean
-  email?: boolean
   gmailId?: boolean
   outlookId?: boolean
   contactNumber?: boolean
@@ -1926,7 +1880,6 @@ export type StudentSelectScalar = {
   name?: boolean
   rollNumber?: boolean
   branch?: boolean
-  email?: boolean
   gmailId?: boolean
   outlookId?: boolean
   contactNumber?: boolean
@@ -1952,7 +1905,7 @@ export type StudentSelectScalar = {
   updatedAt?: boolean
 }
 
-export type StudentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "academicYearId" | "name" | "rollNumber" | "branch" | "email" | "gmailId" | "outlookId" | "contactNumber" | "alternateContactNumber" | "permanentAddress" | "state" | "emergencyContactName" | "emergencyContactNumber" | "emergencyContactRelation" | "bloodGroup" | "medicalConditions" | "identificationMark" | "allergies" | "physicalAccessibilityRequirements" | "onboardingStatus" | "onboardingSubmittedAt" | "consentGiven" | "editAllowedByAdmin" | "isVerified" | "needsReview" | "hostelId" | "createdAt" | "updatedAt", ExtArgs["result"]["student"]>
+export type StudentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "academicYearId" | "name" | "rollNumber" | "branch" | "gmailId" | "outlookId" | "contactNumber" | "alternateContactNumber" | "permanentAddress" | "state" | "emergencyContactName" | "emergencyContactNumber" | "emergencyContactRelation" | "bloodGroup" | "medicalConditions" | "identificationMark" | "allergies" | "physicalAccessibilityRequirements" | "onboardingStatus" | "onboardingSubmittedAt" | "consentGiven" | "editAllowedByAdmin" | "isVerified" | "needsReview" | "hostelId" | "createdAt" | "updatedAt", ExtArgs["result"]["student"]>
 export type StudentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   academicYear?: boolean | Prisma.AcademicYearDefaultArgs<ExtArgs>
@@ -1985,7 +1938,6 @@ export type $StudentPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     name: string
     rollNumber: string
     branch: string
-    email: string
     gmailId: string
     outlookId: string
     contactNumber: string | null
@@ -2442,7 +2394,6 @@ export interface StudentFieldRefs {
   readonly name: Prisma.FieldRef<"Student", 'String'>
   readonly rollNumber: Prisma.FieldRef<"Student", 'String'>
   readonly branch: Prisma.FieldRef<"Student", 'String'>
-  readonly email: Prisma.FieldRef<"Student", 'String'>
   readonly gmailId: Prisma.FieldRef<"Student", 'String'>
   readonly outlookId: Prisma.FieldRef<"Student", 'String'>
   readonly contactNumber: Prisma.FieldRef<"Student", 'String'>

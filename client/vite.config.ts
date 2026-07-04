@@ -10,6 +10,10 @@ export default defineConfig({
   // Vite bakes this into the built assets as the base path for all file references.
   base: process.env.VITE_BASE_URL ? `${process.env.VITE_BASE_URL}/` : '/',
 
+  define: {
+    'import.meta.env.VITE_API_URL': JSON.stringify(process.env.VITE_API_URL || 'http://localhost:3000/api')
+  },
+
   plugins: [
     TanStackRouterVite({ autoCodeSplitting: true }),
     react(),

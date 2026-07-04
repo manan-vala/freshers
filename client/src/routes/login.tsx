@@ -1,4 +1,4 @@
-import { createFileRoute, redirect , Link} from '@tanstack/react-router'
+import { createFileRoute, redirect, Link, useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -38,6 +38,7 @@ export const Route = createFileRoute('/login')({
 
 function LoginPage() {
   const loginMutation = useLogin()
+  const navigate = useNavigate()
   const [showPassword, setShowPassword] = useState(false)
   
   // 👇 State to track if we need to show the OTP screen
@@ -61,9 +62,11 @@ function LoginPage() {
         }
 
         // Otherwise, redirect as normal
-        window.location.href = user.student?.onboardingStatus === 'SUBMITTED' 
-          ? '/onboarding-complete' 
-          : '/onboarding';
+        navigate({
+          to: user.student?.onboardingStatus === 'SUBMITTED' 
+            ? '/onboarding-complete' 
+            : '/onboarding'
+        });
       },
       onError: (error: any) => {
         form.setError('root', {
