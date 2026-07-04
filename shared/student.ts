@@ -51,7 +51,6 @@ export const bulkUploadRowSchema = z.object({
   name: z.string().min(1, 'Name is required'),
   rollNumber: z.string().min(1, 'Roll number is required'),
   branch: z.string().min(1, 'Branch is required'),
-  email: z.string().email('Invalid IITG email'),
   hostelCode: z.string().min(1, 'Hostel code is required'),
   gmailId: z.string().email('Invalid Gmail address'),
   outlookId: z.string().email('Invalid Outlook ID'),

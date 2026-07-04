@@ -347,7 +347,7 @@ function SuperAdminDashboard() {
                     onChange={(e) => setUploadFile(e.target.files?.[0] || null)}
                   />
                   <p className="text-xs text-slate-500">
-                    CSV must contain: name, rollNumber, branch, email, hostelCode, outlookEmail
+                    CSV must contain: name, rollNumber, branch, hostelCode, gmailId, outlookId
                   </p>
                 </div>
                 <div className="space-y-2 flex flex-col justify-start">
@@ -498,7 +498,7 @@ function StudentsDataView() {
                       <TableCell className="text-slate-500">{student.rollNumber}</TableCell>
                       <TableCell className="text-slate-600 max-w-[150px] truncate" title={student.branch}>{student.branch}</TableCell>
                       <TableCell className="text-slate-500">{student.user.email}</TableCell>
-                      <TableCell className="text-slate-500">{student.outlookEmail}</TableCell>
+                      <TableCell className="text-slate-500">{student.outlookId}</TableCell>
                       <TableCell>{readableHostel}</TableCell>
                       <TableCell>
                         <Badge variant={student.onboardingStatus === 'SUBMITTED' ? 'default' : 'secondary'} className={student.onboardingStatus === 'SUBMITTED' ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200' : 'bg-amber-100 text-amber-700 hover:bg-amber-200'}>

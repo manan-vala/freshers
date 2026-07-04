@@ -45,7 +45,6 @@ export async function createUser(data: {
         ? {
             student: {
               create: {
-                email: data.email,
                 name: data.studentData.name,
                 rollNumber: data.studentData.rollNumber,
                 branch: data.studentData.branch,
@@ -204,6 +203,7 @@ export async function getAllStudents(params: {
       { name: { contains: search, mode: 'insensitive' } },
       { rollNumber: { contains: search, mode: 'insensitive' } },
       { user: { email: { contains: search, mode: 'insensitive' } } },
+      { gmailId: { contains: search, mode: 'insensitive' } },
     ];
   }
 

@@ -52,7 +52,7 @@ export const studentImportWorker = new Worker<StudentImportJobData, ImportJobRes
 
     // ── Step 2: Check for duplicates already in DB (one query) ────────────────
     const rollNumbers = validRows.map((r) => r.rollNumber)
-    const emails = validRows.map((r) => r.email)
+    const emails = validRows.map((r) => r.outlookId)
 
     const [existingUsers, existingStudents] = await Promise.all([
       prisma.user.findMany({
@@ -74,7 +74,7 @@ export const studentImportWorker = new Worker<StudentImportJobData, ImportJobRes
     const duplicateRows = validRows.filter(
       (r) =>
         existingLoginIds.has(r.rollNumber) ||
-        existingEmails.has(r.email) ||
+        existingEmails.has(r.outlookId) ||
         existingRollNumbers.has(r.rollNumber)
     )
     for (const row of duplicateRows) {
@@ -89,7 +89,7 @@ export const studentImportWorker = new Worker<StudentImportJobData, ImportJobRes
     const insertableRows = validRows.filter(
       (r) =>
         !existingLoginIds.has(r.rollNumber) &&
-        !existingEmails.has(r.email) &&
+        !existingEmails.has(r.outlookId) &&
         !existingRollNumbers.has(r.rollNumber)
     )
 
@@ -117,7 +117,7 @@ export const studentImportWorker = new Worker<StudentImportJobData, ImportJobRes
           // 4a. Insert User rows
           await tx.user.createMany({
             data: chunk.map((p) => ({
-              email: p.email,
+              email: p.outlookId,
               loginId: p.rollNumber,
               passwordHash: p.passwordHash,
               role: 'STUDENT' as const,
@@ -142,7 +142,6 @@ export const studentImportWorker = new Worker<StudentImportJobData, ImportJobRes
               name: p.name,
               rollNumber: p.rollNumber,
               branch: p.branch,
-              email: p.email,
               academicYearId,
               hostelId: hostelMap.get(p.hostelCode)!,
               gmailId: p.gmailId,
@@ -174,24 +173,8 @@ export const studentImportWorker = new Worker<StudentImportJobData, ImportJobRes
     }
 
     // ── Step 5: Queue credential emails for all successfully inserted students ─
-    // Done AFTER all DB writes so we only send emails for accounts that actually exist.
-    // emailQueue.addBulk() is a single Redis round-trip regardless of count.
-    const successfulRows = prepared.filter(
-      (p) => !result.errors.some((e) => e.rollNumber === p.rollNumber)
-    )
-
-    if (successfulRows.length > 0) {
-      await emailQueue.addBulk(
-        successfulRows.map((p) => ({
-          name: 'credential',
-          data: {
-            to: p.email,
-            templateId: 'credentials' as const,
-            data: { loginId: p.rollNumber, password: p.plainPassword },
-          },
-        }))
-      )
-    }
+    // The user has opted to disable automatic credential emails after CSV upload.
+    // So we skip it here.
 
     return result
   },

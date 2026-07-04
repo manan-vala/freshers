@@ -76,7 +76,6 @@ model Student {
   name           String  @db.VarChar(100)
   rollNumber     String
   branch         String
-  email          String  @db.VarChar(150) // mirrors user.email for convenience
   gmailId        String  @db.VarChar(150) // Personal Gmail address
   outlookId      String  @db.VarChar(150) // IITG Outlook email address
 

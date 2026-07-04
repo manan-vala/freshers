@@ -129,8 +129,11 @@ function VerifyStudent() {
               <span className="font-semibold text-slate-500">Roll Number:</span>
               <span>{student.rollNumber}</span>
               
-              <span className="font-semibold text-slate-500">Email:</span>
-              <span>{student.email}</span>
+              <span className="font-semibold text-slate-500">Gmail:</span>
+              <span>{student.gmailId}</span>
+
+              <span className="font-semibold text-slate-500">Outlook:</span>
+              <span>{student.outlookId}</span>
 
               <span className="font-semibold text-slate-500">Branch:</span>
               <span>{student.branch}</span>

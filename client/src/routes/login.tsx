@@ -16,10 +16,21 @@ export const Route = createFileRoute('/login')({
   beforeLoad: ({ context }) => {
     // If the user is already logged in, redirect them
     if (context.user) {
-      if (context.user.student?.onboardingStatus === 'SUBMITTED') {
-        throw redirect({ to: '/onboarding-complete' })
+      if (context.user.role === 'HMC') {
+        throw redirect({ to: '/hostel/dashboard' })
       }
-      throw redirect({ to: '/onboarding' })
+      if (context.user.role === 'ADMIN') {
+        throw redirect({ to: '/superadmin/dashboard' })
+      }
+      if (context.user.role === 'STUDENT') {
+        if (context.user.student?.onboardingStatus === 'SUBMITTED') {
+          throw redirect({ to: '/onboarding-complete' })
+        }
+        throw redirect({ to: '/onboarding' })
+      }
+      
+      // Fallback
+      return
     }
   },
   component: LoginPage,
