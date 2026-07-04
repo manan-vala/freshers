@@ -2,15 +2,49 @@ import { Router } from 'express'
 import multer from 'multer'
 import { authenticate } from '@/middleware/auth.middleware'
 import { authorize } from '@/middleware/role.middleware'
-import { createAdminUserHandler, getHMCUsersHandler, deleteHMCUserHandler, bulkUploadStudentsHandler, getAllStudentsHandler } from './user.controller'
+import {
+  createAdminUserHandler,
+  getHMCUsersHandler,
+  deleteHMCUserHandler,
+  bulkUploadStudentsHandler,
+  getImportStatusHandler,
+  getAllStudentsHandler,
+} from './user.controller'
 
 const router = Router()
-const upload = multer({ storage: multer.memoryStorage() })
 
+// ── Multer: memory storage, hard file size cap ────────────────────────────────
+// The MIME/size guards inside the controller are the logical gatekeepers.
+// This multer limit is a cheap first-line defence at the network layer.
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB
+})
+
+// ── Admin/HMC management ──────────────────────────────────────────────────────
 router.post('/admin', authenticate, authorize('ADMIN'), createAdminUserHandler)
 router.get('/hmc', authenticate, authorize('ADMIN'), getHMCUsersHandler)
 router.delete('/hmc/:id', authenticate, authorize('ADMIN'), deleteHMCUserHandler)
-router.post('/bulk-upload', authenticate, authorize('ADMIN'), upload.single('file'), bulkUploadStudentsHandler)
+
+// ── Student management ────────────────────────────────────────────────────────
 router.get('/students', authenticate, authorize('ADMIN'), getAllStudentsHandler)
+
+// ── Bulk CSV upload ───────────────────────────────────────────────────────────
+// Step 1: Upload CSV → 202 + { jobId }
+router.post(
+  '/bulk-upload',
+  authenticate,
+  authorize('ADMIN'),
+  upload.single('file'),
+  bulkUploadStudentsHandler
+)
+
+// Step 2: Poll status → { state, progress, result }
+router.get(
+  '/bulk-upload/:jobId/status',
+  authenticate,
+  authorize('ADMIN'),
+  getImportStatusHandler
+)
 
 export default router

@@ -77,7 +77,8 @@ model Student {
   rollNumber     String
   branch         String
   email          String  @db.VarChar(150) // mirrors user.email for convenience
-  outlookEmail   String  @db.VarChar(150) // mirrors user.microsoftId maybe? Wait, just outlook email
+  gmailId        String  @db.VarChar(150) // Personal Gmail address
+  outlookId      String  @db.VarChar(150) // IITG Outlook email address
 
   // Filled by student during onboarding — null until submitted
   contactNumber                 String?

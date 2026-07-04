@@ -4,6 +4,9 @@ import { env } from '@/config/env';    // ✅ Now Zod can see them!
 import type { EmailJob } from '@/modules/email/email.types';
 import { transporter } from '@/modules/email/email.transporter';
 import { renderTemplate, getSubject } from '@/modules/email/email.templates';
+
+// ── Import the student import worker (self-registering side-effect) ────────────
+import './jobs/studentImport.worker'
 const worker = new Worker<EmailJob>(
   'emails',
   async (job) => {
@@ -28,4 +31,4 @@ worker.on('failed', (job, err) => {
   console.error(`✗ Email job ${job?.id} failed:`, err.message);
 });
 
-console.log('Worker is listening for email jobs...');
+console.log('✓ Worker process listening for email + student-import jobs...')
