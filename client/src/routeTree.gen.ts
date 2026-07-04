@@ -19,6 +19,8 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as SuperadminLoginRouteImport } from './routes/superadmin/login'
 import { Route as SuperadminDashboardRouteImport } from './routes/superadmin/dashboard'
 import { Route as HostelDashboardRouteImport } from './routes/hostel/dashboard'
+import { Route as AdminUsersRouteImport } from './routes/admin/users'
+import { Route as Admin_layoutRouteImport } from './routes/admin/__layout'
 import { Route as HostelVerifyStudentIdRouteImport } from './routes/hostel/verify.$studentId'
 
 const OnboardingCompleteRoute = OnboardingCompleteRouteImport.update({
@@ -71,6 +73,16 @@ const HostelDashboardRoute = HostelDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => HostelRouteRoute,
 } as any)
+const AdminUsersRoute = AdminUsersRouteImport.update({
+  id: '/admin/users',
+  path: '/admin/users',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Admin_layoutRoute = Admin_layoutRouteImport.update({
+  id: '/admin/__layout',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HostelVerifyStudentIdRoute = HostelVerifyStudentIdRouteImport.update({
   id: '/verify/$studentId',
   path: '/verify/$studentId',
@@ -85,6 +97,8 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/onboarding-complete': typeof OnboardingCompleteRoute
+  '/admin': typeof Admin_layoutRoute
+  '/admin/users': typeof AdminUsersRoute
   '/hostel/dashboard': typeof HostelDashboardRoute
   '/superadmin/dashboard': typeof SuperadminDashboardRoute
   '/superadmin/login': typeof SuperadminLoginRoute
@@ -98,6 +112,8 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/onboarding-complete': typeof OnboardingCompleteRoute
+  '/admin': typeof Admin_layoutRoute
+  '/admin/users': typeof AdminUsersRoute
   '/hostel/dashboard': typeof HostelDashboardRoute
   '/superadmin/dashboard': typeof SuperadminDashboardRoute
   '/superadmin/login': typeof SuperadminLoginRoute
@@ -112,6 +128,8 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/onboarding-complete': typeof OnboardingCompleteRoute
+  '/admin/__layout': typeof Admin_layoutRoute
+  '/admin/users': typeof AdminUsersRoute
   '/hostel/dashboard': typeof HostelDashboardRoute
   '/superadmin/dashboard': typeof SuperadminDashboardRoute
   '/superadmin/login': typeof SuperadminLoginRoute
@@ -127,6 +145,8 @@ export interface FileRouteTypes {
     | '/login'
     | '/onboarding'
     | '/onboarding-complete'
+    | '/admin'
+    | '/admin/users'
     | '/hostel/dashboard'
     | '/superadmin/dashboard'
     | '/superadmin/login'
@@ -140,6 +160,8 @@ export interface FileRouteTypes {
     | '/login'
     | '/onboarding'
     | '/onboarding-complete'
+    | '/admin'
+    | '/admin/users'
     | '/hostel/dashboard'
     | '/superadmin/dashboard'
     | '/superadmin/login'
@@ -153,6 +175,8 @@ export interface FileRouteTypes {
     | '/login'
     | '/onboarding'
     | '/onboarding-complete'
+    | '/admin/__layout'
+    | '/admin/users'
     | '/hostel/dashboard'
     | '/superadmin/dashboard'
     | '/superadmin/login'
@@ -167,6 +191,8 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   OnboardingRoute: typeof OnboardingRoute
   OnboardingCompleteRoute: typeof OnboardingCompleteRoute
+  Admin_layoutRoute: typeof Admin_layoutRoute
+  AdminUsersRoute: typeof AdminUsersRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -241,6 +267,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HostelDashboardRouteImport
       parentRoute: typeof HostelRouteRoute
     }
+    '/admin/users': {
+      id: '/admin/users'
+      path: '/admin/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AdminUsersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/__layout': {
+      id: '/admin/__layout'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof Admin_layoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/hostel/verify/$studentId': {
       id: '/hostel/verify/$studentId'
       path: '/verify/$studentId'
@@ -287,6 +327,8 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   OnboardingRoute: OnboardingRoute,
   OnboardingCompleteRoute: OnboardingCompleteRoute,
+  Admin_layoutRoute: Admin_layoutRoute,
+  AdminUsersRoute: AdminUsersRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

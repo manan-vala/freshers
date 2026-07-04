@@ -3,7 +3,7 @@ import { emailQueue } from '@/modules/email/email.queue';
 import { hashPassword } from '@/utils/password.util';
 import { AppError } from '@/utils/errors';
 import { randomBytes } from 'crypto';
-import type { HostelName } from '../../../generated/prisma';
+import type { HostelName } from '@/generated/prisma/enums';
 
 export async function createUser(data: {
   email: string;
@@ -14,7 +14,8 @@ export async function createUser(data: {
     rollNumber: string;
     branch: string;
     hostelCode: string;
-    outlookEmail: string;
+    gmailId: string;
+    outlookId: string;
     academicYearId: string;
   };
 }) {
@@ -44,10 +45,12 @@ export async function createUser(data: {
         ? {
             student: {
               create: {
+                email: data.email,
                 name: data.studentData.name,
                 rollNumber: data.studentData.rollNumber,
                 branch: data.studentData.branch,
-                outlookEmail: data.studentData.outlookEmail,
+                gmailId: data.studentData.gmailId,
+                outlookId: data.studentData.outlookId,
                 academicYearId: data.studentData.academicYearId,
                 hostelId: hostelId,
                 onboardingStatus: 'PENDING',
@@ -131,40 +134,46 @@ export async function createAdminUser(data: {
   return user;
 }
 
-import type { BulkUploadRow } from '@shared/student';
+import type { BulkUploadRow } from '@shared/student'
+import { studentImportQueue } from '@/jobs/studentImport.queue'
 
-export async function bulkUploadStudents(rows: BulkUploadRow[], uploadedBy: string) {
-  const activeYear = await prisma.academicYear.findFirst({ where: { isActive: true } });
-  if (!activeYear) throw new Error('No active academic year found');
-
-  let successCount = 0;
-  let failureCount = 0;
-  const errors: { row: number; reason: string }[] = [];
-
-  for (let i = 0; i < rows.length; i++) {
-    const row = rows[i];
-    try {
-      await createUser({
-        email: row.email,
-        loginId: row.rollNumber, // Use roll number as login ID by default
-        role: 'STUDENT',
-        studentData: {
-          name: row.name,
-          rollNumber: row.rollNumber,
-          branch: row.branch,
-          hostelCode: row.hostelCode,
-          outlookEmail: row.outlookEmail,
-          academicYearId: activeYear.id,
-        },
-      });
-      successCount++;
-    } catch (error: any) {
-      failureCount++;
-      errors.push({ row: i + 1, reason: error.message || 'Unknown error' });
-    }
+// Enqueue an import job. Called by the controller immediately after CSV parsing.
+// Returns the BullMQ job ID so the client can poll status.
+export async function enqueueStudentImport(
+  rows: BulkUploadRow[],
+  uploadedBy: string
+): Promise<string> {
+  const activeYear = await prisma.academicYear.findFirst({ where: { isActive: true } })
+  if (!activeYear) {
+    throw new AppError(400, 'No active academic year found. Create one before importing students.')
   }
 
-  return { successCount, failureCount, errors };
+  const job = await studentImportQueue.add('import', {
+    rows,
+    uploadedBy,
+    academicYearId: activeYear.id,
+  })
+
+  // job.id is always a string when the queue uses the default ID generator
+  return job.id!
+}
+
+// Fetch the current status of an import job.
+// Returns a consistent shape regardless of job state.
+export async function getImportJobStatus(jobId: string) {
+  const job = await studentImportQueue.getJob(jobId)
+  if (!job) {
+    throw new AppError(404, 'Import job not found. It may have expired.')
+  }
+
+  const state = await job.getState()
+
+  return {
+    state,
+    progress: job.progress as number,
+    result: state === 'completed' ? (job.returnvalue ?? null) : null,
+    failedReason: state === 'failed' ? (job.failedReason ?? null) : null,
+  }
 }
 
 export async function getAllStudents(params: {

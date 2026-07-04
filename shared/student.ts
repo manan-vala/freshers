@@ -51,9 +51,27 @@ export const bulkUploadRowSchema = z.object({
   name: z.string().min(1, 'Name is required'),
   rollNumber: z.string().min(1, 'Roll number is required'),
   branch: z.string().min(1, 'Branch is required'),
-  email: z.string().email('Invalid email address'),
+  email: z.string().email('Invalid IITG email'),
   hostelCode: z.string().min(1, 'Hostel code is required'),
-  outlookEmail: z.string().email('Invalid Outlook email address'),
+  gmailId: z.string().email('Invalid Gmail address'),
+  outlookId: z.string().email('Invalid Outlook ID'),
 })
 
 export type BulkUploadRow = z.infer<typeof bulkUploadRowSchema>
+
+// ─── Import Job Status (used by client polling hook) ─────────────────────────
+// Defined here so client can import the type without a server dependency.
+export type ImportJobState = 'waiting' | 'active' | 'completed' | 'failed' | 'unknown'
+
+export interface ImportJobResult {
+  successCount: number
+  failureCount: number
+  errors: Array<{ row: number; rollNumber: string; reason: string }>
+}
+
+export interface ImportJobStatus {
+  state: ImportJobState
+  progress: number // 0–100
+  result: ImportJobResult | null
+  failedReason: string | null
+}
