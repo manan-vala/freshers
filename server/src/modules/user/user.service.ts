@@ -80,8 +80,9 @@ export async function createAdminUser(data: {
   role: 'HMC' | 'ADMIN';
   hostelName?: HostelName;  // Required when role === 'HMC'
 }) {
-  const plainPassword = randomBytes(8).toString('hex');
-  const passwordHash = await hashPassword(plainPassword);
+  // HMC admins authenticate via Microsoft OAuth exclusively — no password is ever used.
+  // We still hash a random value to satisfy the non-nullable DB column.
+  const passwordHash = await hashPassword(randomBytes(16).toString('hex'));
 
   const user = await prisma.$transaction(async (tx) => {
     // 1. Create the base User row
@@ -91,7 +92,7 @@ export async function createAdminUser(data: {
         loginId: data.loginId,
         passwordHash,
         role: data.role,
-        mustChangePassword: true,
+        mustChangePassword: false, // Irrelevant — login is handled by Microsoft OAuth
         isActive: true,
       },
     });
@@ -125,12 +126,8 @@ export async function createAdminUser(data: {
     return newUser;
   });
 
-  // 3. Queue credential email AFTER transaction commits successfully
-  await emailQueue.add('credential', {
-    to: user.email,
-    templateId: 'credentials',
-    data: { loginId: user.loginId, password: plainPassword },
-  });
+  // No credential email is sent — HMC admins log in via Microsoft OAuth.
+  // Their provisioned account is activated; they simply hit "Login with Microsoft" to access the dashboard.
 
   return user;
 }
