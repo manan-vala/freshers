@@ -12,7 +12,8 @@ export async function createUser(data: {
   studentData?: {
     name: string;
     rollNumber: string;
-    branch: string;
+    discipline: string;
+    programme: string;
     hostelCode: string;
     gmailId: string;
     outlookId: string;
@@ -47,7 +48,8 @@ export async function createUser(data: {
               create: {
                 name: data.studentData.name,
                 rollNumber: data.studentData.rollNumber,
-                branch: data.studentData.branch,
+                discipline: data.studentData.discipline,
+                programme: data.studentData.programme,
                 gmailId: data.studentData.gmailId,
                 outlookId: data.studentData.outlookId,
                 academicYearId: data.studentData.academicYearId,

@@ -39,9 +39,14 @@ export function ReviewStep({ isConsented, setIsConsented }: Props) {
         <DataRow label="Gmail ID" value={data.email} />
         <DataRow label="Phone Number" value={data.phone} />
         <DataRow label="Emergency Phone" value={data.emergencyPhone} />
-        <DataRow label="Stream" value={data.stream} />
-        {data.stream === "Bachelor of Technology (B.Tech)" && (
-          <DataRow label="Department / Section" value={data.department} />
+        <DataRow label="Emergency Contact Name" value={data.emergencyContactName} />
+        <DataRow label="Emergency Contact Relation" value={data.emergencyContactRelation} />
+        <DataRow label="Permanent Address" value={data.permanentAddress} />
+        <DataRow label="Country" value={data.country === "Other" ? data.otherCountry : data.country} />
+        <DataRow label="State" value={data.state} />
+        <DataRow label="Programme" value={data.programme} />
+        {data.discipline && (
+          <DataRow label="Discipline" value={data.discipline} />
         )}
         <DataRow label="Gender" value={data.gender} />
       </Section>

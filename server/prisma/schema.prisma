@@ -75,7 +75,8 @@ model Student {
   // Pre-filled from admin bulk upload
   name           String  @db.VarChar(100)
   rollNumber     String
-  branch         String
+  discipline     String
+  programme      String
   gmailId        String  @db.VarChar(150) // Personal Gmail address
   outlookId      String  @db.VarChar(150) // IITG Outlook email address
 
@@ -83,6 +84,7 @@ model Student {
   contactNumber                 String?
   alternateContactNumber        String?
   permanentAddress              String?
+  country                       String?
   state                         String?
   emergencyContactName          String?
   emergencyContactNumber        String?
@@ -91,7 +93,10 @@ model Student {
   medicalConditions             String  @default("None") @db.VarChar(500)
   identificationMark            String  @default("None") @db.VarChar(200)
   allergies                     String?
-  physicalAccessibilityRequirements String?
+  dob                           String?
+  gender                        String?
+  isHandicapped                 Boolean  @default(false)
+  handicapDetails               String?
 
   onboardingStatus      OnboardingStatus @default(PENDING)
   onboardingSubmittedAt DateTime?
@@ -110,7 +115,7 @@ model Student {
   @@unique([academicYearId, rollNumber])
   @@index([academicYearId])
   @@index([onboardingStatus])
-  @@index([branch])
+  @@index([discipline])
   @@index([hostelId])
 }
 

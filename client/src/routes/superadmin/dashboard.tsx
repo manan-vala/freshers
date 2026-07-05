@@ -8,7 +8,7 @@ import { superAdminApi } from '@/lib/superadmin'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
-import { IconTrash, IconPlus, IconLoader2, IconLogout, IconShieldCheck, IconUpload, IconUsers, IconHome, IconDatabase, IconSearch } from '@tabler/icons-react'
+import { IconTrash, IconPlus, IconLoader2, IconLogout, IconShieldCheck, IconUpload, IconUsers, IconHome, IconSearch } from '@tabler/icons-react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -347,7 +347,7 @@ function SuperAdminDashboard() {
                     onChange={(e) => setUploadFile(e.target.files?.[0] || null)}
                   />
                   <p className="text-xs text-slate-500">
-                    CSV must contain: name, rollNumber, branch, hostelCode, gmailId, outlookId
+                    CSV must contain: name, rollNumber, discipline, programme, hostelCode, gmailId, outlookId
                   </p>
                 </div>
                 <div className="space-y-2 flex flex-col justify-start">
@@ -468,7 +468,8 @@ function StudentsDataView() {
               <TableRow>
                 <TableHead>Name</TableHead>
                 <TableHead>Roll No.</TableHead>
-                <TableHead>Branch</TableHead>
+                <TableHead>Programme</TableHead>
+                <TableHead>Discipline</TableHead>
                 <TableHead>Email</TableHead>
                 <TableHead>Outlook Email</TableHead>
                 <TableHead>Hostel</TableHead>
@@ -479,13 +480,13 @@ function StudentsDataView() {
             <TableBody>
               {isLoading ? (
                 <TableRow>
-                  <TableCell colSpan={8} className="h-32 text-center text-slate-500">
+                  <TableCell colSpan={9} className="h-32 text-center text-slate-500">
                     <IconLoader2 className="animate-spin mx-auto size-6 text-emerald-500" />
                   </TableCell>
                 </TableRow>
               ) : students.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={8} className="h-32 text-center text-slate-500">
+                  <TableCell colSpan={9} className="h-32 text-center text-slate-500">
                     No students found.
                   </TableCell>
                 </TableRow>
@@ -496,7 +497,8 @@ function StudentsDataView() {
                     <TableRow key={student.id} className="hover:bg-slate-50/50">
                       <TableCell className="font-medium text-slate-900">{student.name}</TableCell>
                       <TableCell className="text-slate-500">{student.rollNumber}</TableCell>
-                      <TableCell className="text-slate-600 max-w-[150px] truncate" title={student.branch}>{student.branch}</TableCell>
+                      <TableCell className="text-slate-600">{student.programme}</TableCell>
+                      <TableCell className="text-slate-600 max-w-[150px] truncate" title={student.discipline}>{student.discipline}</TableCell>
                       <TableCell className="text-slate-500">{student.user.email}</TableCell>
                       <TableCell className="text-slate-500">{student.outlookId}</TableCell>
                       <TableCell>{readableHostel}</TableCell>

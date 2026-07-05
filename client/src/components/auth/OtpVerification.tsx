@@ -4,7 +4,14 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp' // adjust path if needed
 
-export function OtpVerification({ email }: { email: string }) {
+interface OtpVerificationProps {
+  email?: string
+  onSuccess?: () => void
+  onResend?: () => void
+  isLoading?: boolean
+}
+
+export function OtpVerification({ email }: OtpVerificationProps) {
   const [otp, setOtp] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -57,7 +64,7 @@ export function OtpVerification({ email }: { email: string }) {
       <div className="mb-8 text-center">
         <h2 className="text-2xl font-bold text-slate-900 mb-2">Verify Your Account</h2>
         <p className="text-slate-500 text-sm">
-          We sent a 6-digit code to <strong>{email}</strong>. Please enter it below and set your permanent password.
+          We sent a 6-digit code to {email ? <strong>{email}</strong> : "your registered Gmail address"}. Please enter it below and set your permanent password.
         </p>
       </div>
 

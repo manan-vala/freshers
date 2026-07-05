@@ -30,12 +30,14 @@ export type StudentMinAggregateOutputType = {
   academicYearId: string | null
   name: string | null
   rollNumber: string | null
-  branch: string | null
+  discipline: string | null
+  programme: string | null
   gmailId: string | null
   outlookId: string | null
   contactNumber: string | null
   alternateContactNumber: string | null
   permanentAddress: string | null
+  country: string | null
   state: string | null
   emergencyContactName: string | null
   emergencyContactNumber: string | null
@@ -44,7 +46,10 @@ export type StudentMinAggregateOutputType = {
   medicalConditions: string | null
   identificationMark: string | null
   allergies: string | null
-  physicalAccessibilityRequirements: string | null
+  dob: string | null
+  gender: string | null
+  isHandicapped: boolean | null
+  handicapDetails: string | null
   onboardingStatus: $Enums.OnboardingStatus | null
   onboardingSubmittedAt: Date | null
   consentGiven: boolean | null
@@ -62,12 +67,14 @@ export type StudentMaxAggregateOutputType = {
   academicYearId: string | null
   name: string | null
   rollNumber: string | null
-  branch: string | null
+  discipline: string | null
+  programme: string | null
   gmailId: string | null
   outlookId: string | null
   contactNumber: string | null
   alternateContactNumber: string | null
   permanentAddress: string | null
+  country: string | null
   state: string | null
   emergencyContactName: string | null
   emergencyContactNumber: string | null
@@ -76,7 +83,10 @@ export type StudentMaxAggregateOutputType = {
   medicalConditions: string | null
   identificationMark: string | null
   allergies: string | null
-  physicalAccessibilityRequirements: string | null
+  dob: string | null
+  gender: string | null
+  isHandicapped: boolean | null
+  handicapDetails: string | null
   onboardingStatus: $Enums.OnboardingStatus | null
   onboardingSubmittedAt: Date | null
   consentGiven: boolean | null
@@ -94,12 +104,14 @@ export type StudentCountAggregateOutputType = {
   academicYearId: number
   name: number
   rollNumber: number
-  branch: number
+  discipline: number
+  programme: number
   gmailId: number
   outlookId: number
   contactNumber: number
   alternateContactNumber: number
   permanentAddress: number
+  country: number
   state: number
   emergencyContactName: number
   emergencyContactNumber: number
@@ -108,7 +120,10 @@ export type StudentCountAggregateOutputType = {
   medicalConditions: number
   identificationMark: number
   allergies: number
-  physicalAccessibilityRequirements: number
+  dob: number
+  gender: number
+  isHandicapped: number
+  handicapDetails: number
   onboardingStatus: number
   onboardingSubmittedAt: number
   consentGiven: number
@@ -128,12 +143,14 @@ export type StudentMinAggregateInputType = {
   academicYearId?: true
   name?: true
   rollNumber?: true
-  branch?: true
+  discipline?: true
+  programme?: true
   gmailId?: true
   outlookId?: true
   contactNumber?: true
   alternateContactNumber?: true
   permanentAddress?: true
+  country?: true
   state?: true
   emergencyContactName?: true
   emergencyContactNumber?: true
@@ -142,7 +159,10 @@ export type StudentMinAggregateInputType = {
   medicalConditions?: true
   identificationMark?: true
   allergies?: true
-  physicalAccessibilityRequirements?: true
+  dob?: true
+  gender?: true
+  isHandicapped?: true
+  handicapDetails?: true
   onboardingStatus?: true
   onboardingSubmittedAt?: true
   consentGiven?: true
@@ -160,12 +180,14 @@ export type StudentMaxAggregateInputType = {
   academicYearId?: true
   name?: true
   rollNumber?: true
-  branch?: true
+  discipline?: true
+  programme?: true
   gmailId?: true
   outlookId?: true
   contactNumber?: true
   alternateContactNumber?: true
   permanentAddress?: true
+  country?: true
   state?: true
   emergencyContactName?: true
   emergencyContactNumber?: true
@@ -174,7 +196,10 @@ export type StudentMaxAggregateInputType = {
   medicalConditions?: true
   identificationMark?: true
   allergies?: true
-  physicalAccessibilityRequirements?: true
+  dob?: true
+  gender?: true
+  isHandicapped?: true
+  handicapDetails?: true
   onboardingStatus?: true
   onboardingSubmittedAt?: true
   consentGiven?: true
@@ -192,12 +217,14 @@ export type StudentCountAggregateInputType = {
   academicYearId?: true
   name?: true
   rollNumber?: true
-  branch?: true
+  discipline?: true
+  programme?: true
   gmailId?: true
   outlookId?: true
   contactNumber?: true
   alternateContactNumber?: true
   permanentAddress?: true
+  country?: true
   state?: true
   emergencyContactName?: true
   emergencyContactNumber?: true
@@ -206,7 +233,10 @@ export type StudentCountAggregateInputType = {
   medicalConditions?: true
   identificationMark?: true
   allergies?: true
-  physicalAccessibilityRequirements?: true
+  dob?: true
+  gender?: true
+  isHandicapped?: true
+  handicapDetails?: true
   onboardingStatus?: true
   onboardingSubmittedAt?: true
   consentGiven?: true
@@ -297,12 +327,14 @@ export type StudentGroupByOutputType = {
   academicYearId: string
   name: string
   rollNumber: string
-  branch: string
+  discipline: string
+  programme: string
   gmailId: string
   outlookId: string
   contactNumber: string | null
   alternateContactNumber: string | null
   permanentAddress: string | null
+  country: string | null
   state: string | null
   emergencyContactName: string | null
   emergencyContactNumber: string | null
@@ -311,7 +343,10 @@ export type StudentGroupByOutputType = {
   medicalConditions: string
   identificationMark: string
   allergies: string | null
-  physicalAccessibilityRequirements: string | null
+  dob: string | null
+  gender: string | null
+  isHandicapped: boolean
+  handicapDetails: string | null
   onboardingStatus: $Enums.OnboardingStatus
   onboardingSubmittedAt: Date | null
   consentGiven: boolean
@@ -350,12 +385,14 @@ export type StudentWhereInput = {
   academicYearId?: Prisma.StringFilter<"Student"> | string
   name?: Prisma.StringFilter<"Student"> | string
   rollNumber?: Prisma.StringFilter<"Student"> | string
-  branch?: Prisma.StringFilter<"Student"> | string
+  discipline?: Prisma.StringFilter<"Student"> | string
+  programme?: Prisma.StringFilter<"Student"> | string
   gmailId?: Prisma.StringFilter<"Student"> | string
   outlookId?: Prisma.StringFilter<"Student"> | string
   contactNumber?: Prisma.StringNullableFilter<"Student"> | string | null
   alternateContactNumber?: Prisma.StringNullableFilter<"Student"> | string | null
   permanentAddress?: Prisma.StringNullableFilter<"Student"> | string | null
+  country?: Prisma.StringNullableFilter<"Student"> | string | null
   state?: Prisma.StringNullableFilter<"Student"> | string | null
   emergencyContactName?: Prisma.StringNullableFilter<"Student"> | string | null
   emergencyContactNumber?: Prisma.StringNullableFilter<"Student"> | string | null
@@ -364,7 +401,10 @@ export type StudentWhereInput = {
   medicalConditions?: Prisma.StringFilter<"Student"> | string
   identificationMark?: Prisma.StringFilter<"Student"> | string
   allergies?: Prisma.StringNullableFilter<"Student"> | string | null
-  physicalAccessibilityRequirements?: Prisma.StringNullableFilter<"Student"> | string | null
+  dob?: Prisma.StringNullableFilter<"Student"> | string | null
+  gender?: Prisma.StringNullableFilter<"Student"> | string | null
+  isHandicapped?: Prisma.BoolFilter<"Student"> | boolean
+  handicapDetails?: Prisma.StringNullableFilter<"Student"> | string | null
   onboardingStatus?: Prisma.EnumOnboardingStatusFilter<"Student"> | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.DateTimeNullableFilter<"Student"> | Date | string | null
   consentGiven?: Prisma.BoolFilter<"Student"> | boolean
@@ -386,12 +426,14 @@ export type StudentOrderByWithRelationInput = {
   academicYearId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   rollNumber?: Prisma.SortOrder
-  branch?: Prisma.SortOrder
+  discipline?: Prisma.SortOrder
+  programme?: Prisma.SortOrder
   gmailId?: Prisma.SortOrder
   outlookId?: Prisma.SortOrder
   contactNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   alternateContactNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   permanentAddress?: Prisma.SortOrderInput | Prisma.SortOrder
+  country?: Prisma.SortOrderInput | Prisma.SortOrder
   state?: Prisma.SortOrderInput | Prisma.SortOrder
   emergencyContactName?: Prisma.SortOrderInput | Prisma.SortOrder
   emergencyContactNumber?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -400,7 +442,10 @@ export type StudentOrderByWithRelationInput = {
   medicalConditions?: Prisma.SortOrder
   identificationMark?: Prisma.SortOrder
   allergies?: Prisma.SortOrderInput | Prisma.SortOrder
-  physicalAccessibilityRequirements?: Prisma.SortOrderInput | Prisma.SortOrder
+  dob?: Prisma.SortOrderInput | Prisma.SortOrder
+  gender?: Prisma.SortOrderInput | Prisma.SortOrder
+  isHandicapped?: Prisma.SortOrder
+  handicapDetails?: Prisma.SortOrderInput | Prisma.SortOrder
   onboardingStatus?: Prisma.SortOrder
   onboardingSubmittedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   consentGiven?: Prisma.SortOrder
@@ -426,12 +471,14 @@ export type StudentWhereUniqueInput = Prisma.AtLeast<{
   academicYearId?: Prisma.StringFilter<"Student"> | string
   name?: Prisma.StringFilter<"Student"> | string
   rollNumber?: Prisma.StringFilter<"Student"> | string
-  branch?: Prisma.StringFilter<"Student"> | string
+  discipline?: Prisma.StringFilter<"Student"> | string
+  programme?: Prisma.StringFilter<"Student"> | string
   gmailId?: Prisma.StringFilter<"Student"> | string
   outlookId?: Prisma.StringFilter<"Student"> | string
   contactNumber?: Prisma.StringNullableFilter<"Student"> | string | null
   alternateContactNumber?: Prisma.StringNullableFilter<"Student"> | string | null
   permanentAddress?: Prisma.StringNullableFilter<"Student"> | string | null
+  country?: Prisma.StringNullableFilter<"Student"> | string | null
   state?: Prisma.StringNullableFilter<"Student"> | string | null
   emergencyContactName?: Prisma.StringNullableFilter<"Student"> | string | null
   emergencyContactNumber?: Prisma.StringNullableFilter<"Student"> | string | null
@@ -440,7 +487,10 @@ export type StudentWhereUniqueInput = Prisma.AtLeast<{
   medicalConditions?: Prisma.StringFilter<"Student"> | string
   identificationMark?: Prisma.StringFilter<"Student"> | string
   allergies?: Prisma.StringNullableFilter<"Student"> | string | null
-  physicalAccessibilityRequirements?: Prisma.StringNullableFilter<"Student"> | string | null
+  dob?: Prisma.StringNullableFilter<"Student"> | string | null
+  gender?: Prisma.StringNullableFilter<"Student"> | string | null
+  isHandicapped?: Prisma.BoolFilter<"Student"> | boolean
+  handicapDetails?: Prisma.StringNullableFilter<"Student"> | string | null
   onboardingStatus?: Prisma.EnumOnboardingStatusFilter<"Student"> | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.DateTimeNullableFilter<"Student"> | Date | string | null
   consentGiven?: Prisma.BoolFilter<"Student"> | boolean
@@ -462,12 +512,14 @@ export type StudentOrderByWithAggregationInput = {
   academicYearId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   rollNumber?: Prisma.SortOrder
-  branch?: Prisma.SortOrder
+  discipline?: Prisma.SortOrder
+  programme?: Prisma.SortOrder
   gmailId?: Prisma.SortOrder
   outlookId?: Prisma.SortOrder
   contactNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   alternateContactNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   permanentAddress?: Prisma.SortOrderInput | Prisma.SortOrder
+  country?: Prisma.SortOrderInput | Prisma.SortOrder
   state?: Prisma.SortOrderInput | Prisma.SortOrder
   emergencyContactName?: Prisma.SortOrderInput | Prisma.SortOrder
   emergencyContactNumber?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -476,7 +528,10 @@ export type StudentOrderByWithAggregationInput = {
   medicalConditions?: Prisma.SortOrder
   identificationMark?: Prisma.SortOrder
   allergies?: Prisma.SortOrderInput | Prisma.SortOrder
-  physicalAccessibilityRequirements?: Prisma.SortOrderInput | Prisma.SortOrder
+  dob?: Prisma.SortOrderInput | Prisma.SortOrder
+  gender?: Prisma.SortOrderInput | Prisma.SortOrder
+  isHandicapped?: Prisma.SortOrder
+  handicapDetails?: Prisma.SortOrderInput | Prisma.SortOrder
   onboardingStatus?: Prisma.SortOrder
   onboardingSubmittedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   consentGiven?: Prisma.SortOrder
@@ -500,12 +555,14 @@ export type StudentScalarWhereWithAggregatesInput = {
   academicYearId?: Prisma.StringWithAggregatesFilter<"Student"> | string
   name?: Prisma.StringWithAggregatesFilter<"Student"> | string
   rollNumber?: Prisma.StringWithAggregatesFilter<"Student"> | string
-  branch?: Prisma.StringWithAggregatesFilter<"Student"> | string
+  discipline?: Prisma.StringWithAggregatesFilter<"Student"> | string
+  programme?: Prisma.StringWithAggregatesFilter<"Student"> | string
   gmailId?: Prisma.StringWithAggregatesFilter<"Student"> | string
   outlookId?: Prisma.StringWithAggregatesFilter<"Student"> | string
   contactNumber?: Prisma.StringNullableWithAggregatesFilter<"Student"> | string | null
   alternateContactNumber?: Prisma.StringNullableWithAggregatesFilter<"Student"> | string | null
   permanentAddress?: Prisma.StringNullableWithAggregatesFilter<"Student"> | string | null
+  country?: Prisma.StringNullableWithAggregatesFilter<"Student"> | string | null
   state?: Prisma.StringNullableWithAggregatesFilter<"Student"> | string | null
   emergencyContactName?: Prisma.StringNullableWithAggregatesFilter<"Student"> | string | null
   emergencyContactNumber?: Prisma.StringNullableWithAggregatesFilter<"Student"> | string | null
@@ -514,7 +571,10 @@ export type StudentScalarWhereWithAggregatesInput = {
   medicalConditions?: Prisma.StringWithAggregatesFilter<"Student"> | string
   identificationMark?: Prisma.StringWithAggregatesFilter<"Student"> | string
   allergies?: Prisma.StringNullableWithAggregatesFilter<"Student"> | string | null
-  physicalAccessibilityRequirements?: Prisma.StringNullableWithAggregatesFilter<"Student"> | string | null
+  dob?: Prisma.StringNullableWithAggregatesFilter<"Student"> | string | null
+  gender?: Prisma.StringNullableWithAggregatesFilter<"Student"> | string | null
+  isHandicapped?: Prisma.BoolWithAggregatesFilter<"Student"> | boolean
+  handicapDetails?: Prisma.StringNullableWithAggregatesFilter<"Student"> | string | null
   onboardingStatus?: Prisma.EnumOnboardingStatusWithAggregatesFilter<"Student"> | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Student"> | Date | string | null
   consentGiven?: Prisma.BoolWithAggregatesFilter<"Student"> | boolean
@@ -530,12 +590,14 @@ export type StudentCreateInput = {
   id?: string
   name: string
   rollNumber: string
-  branch: string
+  discipline: string
+  programme: string
   gmailId: string
   outlookId: string
   contactNumber?: string | null
   alternateContactNumber?: string | null
   permanentAddress?: string | null
+  country?: string | null
   state?: string | null
   emergencyContactName?: string | null
   emergencyContactNumber?: string | null
@@ -544,7 +606,10 @@ export type StudentCreateInput = {
   medicalConditions?: string
   identificationMark?: string
   allergies?: string | null
-  physicalAccessibilityRequirements?: string | null
+  dob?: string | null
+  gender?: string | null
+  isHandicapped?: boolean
+  handicapDetails?: string | null
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
   consentGiven?: boolean
@@ -565,12 +630,14 @@ export type StudentUncheckedCreateInput = {
   academicYearId: string
   name: string
   rollNumber: string
-  branch: string
+  discipline: string
+  programme: string
   gmailId: string
   outlookId: string
   contactNumber?: string | null
   alternateContactNumber?: string | null
   permanentAddress?: string | null
+  country?: string | null
   state?: string | null
   emergencyContactName?: string | null
   emergencyContactNumber?: string | null
@@ -579,7 +646,10 @@ export type StudentUncheckedCreateInput = {
   medicalConditions?: string
   identificationMark?: string
   allergies?: string | null
-  physicalAccessibilityRequirements?: string | null
+  dob?: string | null
+  gender?: string | null
+  isHandicapped?: boolean
+  handicapDetails?: string | null
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
   consentGiven?: boolean
@@ -596,12 +666,14 @@ export type StudentUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  branch?: Prisma.StringFieldUpdateOperationsInput | string
+  discipline?: Prisma.StringFieldUpdateOperationsInput | string
+  programme?: Prisma.StringFieldUpdateOperationsInput | string
   gmailId?: Prisma.StringFieldUpdateOperationsInput | string
   outlookId?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   alternateContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permanentAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -610,7 +682,10 @@ export type StudentUpdateInput = {
   medicalConditions?: Prisma.StringFieldUpdateOperationsInput | string
   identificationMark?: Prisma.StringFieldUpdateOperationsInput | string
   allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  physicalAccessibilityRequirements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dob?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isHandicapped?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  handicapDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   consentGiven?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -631,12 +706,14 @@ export type StudentUncheckedUpdateInput = {
   academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  branch?: Prisma.StringFieldUpdateOperationsInput | string
+  discipline?: Prisma.StringFieldUpdateOperationsInput | string
+  programme?: Prisma.StringFieldUpdateOperationsInput | string
   gmailId?: Prisma.StringFieldUpdateOperationsInput | string
   outlookId?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   alternateContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permanentAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -645,7 +722,10 @@ export type StudentUncheckedUpdateInput = {
   medicalConditions?: Prisma.StringFieldUpdateOperationsInput | string
   identificationMark?: Prisma.StringFieldUpdateOperationsInput | string
   allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  physicalAccessibilityRequirements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dob?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isHandicapped?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  handicapDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   consentGiven?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -664,12 +744,14 @@ export type StudentCreateManyInput = {
   academicYearId: string
   name: string
   rollNumber: string
-  branch: string
+  discipline: string
+  programme: string
   gmailId: string
   outlookId: string
   contactNumber?: string | null
   alternateContactNumber?: string | null
   permanentAddress?: string | null
+  country?: string | null
   state?: string | null
   emergencyContactName?: string | null
   emergencyContactNumber?: string | null
@@ -678,7 +760,10 @@ export type StudentCreateManyInput = {
   medicalConditions?: string
   identificationMark?: string
   allergies?: string | null
-  physicalAccessibilityRequirements?: string | null
+  dob?: string | null
+  gender?: string | null
+  isHandicapped?: boolean
+  handicapDetails?: string | null
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
   consentGiven?: boolean
@@ -694,12 +779,14 @@ export type StudentUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  branch?: Prisma.StringFieldUpdateOperationsInput | string
+  discipline?: Prisma.StringFieldUpdateOperationsInput | string
+  programme?: Prisma.StringFieldUpdateOperationsInput | string
   gmailId?: Prisma.StringFieldUpdateOperationsInput | string
   outlookId?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   alternateContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permanentAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -708,7 +795,10 @@ export type StudentUpdateManyMutationInput = {
   medicalConditions?: Prisma.StringFieldUpdateOperationsInput | string
   identificationMark?: Prisma.StringFieldUpdateOperationsInput | string
   allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  physicalAccessibilityRequirements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dob?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isHandicapped?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  handicapDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   consentGiven?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -725,12 +815,14 @@ export type StudentUncheckedUpdateManyInput = {
   academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  branch?: Prisma.StringFieldUpdateOperationsInput | string
+  discipline?: Prisma.StringFieldUpdateOperationsInput | string
+  programme?: Prisma.StringFieldUpdateOperationsInput | string
   gmailId?: Prisma.StringFieldUpdateOperationsInput | string
   outlookId?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   alternateContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permanentAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -739,7 +831,10 @@ export type StudentUncheckedUpdateManyInput = {
   medicalConditions?: Prisma.StringFieldUpdateOperationsInput | string
   identificationMark?: Prisma.StringFieldUpdateOperationsInput | string
   allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  physicalAccessibilityRequirements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dob?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isHandicapped?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  handicapDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   consentGiven?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -777,12 +872,14 @@ export type StudentCountOrderByAggregateInput = {
   academicYearId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   rollNumber?: Prisma.SortOrder
-  branch?: Prisma.SortOrder
+  discipline?: Prisma.SortOrder
+  programme?: Prisma.SortOrder
   gmailId?: Prisma.SortOrder
   outlookId?: Prisma.SortOrder
   contactNumber?: Prisma.SortOrder
   alternateContactNumber?: Prisma.SortOrder
   permanentAddress?: Prisma.SortOrder
+  country?: Prisma.SortOrder
   state?: Prisma.SortOrder
   emergencyContactName?: Prisma.SortOrder
   emergencyContactNumber?: Prisma.SortOrder
@@ -791,7 +888,10 @@ export type StudentCountOrderByAggregateInput = {
   medicalConditions?: Prisma.SortOrder
   identificationMark?: Prisma.SortOrder
   allergies?: Prisma.SortOrder
-  physicalAccessibilityRequirements?: Prisma.SortOrder
+  dob?: Prisma.SortOrder
+  gender?: Prisma.SortOrder
+  isHandicapped?: Prisma.SortOrder
+  handicapDetails?: Prisma.SortOrder
   onboardingStatus?: Prisma.SortOrder
   onboardingSubmittedAt?: Prisma.SortOrder
   consentGiven?: Prisma.SortOrder
@@ -809,12 +909,14 @@ export type StudentMaxOrderByAggregateInput = {
   academicYearId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   rollNumber?: Prisma.SortOrder
-  branch?: Prisma.SortOrder
+  discipline?: Prisma.SortOrder
+  programme?: Prisma.SortOrder
   gmailId?: Prisma.SortOrder
   outlookId?: Prisma.SortOrder
   contactNumber?: Prisma.SortOrder
   alternateContactNumber?: Prisma.SortOrder
   permanentAddress?: Prisma.SortOrder
+  country?: Prisma.SortOrder
   state?: Prisma.SortOrder
   emergencyContactName?: Prisma.SortOrder
   emergencyContactNumber?: Prisma.SortOrder
@@ -823,7 +925,10 @@ export type StudentMaxOrderByAggregateInput = {
   medicalConditions?: Prisma.SortOrder
   identificationMark?: Prisma.SortOrder
   allergies?: Prisma.SortOrder
-  physicalAccessibilityRequirements?: Prisma.SortOrder
+  dob?: Prisma.SortOrder
+  gender?: Prisma.SortOrder
+  isHandicapped?: Prisma.SortOrder
+  handicapDetails?: Prisma.SortOrder
   onboardingStatus?: Prisma.SortOrder
   onboardingSubmittedAt?: Prisma.SortOrder
   consentGiven?: Prisma.SortOrder
@@ -841,12 +946,14 @@ export type StudentMinOrderByAggregateInput = {
   academicYearId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   rollNumber?: Prisma.SortOrder
-  branch?: Prisma.SortOrder
+  discipline?: Prisma.SortOrder
+  programme?: Prisma.SortOrder
   gmailId?: Prisma.SortOrder
   outlookId?: Prisma.SortOrder
   contactNumber?: Prisma.SortOrder
   alternateContactNumber?: Prisma.SortOrder
   permanentAddress?: Prisma.SortOrder
+  country?: Prisma.SortOrder
   state?: Prisma.SortOrder
   emergencyContactName?: Prisma.SortOrder
   emergencyContactNumber?: Prisma.SortOrder
@@ -855,7 +962,10 @@ export type StudentMinOrderByAggregateInput = {
   medicalConditions?: Prisma.SortOrder
   identificationMark?: Prisma.SortOrder
   allergies?: Prisma.SortOrder
-  physicalAccessibilityRequirements?: Prisma.SortOrder
+  dob?: Prisma.SortOrder
+  gender?: Prisma.SortOrder
+  isHandicapped?: Prisma.SortOrder
+  handicapDetails?: Prisma.SortOrder
   onboardingStatus?: Prisma.SortOrder
   onboardingSubmittedAt?: Prisma.SortOrder
   consentGiven?: Prisma.SortOrder
@@ -1014,12 +1124,14 @@ export type StudentCreateWithoutAcademicYearInput = {
   id?: string
   name: string
   rollNumber: string
-  branch: string
+  discipline: string
+  programme: string
   gmailId: string
   outlookId: string
   contactNumber?: string | null
   alternateContactNumber?: string | null
   permanentAddress?: string | null
+  country?: string | null
   state?: string | null
   emergencyContactName?: string | null
   emergencyContactNumber?: string | null
@@ -1028,7 +1140,10 @@ export type StudentCreateWithoutAcademicYearInput = {
   medicalConditions?: string
   identificationMark?: string
   allergies?: string | null
-  physicalAccessibilityRequirements?: string | null
+  dob?: string | null
+  gender?: string | null
+  isHandicapped?: boolean
+  handicapDetails?: string | null
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
   consentGiven?: boolean
@@ -1047,12 +1162,14 @@ export type StudentUncheckedCreateWithoutAcademicYearInput = {
   userId: string
   name: string
   rollNumber: string
-  branch: string
+  discipline: string
+  programme: string
   gmailId: string
   outlookId: string
   contactNumber?: string | null
   alternateContactNumber?: string | null
   permanentAddress?: string | null
+  country?: string | null
   state?: string | null
   emergencyContactName?: string | null
   emergencyContactNumber?: string | null
@@ -1061,7 +1178,10 @@ export type StudentUncheckedCreateWithoutAcademicYearInput = {
   medicalConditions?: string
   identificationMark?: string
   allergies?: string | null
-  physicalAccessibilityRequirements?: string | null
+  dob?: string | null
+  gender?: string | null
+  isHandicapped?: boolean
+  handicapDetails?: string | null
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
   consentGiven?: boolean
@@ -1109,12 +1229,14 @@ export type StudentScalarWhereInput = {
   academicYearId?: Prisma.StringFilter<"Student"> | string
   name?: Prisma.StringFilter<"Student"> | string
   rollNumber?: Prisma.StringFilter<"Student"> | string
-  branch?: Prisma.StringFilter<"Student"> | string
+  discipline?: Prisma.StringFilter<"Student"> | string
+  programme?: Prisma.StringFilter<"Student"> | string
   gmailId?: Prisma.StringFilter<"Student"> | string
   outlookId?: Prisma.StringFilter<"Student"> | string
   contactNumber?: Prisma.StringNullableFilter<"Student"> | string | null
   alternateContactNumber?: Prisma.StringNullableFilter<"Student"> | string | null
   permanentAddress?: Prisma.StringNullableFilter<"Student"> | string | null
+  country?: Prisma.StringNullableFilter<"Student"> | string | null
   state?: Prisma.StringNullableFilter<"Student"> | string | null
   emergencyContactName?: Prisma.StringNullableFilter<"Student"> | string | null
   emergencyContactNumber?: Prisma.StringNullableFilter<"Student"> | string | null
@@ -1123,7 +1245,10 @@ export type StudentScalarWhereInput = {
   medicalConditions?: Prisma.StringFilter<"Student"> | string
   identificationMark?: Prisma.StringFilter<"Student"> | string
   allergies?: Prisma.StringNullableFilter<"Student"> | string | null
-  physicalAccessibilityRequirements?: Prisma.StringNullableFilter<"Student"> | string | null
+  dob?: Prisma.StringNullableFilter<"Student"> | string | null
+  gender?: Prisma.StringNullableFilter<"Student"> | string | null
+  isHandicapped?: Prisma.BoolFilter<"Student"> | boolean
+  handicapDetails?: Prisma.StringNullableFilter<"Student"> | string | null
   onboardingStatus?: Prisma.EnumOnboardingStatusFilter<"Student"> | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.DateTimeNullableFilter<"Student"> | Date | string | null
   consentGiven?: Prisma.BoolFilter<"Student"> | boolean
@@ -1139,12 +1264,14 @@ export type StudentCreateWithoutUserInput = {
   id?: string
   name: string
   rollNumber: string
-  branch: string
+  discipline: string
+  programme: string
   gmailId: string
   outlookId: string
   contactNumber?: string | null
   alternateContactNumber?: string | null
   permanentAddress?: string | null
+  country?: string | null
   state?: string | null
   emergencyContactName?: string | null
   emergencyContactNumber?: string | null
@@ -1153,7 +1280,10 @@ export type StudentCreateWithoutUserInput = {
   medicalConditions?: string
   identificationMark?: string
   allergies?: string | null
-  physicalAccessibilityRequirements?: string | null
+  dob?: string | null
+  gender?: string | null
+  isHandicapped?: boolean
+  handicapDetails?: string | null
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
   consentGiven?: boolean
@@ -1172,12 +1302,14 @@ export type StudentUncheckedCreateWithoutUserInput = {
   academicYearId: string
   name: string
   rollNumber: string
-  branch: string
+  discipline: string
+  programme: string
   gmailId: string
   outlookId: string
   contactNumber?: string | null
   alternateContactNumber?: string | null
   permanentAddress?: string | null
+  country?: string | null
   state?: string | null
   emergencyContactName?: string | null
   emergencyContactNumber?: string | null
@@ -1186,7 +1318,10 @@ export type StudentUncheckedCreateWithoutUserInput = {
   medicalConditions?: string
   identificationMark?: string
   allergies?: string | null
-  physicalAccessibilityRequirements?: string | null
+  dob?: string | null
+  gender?: string | null
+  isHandicapped?: boolean
+  handicapDetails?: string | null
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
   consentGiven?: boolean
@@ -1219,12 +1354,14 @@ export type StudentUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  branch?: Prisma.StringFieldUpdateOperationsInput | string
+  discipline?: Prisma.StringFieldUpdateOperationsInput | string
+  programme?: Prisma.StringFieldUpdateOperationsInput | string
   gmailId?: Prisma.StringFieldUpdateOperationsInput | string
   outlookId?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   alternateContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permanentAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1233,7 +1370,10 @@ export type StudentUpdateWithoutUserInput = {
   medicalConditions?: Prisma.StringFieldUpdateOperationsInput | string
   identificationMark?: Prisma.StringFieldUpdateOperationsInput | string
   allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  physicalAccessibilityRequirements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dob?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isHandicapped?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  handicapDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   consentGiven?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1252,12 +1392,14 @@ export type StudentUncheckedUpdateWithoutUserInput = {
   academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  branch?: Prisma.StringFieldUpdateOperationsInput | string
+  discipline?: Prisma.StringFieldUpdateOperationsInput | string
+  programme?: Prisma.StringFieldUpdateOperationsInput | string
   gmailId?: Prisma.StringFieldUpdateOperationsInput | string
   outlookId?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   alternateContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permanentAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1266,7 +1408,10 @@ export type StudentUncheckedUpdateWithoutUserInput = {
   medicalConditions?: Prisma.StringFieldUpdateOperationsInput | string
   identificationMark?: Prisma.StringFieldUpdateOperationsInput | string
   allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  physicalAccessibilityRequirements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dob?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isHandicapped?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  handicapDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   consentGiven?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1283,12 +1428,14 @@ export type StudentCreateWithoutHostelInput = {
   id?: string
   name: string
   rollNumber: string
-  branch: string
+  discipline: string
+  programme: string
   gmailId: string
   outlookId: string
   contactNumber?: string | null
   alternateContactNumber?: string | null
   permanentAddress?: string | null
+  country?: string | null
   state?: string | null
   emergencyContactName?: string | null
   emergencyContactNumber?: string | null
@@ -1297,7 +1444,10 @@ export type StudentCreateWithoutHostelInput = {
   medicalConditions?: string
   identificationMark?: string
   allergies?: string | null
-  physicalAccessibilityRequirements?: string | null
+  dob?: string | null
+  gender?: string | null
+  isHandicapped?: boolean
+  handicapDetails?: string | null
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
   consentGiven?: boolean
@@ -1317,12 +1467,14 @@ export type StudentUncheckedCreateWithoutHostelInput = {
   academicYearId: string
   name: string
   rollNumber: string
-  branch: string
+  discipline: string
+  programme: string
   gmailId: string
   outlookId: string
   contactNumber?: string | null
   alternateContactNumber?: string | null
   permanentAddress?: string | null
+  country?: string | null
   state?: string | null
   emergencyContactName?: string | null
   emergencyContactNumber?: string | null
@@ -1331,7 +1483,10 @@ export type StudentUncheckedCreateWithoutHostelInput = {
   medicalConditions?: string
   identificationMark?: string
   allergies?: string | null
-  physicalAccessibilityRequirements?: string | null
+  dob?: string | null
+  gender?: string | null
+  isHandicapped?: boolean
+  handicapDetails?: string | null
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
   consentGiven?: boolean
@@ -1373,12 +1528,14 @@ export type StudentCreateWithoutAllocationInput = {
   id?: string
   name: string
   rollNumber: string
-  branch: string
+  discipline: string
+  programme: string
   gmailId: string
   outlookId: string
   contactNumber?: string | null
   alternateContactNumber?: string | null
   permanentAddress?: string | null
+  country?: string | null
   state?: string | null
   emergencyContactName?: string | null
   emergencyContactNumber?: string | null
@@ -1387,7 +1544,10 @@ export type StudentCreateWithoutAllocationInput = {
   medicalConditions?: string
   identificationMark?: string
   allergies?: string | null
-  physicalAccessibilityRequirements?: string | null
+  dob?: string | null
+  gender?: string | null
+  isHandicapped?: boolean
+  handicapDetails?: string | null
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
   consentGiven?: boolean
@@ -1407,12 +1567,14 @@ export type StudentUncheckedCreateWithoutAllocationInput = {
   academicYearId: string
   name: string
   rollNumber: string
-  branch: string
+  discipline: string
+  programme: string
   gmailId: string
   outlookId: string
   contactNumber?: string | null
   alternateContactNumber?: string | null
   permanentAddress?: string | null
+  country?: string | null
   state?: string | null
   emergencyContactName?: string | null
   emergencyContactNumber?: string | null
@@ -1421,7 +1583,10 @@ export type StudentUncheckedCreateWithoutAllocationInput = {
   medicalConditions?: string
   identificationMark?: string
   allergies?: string | null
-  physicalAccessibilityRequirements?: string | null
+  dob?: string | null
+  gender?: string | null
+  isHandicapped?: boolean
+  handicapDetails?: string | null
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
   consentGiven?: boolean
@@ -1453,12 +1618,14 @@ export type StudentUpdateWithoutAllocationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  branch?: Prisma.StringFieldUpdateOperationsInput | string
+  discipline?: Prisma.StringFieldUpdateOperationsInput | string
+  programme?: Prisma.StringFieldUpdateOperationsInput | string
   gmailId?: Prisma.StringFieldUpdateOperationsInput | string
   outlookId?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   alternateContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permanentAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1467,7 +1634,10 @@ export type StudentUpdateWithoutAllocationInput = {
   medicalConditions?: Prisma.StringFieldUpdateOperationsInput | string
   identificationMark?: Prisma.StringFieldUpdateOperationsInput | string
   allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  physicalAccessibilityRequirements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dob?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isHandicapped?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  handicapDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   consentGiven?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1487,12 +1657,14 @@ export type StudentUncheckedUpdateWithoutAllocationInput = {
   academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  branch?: Prisma.StringFieldUpdateOperationsInput | string
+  discipline?: Prisma.StringFieldUpdateOperationsInput | string
+  programme?: Prisma.StringFieldUpdateOperationsInput | string
   gmailId?: Prisma.StringFieldUpdateOperationsInput | string
   outlookId?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   alternateContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permanentAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1501,7 +1673,10 @@ export type StudentUncheckedUpdateWithoutAllocationInput = {
   medicalConditions?: Prisma.StringFieldUpdateOperationsInput | string
   identificationMark?: Prisma.StringFieldUpdateOperationsInput | string
   allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  physicalAccessibilityRequirements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dob?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isHandicapped?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  handicapDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   consentGiven?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1518,12 +1693,14 @@ export type StudentCreateManyAcademicYearInput = {
   userId: string
   name: string
   rollNumber: string
-  branch: string
+  discipline: string
+  programme: string
   gmailId: string
   outlookId: string
   contactNumber?: string | null
   alternateContactNumber?: string | null
   permanentAddress?: string | null
+  country?: string | null
   state?: string | null
   emergencyContactName?: string | null
   emergencyContactNumber?: string | null
@@ -1532,7 +1709,10 @@ export type StudentCreateManyAcademicYearInput = {
   medicalConditions?: string
   identificationMark?: string
   allergies?: string | null
-  physicalAccessibilityRequirements?: string | null
+  dob?: string | null
+  gender?: string | null
+  isHandicapped?: boolean
+  handicapDetails?: string | null
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
   consentGiven?: boolean
@@ -1548,12 +1728,14 @@ export type StudentUpdateWithoutAcademicYearInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  branch?: Prisma.StringFieldUpdateOperationsInput | string
+  discipline?: Prisma.StringFieldUpdateOperationsInput | string
+  programme?: Prisma.StringFieldUpdateOperationsInput | string
   gmailId?: Prisma.StringFieldUpdateOperationsInput | string
   outlookId?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   alternateContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permanentAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1562,7 +1744,10 @@ export type StudentUpdateWithoutAcademicYearInput = {
   medicalConditions?: Prisma.StringFieldUpdateOperationsInput | string
   identificationMark?: Prisma.StringFieldUpdateOperationsInput | string
   allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  physicalAccessibilityRequirements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dob?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isHandicapped?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  handicapDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   consentGiven?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1581,12 +1766,14 @@ export type StudentUncheckedUpdateWithoutAcademicYearInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  branch?: Prisma.StringFieldUpdateOperationsInput | string
+  discipline?: Prisma.StringFieldUpdateOperationsInput | string
+  programme?: Prisma.StringFieldUpdateOperationsInput | string
   gmailId?: Prisma.StringFieldUpdateOperationsInput | string
   outlookId?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   alternateContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permanentAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1595,7 +1782,10 @@ export type StudentUncheckedUpdateWithoutAcademicYearInput = {
   medicalConditions?: Prisma.StringFieldUpdateOperationsInput | string
   identificationMark?: Prisma.StringFieldUpdateOperationsInput | string
   allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  physicalAccessibilityRequirements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dob?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isHandicapped?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  handicapDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   consentGiven?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1613,12 +1803,14 @@ export type StudentUncheckedUpdateManyWithoutAcademicYearInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  branch?: Prisma.StringFieldUpdateOperationsInput | string
+  discipline?: Prisma.StringFieldUpdateOperationsInput | string
+  programme?: Prisma.StringFieldUpdateOperationsInput | string
   gmailId?: Prisma.StringFieldUpdateOperationsInput | string
   outlookId?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   alternateContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permanentAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1627,7 +1819,10 @@ export type StudentUncheckedUpdateManyWithoutAcademicYearInput = {
   medicalConditions?: Prisma.StringFieldUpdateOperationsInput | string
   identificationMark?: Prisma.StringFieldUpdateOperationsInput | string
   allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  physicalAccessibilityRequirements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dob?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isHandicapped?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  handicapDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   consentGiven?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1645,12 +1840,14 @@ export type StudentCreateManyHostelInput = {
   academicYearId: string
   name: string
   rollNumber: string
-  branch: string
+  discipline: string
+  programme: string
   gmailId: string
   outlookId: string
   contactNumber?: string | null
   alternateContactNumber?: string | null
   permanentAddress?: string | null
+  country?: string | null
   state?: string | null
   emergencyContactName?: string | null
   emergencyContactNumber?: string | null
@@ -1659,7 +1856,10 @@ export type StudentCreateManyHostelInput = {
   medicalConditions?: string
   identificationMark?: string
   allergies?: string | null
-  physicalAccessibilityRequirements?: string | null
+  dob?: string | null
+  gender?: string | null
+  isHandicapped?: boolean
+  handicapDetails?: string | null
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
   consentGiven?: boolean
@@ -1674,12 +1874,14 @@ export type StudentUpdateWithoutHostelInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  branch?: Prisma.StringFieldUpdateOperationsInput | string
+  discipline?: Prisma.StringFieldUpdateOperationsInput | string
+  programme?: Prisma.StringFieldUpdateOperationsInput | string
   gmailId?: Prisma.StringFieldUpdateOperationsInput | string
   outlookId?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   alternateContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permanentAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1688,7 +1890,10 @@ export type StudentUpdateWithoutHostelInput = {
   medicalConditions?: Prisma.StringFieldUpdateOperationsInput | string
   identificationMark?: Prisma.StringFieldUpdateOperationsInput | string
   allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  physicalAccessibilityRequirements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dob?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isHandicapped?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  handicapDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   consentGiven?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1708,12 +1913,14 @@ export type StudentUncheckedUpdateWithoutHostelInput = {
   academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  branch?: Prisma.StringFieldUpdateOperationsInput | string
+  discipline?: Prisma.StringFieldUpdateOperationsInput | string
+  programme?: Prisma.StringFieldUpdateOperationsInput | string
   gmailId?: Prisma.StringFieldUpdateOperationsInput | string
   outlookId?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   alternateContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permanentAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1722,7 +1929,10 @@ export type StudentUncheckedUpdateWithoutHostelInput = {
   medicalConditions?: Prisma.StringFieldUpdateOperationsInput | string
   identificationMark?: Prisma.StringFieldUpdateOperationsInput | string
   allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  physicalAccessibilityRequirements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dob?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isHandicapped?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  handicapDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   consentGiven?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1740,12 +1950,14 @@ export type StudentUncheckedUpdateManyWithoutHostelInput = {
   academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  branch?: Prisma.StringFieldUpdateOperationsInput | string
+  discipline?: Prisma.StringFieldUpdateOperationsInput | string
+  programme?: Prisma.StringFieldUpdateOperationsInput | string
   gmailId?: Prisma.StringFieldUpdateOperationsInput | string
   outlookId?: Prisma.StringFieldUpdateOperationsInput | string
   contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   alternateContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permanentAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyContactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1754,7 +1966,10 @@ export type StudentUncheckedUpdateManyWithoutHostelInput = {
   medicalConditions?: Prisma.StringFieldUpdateOperationsInput | string
   identificationMark?: Prisma.StringFieldUpdateOperationsInput | string
   allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  physicalAccessibilityRequirements?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dob?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isHandicapped?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  handicapDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   consentGiven?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1773,12 +1988,14 @@ export type StudentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   academicYearId?: boolean
   name?: boolean
   rollNumber?: boolean
-  branch?: boolean
+  discipline?: boolean
+  programme?: boolean
   gmailId?: boolean
   outlookId?: boolean
   contactNumber?: boolean
   alternateContactNumber?: boolean
   permanentAddress?: boolean
+  country?: boolean
   state?: boolean
   emergencyContactName?: boolean
   emergencyContactNumber?: boolean
@@ -1787,7 +2004,10 @@ export type StudentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   medicalConditions?: boolean
   identificationMark?: boolean
   allergies?: boolean
-  physicalAccessibilityRequirements?: boolean
+  dob?: boolean
+  gender?: boolean
+  isHandicapped?: boolean
+  handicapDetails?: boolean
   onboardingStatus?: boolean
   onboardingSubmittedAt?: boolean
   consentGiven?: boolean
@@ -1809,12 +2029,14 @@ export type StudentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   academicYearId?: boolean
   name?: boolean
   rollNumber?: boolean
-  branch?: boolean
+  discipline?: boolean
+  programme?: boolean
   gmailId?: boolean
   outlookId?: boolean
   contactNumber?: boolean
   alternateContactNumber?: boolean
   permanentAddress?: boolean
+  country?: boolean
   state?: boolean
   emergencyContactName?: boolean
   emergencyContactNumber?: boolean
@@ -1823,7 +2045,10 @@ export type StudentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   medicalConditions?: boolean
   identificationMark?: boolean
   allergies?: boolean
-  physicalAccessibilityRequirements?: boolean
+  dob?: boolean
+  gender?: boolean
+  isHandicapped?: boolean
+  handicapDetails?: boolean
   onboardingStatus?: boolean
   onboardingSubmittedAt?: boolean
   consentGiven?: boolean
@@ -1844,12 +2069,14 @@ export type StudentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   academicYearId?: boolean
   name?: boolean
   rollNumber?: boolean
-  branch?: boolean
+  discipline?: boolean
+  programme?: boolean
   gmailId?: boolean
   outlookId?: boolean
   contactNumber?: boolean
   alternateContactNumber?: boolean
   permanentAddress?: boolean
+  country?: boolean
   state?: boolean
   emergencyContactName?: boolean
   emergencyContactNumber?: boolean
@@ -1858,7 +2085,10 @@ export type StudentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   medicalConditions?: boolean
   identificationMark?: boolean
   allergies?: boolean
-  physicalAccessibilityRequirements?: boolean
+  dob?: boolean
+  gender?: boolean
+  isHandicapped?: boolean
+  handicapDetails?: boolean
   onboardingStatus?: boolean
   onboardingSubmittedAt?: boolean
   consentGiven?: boolean
@@ -1879,12 +2109,14 @@ export type StudentSelectScalar = {
   academicYearId?: boolean
   name?: boolean
   rollNumber?: boolean
-  branch?: boolean
+  discipline?: boolean
+  programme?: boolean
   gmailId?: boolean
   outlookId?: boolean
   contactNumber?: boolean
   alternateContactNumber?: boolean
   permanentAddress?: boolean
+  country?: boolean
   state?: boolean
   emergencyContactName?: boolean
   emergencyContactNumber?: boolean
@@ -1893,7 +2125,10 @@ export type StudentSelectScalar = {
   medicalConditions?: boolean
   identificationMark?: boolean
   allergies?: boolean
-  physicalAccessibilityRequirements?: boolean
+  dob?: boolean
+  gender?: boolean
+  isHandicapped?: boolean
+  handicapDetails?: boolean
   onboardingStatus?: boolean
   onboardingSubmittedAt?: boolean
   consentGiven?: boolean
@@ -1905,7 +2140,7 @@ export type StudentSelectScalar = {
   updatedAt?: boolean
 }
 
-export type StudentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "academicYearId" | "name" | "rollNumber" | "branch" | "gmailId" | "outlookId" | "contactNumber" | "alternateContactNumber" | "permanentAddress" | "state" | "emergencyContactName" | "emergencyContactNumber" | "emergencyContactRelation" | "bloodGroup" | "medicalConditions" | "identificationMark" | "allergies" | "physicalAccessibilityRequirements" | "onboardingStatus" | "onboardingSubmittedAt" | "consentGiven" | "editAllowedByAdmin" | "isVerified" | "needsReview" | "hostelId" | "createdAt" | "updatedAt", ExtArgs["result"]["student"]>
+export type StudentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "academicYearId" | "name" | "rollNumber" | "discipline" | "programme" | "gmailId" | "outlookId" | "contactNumber" | "alternateContactNumber" | "permanentAddress" | "country" | "state" | "emergencyContactName" | "emergencyContactNumber" | "emergencyContactRelation" | "bloodGroup" | "medicalConditions" | "identificationMark" | "allergies" | "dob" | "gender" | "isHandicapped" | "handicapDetails" | "onboardingStatus" | "onboardingSubmittedAt" | "consentGiven" | "editAllowedByAdmin" | "isVerified" | "needsReview" | "hostelId" | "createdAt" | "updatedAt", ExtArgs["result"]["student"]>
 export type StudentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   academicYear?: boolean | Prisma.AcademicYearDefaultArgs<ExtArgs>
@@ -1937,12 +2172,14 @@ export type $StudentPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     academicYearId: string
     name: string
     rollNumber: string
-    branch: string
+    discipline: string
+    programme: string
     gmailId: string
     outlookId: string
     contactNumber: string | null
     alternateContactNumber: string | null
     permanentAddress: string | null
+    country: string | null
     state: string | null
     emergencyContactName: string | null
     emergencyContactNumber: string | null
@@ -1951,7 +2188,10 @@ export type $StudentPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     medicalConditions: string
     identificationMark: string
     allergies: string | null
-    physicalAccessibilityRequirements: string | null
+    dob: string | null
+    gender: string | null
+    isHandicapped: boolean
+    handicapDetails: string | null
     onboardingStatus: $Enums.OnboardingStatus
     onboardingSubmittedAt: Date | null
     consentGiven: boolean
@@ -2393,12 +2633,14 @@ export interface StudentFieldRefs {
   readonly academicYearId: Prisma.FieldRef<"Student", 'String'>
   readonly name: Prisma.FieldRef<"Student", 'String'>
   readonly rollNumber: Prisma.FieldRef<"Student", 'String'>
-  readonly branch: Prisma.FieldRef<"Student", 'String'>
+  readonly discipline: Prisma.FieldRef<"Student", 'String'>
+  readonly programme: Prisma.FieldRef<"Student", 'String'>
   readonly gmailId: Prisma.FieldRef<"Student", 'String'>
   readonly outlookId: Prisma.FieldRef<"Student", 'String'>
   readonly contactNumber: Prisma.FieldRef<"Student", 'String'>
   readonly alternateContactNumber: Prisma.FieldRef<"Student", 'String'>
   readonly permanentAddress: Prisma.FieldRef<"Student", 'String'>
+  readonly country: Prisma.FieldRef<"Student", 'String'>
   readonly state: Prisma.FieldRef<"Student", 'String'>
   readonly emergencyContactName: Prisma.FieldRef<"Student", 'String'>
   readonly emergencyContactNumber: Prisma.FieldRef<"Student", 'String'>
@@ -2407,7 +2649,10 @@ export interface StudentFieldRefs {
   readonly medicalConditions: Prisma.FieldRef<"Student", 'String'>
   readonly identificationMark: Prisma.FieldRef<"Student", 'String'>
   readonly allergies: Prisma.FieldRef<"Student", 'String'>
-  readonly physicalAccessibilityRequirements: Prisma.FieldRef<"Student", 'String'>
+  readonly dob: Prisma.FieldRef<"Student", 'String'>
+  readonly gender: Prisma.FieldRef<"Student", 'String'>
+  readonly isHandicapped: Prisma.FieldRef<"Student", 'Boolean'>
+  readonly handicapDetails: Prisma.FieldRef<"Student", 'String'>
   readonly onboardingStatus: Prisma.FieldRef<"Student", 'OnboardingStatus'>
   readonly onboardingSubmittedAt: Prisma.FieldRef<"Student", 'DateTime'>
   readonly consentGiven: Prisma.FieldRef<"Student", 'Boolean'>

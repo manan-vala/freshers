@@ -23,6 +23,23 @@ function safeEqual(a: string, b: string): boolean {
 export async function login(input: LoginInput) {
   const user = await prisma.user.findFirst({
     where: { email: input.email, deletedAt: null },
+    include: {
+      student: {
+        select: {
+          onboardingStatus: true,
+          name: true,
+          gmailId: true,
+        },
+      },
+      hmcAdmin: {
+        select: {
+          hostelId: true,
+          hostel: {
+            select: { id: true, name: true, code: true, type: true },
+          },
+        },
+      },
+    },
   });
 
   if (!user || !user.isActive || !user.passwordHash) {
@@ -34,15 +51,23 @@ export async function login(input: LoginInput) {
     throw new AppError(401, 'Invalid credentials');
   }
 if (user.mustChangePassword) {
+    if (user.role !== 'STUDENT') {
+      throw new AppError(403, 'First login flow is only supported for students');
+    }
+    const otpDestination = user.student?.gmailId;
+    if (!otpDestination) {
+      throw new AppError(500, 'We could not find a Gmail address for your account. Please contact the HMC office.');
+    }
+
     const otp = generateOTP();
     await storeOTP('first-login', user.id, otp, 5); // 5 min expiry
     
     if (env.NODE_ENV === 'development') {
-      console.log(`[DEV] First-login OTP sent to ${user.email}. Check your email worker output.`);
+      console.log(`[DEV] First-login OTP sent to ${otpDestination}. Check your email worker output.`);
     }
     
     await emailQueue.add('first-login-otp', {
-      to: user.email,
+      to: otpDestination,
       templateId: 'otp-email',
       data: { otp },
     });
@@ -57,8 +82,14 @@ if (user.mustChangePassword) {
 
   return {
     user: {
+      id: user.id,
+      loginId: user.loginId,
+      email: user.email,
       role: user.role,
+      isActive: user.isActive,
       mustChangePassword: user.mustChangePassword,
+      student: user.student,
+      hmcAdmin: user.hmcAdmin,
     },
     accessToken,
     refreshToken,
@@ -93,8 +124,14 @@ export async function adminLogin(input: LoginInput) {
 
   return {
     user: {
+      id: adminUser.id,
+      loginId: adminUser.loginId,
+      email: adminUser.email,
       role: adminUser.role,
+      isActive: adminUser.isActive,
       mustChangePassword: adminUser.mustChangePassword,
+      student: null,
+      hmcAdmin: null,
     },
     accessToken,
     refreshToken,
@@ -144,10 +181,16 @@ export async function logout(jti: string, exp: number) {
 export async function requestFirstLoginOtp(userId: string) {
   const user = await prisma.user.findFirst({
     where: { id: userId, deletedAt: null },
+    include: { student: true },
   });
 
-  if (!user || !user.isActive || !user.mustChangePassword) {
+  if (!user || !user.isActive || !user.mustChangePassword || user.role !== 'STUDENT') {
     throw new AppError(400, 'Invalid request or password already changed');
+  }
+
+  const otpDestination = user.student?.gmailId;
+  if (!otpDestination) {
+    throw new AppError(500, 'We could not find a Gmail address for your account. Please contact the HMC office.');
   }
 
   const otp = generateOTP();
@@ -156,7 +199,7 @@ export async function requestFirstLoginOtp(userId: string) {
     console.log('[DEV] OTP dispatched via email queue.');
   }
   await emailQueue.add('first-login-otp', {
-    to: user.email,
+    to: otpDestination,
     templateId: 'otp-email',
     data: { otp },
   });
@@ -194,9 +237,16 @@ export async function changePassword(userId: string, input: ChangePasswordInput)
 export async function forgotPassword(input: ForgotPasswordInput) {
   const user = await prisma.user.findFirst({
     where: { email: input.email, deletedAt: null },
+    include: { student: true },
   });
 
-  if (!user || !user.isActive) return;
+  // Silent no-op for non-students or inactive accounts to prevent info leakage
+  if (!user || !user.isActive || user.role !== 'STUDENT') return;
+
+  const otpDestination = user.student?.gmailId;
+  if (!otpDestination) {
+    throw new AppError(500, 'We could not find a Gmail address for your account. Please contact the HMC office.');
+  }
 
   const otp = generateOTP();
   await storeOTP('forgot', user.email, otp, 5); // 5 min expiry
@@ -204,7 +254,7 @@ export async function forgotPassword(input: ForgotPasswordInput) {
     console.log('[DEV] Password reset OTP dispatched via email queue.');
   }
   await emailQueue.add('password-reset', {
-    to: user.email,
+    to: otpDestination,
     templateId: 'otp-email', 
     data: { otp },
   });
@@ -248,6 +298,8 @@ export async function getMe(userId: string) {
       student: {
         select: {
           onboardingStatus: true,
+          name: true,
+          gmailId: true,
         }
       },
       // 2. If the user is a HOSTEL ADMIN (HMC), fetch their hostel details

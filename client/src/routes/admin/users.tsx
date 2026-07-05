@@ -133,7 +133,7 @@ function AdminUsersPage() {
             <>
               <p className="text-sm font-medium">Drop your CSV here or click to browse</p>
               <p className="text-xs text-muted-foreground mt-1">
-                Columns required: name, rollNumber, branch, hostelCode, gmailId, outlookId
+                Columns required: name, rollNumber, discipline, programme, hostelCode, gmailId, outlookId
               </p>
             </>
           )}
@@ -234,8 +234,8 @@ function AdminUsersPage() {
       <div className="rounded-lg border p-4 text-sm">
         <p className="font-semibold mb-2">CSV Format Reference</p>
         <code className="block text-xs bg-muted rounded p-2 overflow-x-auto">
-          name,rollNumber,branch,hostelCode,gmailId,outlookId{'\n'}
-          Arjun Sharma,230101001,CSE,BH1,arjun@gmail.com,230101001@iitg.ac.in
+          name,rollNumber,discipline,programme,hostelCode,gmailId,outlookId{'\n'}
+          Arjun Sharma,230101001,Computer Science and Engineering,Bachelor of Technology (B.Tech),BH1,arjun@gmail.com,230101001@iitg.ac.in
         </code>
         <p className="text-muted-foreground mt-2 text-xs">
           Maximum 5,000 rows per file. File size limit: 5 MB.

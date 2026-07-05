@@ -2,6 +2,11 @@ import { useState } from 'react'
 import { createFileRoute, useNavigate, redirect } from '@tanstack/react-router'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { api } from '@/lib/api'
+import { authKeys } from '@/lib/auth'
+import { AxiosError } from 'axios'
+import { Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Form } from '@/components/ui/form'
 import { StepIndicator } from '@/components/onboarding/StepIndicator'
@@ -28,19 +33,24 @@ const STEPS = ["General Details", "Medical Details", "Review & Submit"];
 function OnboardingPage() {
   const { user } = Route.useRouteContext();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [currentStep, setCurrentStep] = useState(0);
   const [isConsented, setIsConsented] = useState(false);
 
   const form = useForm<OnboardingData>({
     resolver: zodResolver(onboardingSchema) as any,
-    defaultValues: initialOnboardingData as OnboardingData,
+    defaultValues: {
+      ...(initialOnboardingData as OnboardingData),
+      fullName: user?.student?.name || '',
+      email: user?.student?.gmailId || '',
+    },
     mode: 'onChange',
   });
 
   const handleNext = async () => {
     let fieldsToValidate: (keyof OnboardingData)[] = [];
     if (currentStep === 0) {
-      fieldsToValidate = ['fullName', 'email', 'phone', 'emergencyPhone', 'stream', 'department', 'gender'];
+      fieldsToValidate = ['fullName', 'email', 'phone', 'emergencyPhone', 'emergencyContactName', 'emergencyContactRelation', 'programme', 'discipline', 'gender', 'permanentAddress', 'country', 'otherCountry', 'state'];
     } else if (currentStep === 1) {
       fieldsToValidate = ['dob', 'bloodGroup', 'medicalConditions', 'identificationMark', 'isHandicapped', 'handicapDetails'];
     }
@@ -63,11 +73,24 @@ function OnboardingPage() {
     }
   };
 
-  const onSubmit = (data: any) => {
+  const submitMutation = useMutation({
+    mutationFn: (data: OnboardingData) => {
+      return api.post('/v1/onboarding/submit', data);
+    },
+    onSuccess: async () => {
+      // Invalidate auth cache so the router context user is re-fetched with SUBMITTED status
+      await queryClient.invalidateQueries({ queryKey: authKeys.me });
+      navigate({ to: '/onboarding-complete' });
+    },
+    onError: (error: AxiosError<any>) => {
+      const message = error.response?.data?.message ?? 'Submission failed. Please try again.';
+      alert(`Onboarding submission failed: ${message}`);
+    }
+  });
+
+  const onSubmit = (data: OnboardingData) => {
     if (!isConsented) return;
-    console.log("Submitting Onboarding Data:", data);
-    alert("Onboarding submitted successfully! Check console for data.");
-    navigate({ to: '/' });
+    submitMutation.mutate(data);
   };
 
   return (
@@ -104,8 +127,15 @@ function OnboardingPage() {
                 </Button>
                 
                 {currentStep === STEPS.length - 1 ? (
-                  <Button type="submit" disabled={!isConsented}>
-                    Submit Profile
+                  <Button type="submit" disabled={!isConsented || submitMutation.isPending}>
+                    {submitMutation.isPending ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Submitting...
+                      </>
+                    ) : (
+                      'Submit Profile'
+                    )}
                   </Button>
                 ) : (
                   <Button type="button" onClick={handleNext}>

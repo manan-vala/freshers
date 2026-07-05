@@ -4,9 +4,9 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form"
 import { FieldSet } from "@/components/ui/field"
-import { STREAMS, BTECH_DEPARTMENTS } from "@/lib/constants"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import type { OnboardingData } from "./types"
+import { PROGRAMMES_AND_DISCIPLINES, COUNTRIES, INDIAN_STATES } from "@shared/student"
 
 function RequiredLabel({ text, limitInfo }: { text: string; limitInfo?: string }) {
   return (
@@ -29,7 +29,9 @@ function RequiredLabel({ text, limitInfo }: { text: string; limitInfo?: string }
 
 export function GeneralDetailsStep() {
   const form = useFormContext<OnboardingData>();
-  const streamValue = form.watch("stream");
+  const programmeValue = form.watch("programme");
+  const countryValue = form.watch("country");
+  const availableDisciplines = programmeValue ? PROGRAMMES_AND_DISCIPLINES[programmeValue] || [] : [];
 
   return (
     <div className="flex flex-col gap-6">
@@ -41,7 +43,7 @@ export function GeneralDetailsStep() {
             <FormItem>
               <FormLabel><RequiredLabel text="Full Name (same as allotment sheet)" limitInfo="Max 100 characters" /></FormLabel>
               <FormControl>
-                <Input placeholder="John Doe" {...field} />
+                <Input placeholder="John Doe" readOnly className="bg-slate-50 cursor-not-allowed" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -55,12 +57,106 @@ export function GeneralDetailsStep() {
             <FormItem>
               <FormLabel><RequiredLabel text="Gmail ID" limitInfo="Max 150 characters" /></FormLabel>
               <FormControl>
-                <Input type="email" placeholder="john.doe@gmail.com" {...field} />
+                <Input type="email" placeholder="john.doe@gmail.com" readOnly className="bg-slate-50 cursor-not-allowed" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
+
+        <FormField
+          control={form.control}
+          name="permanentAddress"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel><RequiredLabel text="Permanent Address" /></FormLabel>
+              <FormControl>
+                <Input placeholder="123 Main St, City, Country" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <FormField
+            control={form.control}
+            name="country"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel><RequiredLabel text="Country" /></FormLabel>
+                <Select 
+                  onValueChange={(val) => {
+                    field.onChange(val);
+                    if (val !== "India") {
+                      form.setValue("state", "");
+                    }
+                    if (val !== "Other") {
+                      form.setValue("otherCountry", "");
+                    }
+                  }} 
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select Country" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="Other">Other</SelectItem>
+                    {COUNTRIES.map(c => (
+                      <SelectItem key={c} value={c}>{c}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="state"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{countryValue === "India" ? <RequiredLabel text="State" /> : "State"}</FormLabel>
+                <Select 
+                  onValueChange={field.onChange} 
+                  defaultValue={field.value}
+                  disabled={countryValue !== "India"}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder={countryValue === "India" ? "Select State" : "N/A"} />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {INDIAN_STATES.map(s => (
+                      <SelectItem key={s} value={s}>{s}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        {countryValue === "Other" && (
+          <FormField
+            control={form.control}
+            name="otherCountry"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel><RequiredLabel text="Please specify your country" /></FormLabel>
+                <FormControl>
+                  <Input placeholder="Country name" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormField
@@ -97,28 +193,65 @@ export function GeneralDetailsStep() {
             )}
           />
         </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <FormField
+            control={form.control}
+            name="emergencyContactName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel><RequiredLabel text="Emergency Contact Name" /></FormLabel>
+                <FormControl>
+                  <Input placeholder="Jane Doe" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="emergencyContactRelation"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel><RequiredLabel text="Relation" /></FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select Relation" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="Mother">Mother</SelectItem>
+                    <SelectItem value="Father">Father</SelectItem>
+                    <SelectItem value="Other">Other</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
         <FormField
           control={form.control}
-          name="stream"
+          name="programme"
           render={({ field }) => (
             <FormItem>
-              <FormLabel><RequiredLabel text="Stream" /></FormLabel>
+              <FormLabel><RequiredLabel text="Programme" /></FormLabel>
               <Select 
                 onValueChange={(val) => {
                   field.onChange(val);
-                  form.setValue("department", "");
+                  form.setValue("discipline", "");
                 }} 
                 defaultValue={field.value}
               >
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select Stream" />
+                    <SelectValue placeholder="Select Programme" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {STREAMS.map(s => (
-                    <SelectItem key={s} value={s}>{s}</SelectItem>
+                  {Object.keys(PROGRAMMES_AND_DISCIPLINES).map(p => (
+                    <SelectItem key={p} value={p}>{p}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -127,21 +260,21 @@ export function GeneralDetailsStep() {
           )}
         />
 
-        {streamValue === "Bachelor of Technology (B.Tech)" && (
+        {availableDisciplines.length > 0 && (
           <FormField
             control={form.control}
-            name="department"
+            name="discipline"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Department / Section</FormLabel>
+                <FormLabel><RequiredLabel text="Discipline" /></FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select Department" />
+                      <SelectValue placeholder="Select Discipline" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {BTECH_DEPARTMENTS.map(d => (
+                    {availableDisciplines.map(d => (
                       <SelectItem key={d} value={d}>{d}</SelectItem>
                     ))}
                   </SelectContent>

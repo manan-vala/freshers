@@ -10,6 +10,8 @@ export interface User {
   isActive: boolean;
   mustChangePassword: boolean;
   student?: {
+    name: string;
+    gmailId: string;
     onboardingStatus: 'PENDING' | 'SUBMITTED';
     hostelId: string | null;
     hostel: {

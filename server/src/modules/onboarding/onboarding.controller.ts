@@ -1,7 +1,16 @@
 import { Request, Response, NextFunction } from 'express'
-import { getOnboardedStudents, verifyStudent } from './onboarding.service'
+import { getOnboardedStudents, verifyStudent, submitOnboarding } from './onboarding.service'
 
 import { prisma } from '@/config/prisma'
+
+export async function submitOnboardingHandler(req: Request, res: Response, next: NextFunction) {
+  try {
+    const result = await submitOnboarding(req.user!.sub, req.body)
+    res.json({ success: true, data: result })
+  } catch (error) {
+    next(error)
+  }
+}
 
 export async function getOnboardedStudentsHandler(req: Request, res: Response, next: NextFunction) {
   try {
@@ -15,7 +24,7 @@ export async function getOnboardedStudentsHandler(req: Request, res: Response, n
       }
     }
 
-    const students = await getOnboardedStudents(search)
+    const students = await getOnboardedStudents(search, hostelId)
     res.json({ success: true, data: students })
   } catch (error) {
     next(error)

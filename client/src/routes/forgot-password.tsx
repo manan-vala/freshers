@@ -134,7 +134,7 @@ function ForgotPasswordPage() {
             <div className="mb-8">
               <h2 className="text-2xl font-bold text-slate-900 mb-2">Enter Reset Code</h2>
               <p className="text-slate-500 text-sm">
-                We sent a 6-digit code to <strong>{email}</strong>.
+                We sent a 6-digit code to your registered <strong>Gmail address</strong> linked to {email}.
               </p>
             </div>
 
