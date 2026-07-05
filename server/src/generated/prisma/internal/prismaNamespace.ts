@@ -1279,7 +1279,6 @@ export const RoomScalarFieldEnum = {
   id: 'id',
   hostelId: 'hostelId',
   roomNumber: 'roomNumber',
-  floor: 'floor',
   capacity: 'capacity',
   currentOccupancy: 'currentOccupancy',
   isAccessible: 'isAccessible',

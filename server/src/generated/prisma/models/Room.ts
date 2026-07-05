@@ -27,13 +27,11 @@ export type AggregateRoom = {
 }
 
 export type RoomAvgAggregateOutputType = {
-  floor: number | null
   capacity: number | null
   currentOccupancy: number | null
 }
 
 export type RoomSumAggregateOutputType = {
-  floor: number | null
   capacity: number | null
   currentOccupancy: number | null
 }
@@ -42,7 +40,6 @@ export type RoomMinAggregateOutputType = {
   id: string | null
   hostelId: string | null
   roomNumber: string | null
-  floor: number | null
   capacity: number | null
   currentOccupancy: number | null
   isAccessible: boolean | null
@@ -55,7 +52,6 @@ export type RoomMaxAggregateOutputType = {
   id: string | null
   hostelId: string | null
   roomNumber: string | null
-  floor: number | null
   capacity: number | null
   currentOccupancy: number | null
   isAccessible: boolean | null
@@ -68,7 +64,6 @@ export type RoomCountAggregateOutputType = {
   id: number
   hostelId: number
   roomNumber: number
-  floor: number
   capacity: number
   currentOccupancy: number
   isAccessible: number
@@ -80,13 +75,11 @@ export type RoomCountAggregateOutputType = {
 
 
 export type RoomAvgAggregateInputType = {
-  floor?: true
   capacity?: true
   currentOccupancy?: true
 }
 
 export type RoomSumAggregateInputType = {
-  floor?: true
   capacity?: true
   currentOccupancy?: true
 }
@@ -95,7 +88,6 @@ export type RoomMinAggregateInputType = {
   id?: true
   hostelId?: true
   roomNumber?: true
-  floor?: true
   capacity?: true
   currentOccupancy?: true
   isAccessible?: true
@@ -108,7 +100,6 @@ export type RoomMaxAggregateInputType = {
   id?: true
   hostelId?: true
   roomNumber?: true
-  floor?: true
   capacity?: true
   currentOccupancy?: true
   isAccessible?: true
@@ -121,7 +112,6 @@ export type RoomCountAggregateInputType = {
   id?: true
   hostelId?: true
   roomNumber?: true
-  floor?: true
   capacity?: true
   currentOccupancy?: true
   isAccessible?: true
@@ -221,7 +211,6 @@ export type RoomGroupByOutputType = {
   id: string
   hostelId: string
   roomNumber: string
-  floor: number | null
   capacity: number
   currentOccupancy: number
   isAccessible: boolean
@@ -257,7 +246,6 @@ export type RoomWhereInput = {
   id?: Prisma.StringFilter<"Room"> | string
   hostelId?: Prisma.StringFilter<"Room"> | string
   roomNumber?: Prisma.StringFilter<"Room"> | string
-  floor?: Prisma.IntNullableFilter<"Room"> | number | null
   capacity?: Prisma.IntFilter<"Room"> | number
   currentOccupancy?: Prisma.IntFilter<"Room"> | number
   isAccessible?: Prisma.BoolFilter<"Room"> | boolean
@@ -272,7 +260,6 @@ export type RoomOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   hostelId?: Prisma.SortOrder
   roomNumber?: Prisma.SortOrder
-  floor?: Prisma.SortOrderInput | Prisma.SortOrder
   capacity?: Prisma.SortOrder
   currentOccupancy?: Prisma.SortOrder
   isAccessible?: Prisma.SortOrder
@@ -291,7 +278,6 @@ export type RoomWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.RoomWhereInput | Prisma.RoomWhereInput[]
   hostelId?: Prisma.StringFilter<"Room"> | string
   roomNumber?: Prisma.StringFilter<"Room"> | string
-  floor?: Prisma.IntNullableFilter<"Room"> | number | null
   capacity?: Prisma.IntFilter<"Room"> | number
   currentOccupancy?: Prisma.IntFilter<"Room"> | number
   isAccessible?: Prisma.BoolFilter<"Room"> | boolean
@@ -306,7 +292,6 @@ export type RoomOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   hostelId?: Prisma.SortOrder
   roomNumber?: Prisma.SortOrder
-  floor?: Prisma.SortOrderInput | Prisma.SortOrder
   capacity?: Prisma.SortOrder
   currentOccupancy?: Prisma.SortOrder
   isAccessible?: Prisma.SortOrder
@@ -327,7 +312,6 @@ export type RoomScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Room"> | string
   hostelId?: Prisma.StringWithAggregatesFilter<"Room"> | string
   roomNumber?: Prisma.StringWithAggregatesFilter<"Room"> | string
-  floor?: Prisma.IntNullableWithAggregatesFilter<"Room"> | number | null
   capacity?: Prisma.IntWithAggregatesFilter<"Room"> | number
   currentOccupancy?: Prisma.IntWithAggregatesFilter<"Room"> | number
   isAccessible?: Prisma.BoolWithAggregatesFilter<"Room"> | boolean
@@ -339,7 +323,6 @@ export type RoomScalarWhereWithAggregatesInput = {
 export type RoomCreateInput = {
   id?: string
   roomNumber: string
-  floor?: number | null
   capacity?: number
   currentOccupancy?: number
   isAccessible?: boolean
@@ -354,7 +337,6 @@ export type RoomUncheckedCreateInput = {
   id?: string
   hostelId: string
   roomNumber: string
-  floor?: number | null
   capacity?: number
   currentOccupancy?: number
   isAccessible?: boolean
@@ -367,7 +349,6 @@ export type RoomUncheckedCreateInput = {
 export type RoomUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   roomNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  floor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   capacity?: Prisma.IntFieldUpdateOperationsInput | number
   currentOccupancy?: Prisma.IntFieldUpdateOperationsInput | number
   isAccessible?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -382,7 +363,6 @@ export type RoomUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   hostelId?: Prisma.StringFieldUpdateOperationsInput | string
   roomNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  floor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   capacity?: Prisma.IntFieldUpdateOperationsInput | number
   currentOccupancy?: Prisma.IntFieldUpdateOperationsInput | number
   isAccessible?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -396,7 +376,6 @@ export type RoomCreateManyInput = {
   id?: string
   hostelId: string
   roomNumber: string
-  floor?: number | null
   capacity?: number
   currentOccupancy?: number
   isAccessible?: boolean
@@ -408,7 +387,6 @@ export type RoomCreateManyInput = {
 export type RoomUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   roomNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  floor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   capacity?: Prisma.IntFieldUpdateOperationsInput | number
   currentOccupancy?: Prisma.IntFieldUpdateOperationsInput | number
   isAccessible?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -421,7 +399,6 @@ export type RoomUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   hostelId?: Prisma.StringFieldUpdateOperationsInput | string
   roomNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  floor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   capacity?: Prisma.IntFieldUpdateOperationsInput | number
   currentOccupancy?: Prisma.IntFieldUpdateOperationsInput | number
   isAccessible?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -449,7 +426,6 @@ export type RoomCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   hostelId?: Prisma.SortOrder
   roomNumber?: Prisma.SortOrder
-  floor?: Prisma.SortOrder
   capacity?: Prisma.SortOrder
   currentOccupancy?: Prisma.SortOrder
   isAccessible?: Prisma.SortOrder
@@ -459,7 +435,6 @@ export type RoomCountOrderByAggregateInput = {
 }
 
 export type RoomAvgOrderByAggregateInput = {
-  floor?: Prisma.SortOrder
   capacity?: Prisma.SortOrder
   currentOccupancy?: Prisma.SortOrder
 }
@@ -468,7 +443,6 @@ export type RoomMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   hostelId?: Prisma.SortOrder
   roomNumber?: Prisma.SortOrder
-  floor?: Prisma.SortOrder
   capacity?: Prisma.SortOrder
   currentOccupancy?: Prisma.SortOrder
   isAccessible?: Prisma.SortOrder
@@ -481,7 +455,6 @@ export type RoomMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   hostelId?: Prisma.SortOrder
   roomNumber?: Prisma.SortOrder
-  floor?: Prisma.SortOrder
   capacity?: Prisma.SortOrder
   currentOccupancy?: Prisma.SortOrder
   isAccessible?: Prisma.SortOrder
@@ -491,7 +464,6 @@ export type RoomMinOrderByAggregateInput = {
 }
 
 export type RoomSumOrderByAggregateInput = {
-  floor?: Prisma.SortOrder
   capacity?: Prisma.SortOrder
   currentOccupancy?: Prisma.SortOrder
 }
@@ -543,14 +515,6 @@ export type RoomUncheckedUpdateManyWithoutHostelNestedInput = {
   deleteMany?: Prisma.RoomScalarWhereInput | Prisma.RoomScalarWhereInput[]
 }
 
-export type NullableIntFieldUpdateOperationsInput = {
-  set?: number | null
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type IntFieldUpdateOperationsInput = {
   set?: number
   increment?: number
@@ -576,7 +540,6 @@ export type RoomUpdateOneRequiredWithoutAllocationsNestedInput = {
 export type RoomCreateWithoutHostelInput = {
   id?: string
   roomNumber: string
-  floor?: number | null
   capacity?: number
   currentOccupancy?: number
   isAccessible?: boolean
@@ -589,7 +552,6 @@ export type RoomCreateWithoutHostelInput = {
 export type RoomUncheckedCreateWithoutHostelInput = {
   id?: string
   roomNumber: string
-  floor?: number | null
   capacity?: number
   currentOccupancy?: number
   isAccessible?: boolean
@@ -632,7 +594,6 @@ export type RoomScalarWhereInput = {
   id?: Prisma.StringFilter<"Room"> | string
   hostelId?: Prisma.StringFilter<"Room"> | string
   roomNumber?: Prisma.StringFilter<"Room"> | string
-  floor?: Prisma.IntNullableFilter<"Room"> | number | null
   capacity?: Prisma.IntFilter<"Room"> | number
   currentOccupancy?: Prisma.IntFilter<"Room"> | number
   isAccessible?: Prisma.BoolFilter<"Room"> | boolean
@@ -644,7 +605,6 @@ export type RoomScalarWhereInput = {
 export type RoomCreateWithoutAllocationsInput = {
   id?: string
   roomNumber: string
-  floor?: number | null
   capacity?: number
   currentOccupancy?: number
   isAccessible?: boolean
@@ -658,7 +618,6 @@ export type RoomUncheckedCreateWithoutAllocationsInput = {
   id?: string
   hostelId: string
   roomNumber: string
-  floor?: number | null
   capacity?: number
   currentOccupancy?: number
   isAccessible?: boolean
@@ -686,7 +645,6 @@ export type RoomUpdateToOneWithWhereWithoutAllocationsInput = {
 export type RoomUpdateWithoutAllocationsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   roomNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  floor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   capacity?: Prisma.IntFieldUpdateOperationsInput | number
   currentOccupancy?: Prisma.IntFieldUpdateOperationsInput | number
   isAccessible?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -700,7 +658,6 @@ export type RoomUncheckedUpdateWithoutAllocationsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   hostelId?: Prisma.StringFieldUpdateOperationsInput | string
   roomNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  floor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   capacity?: Prisma.IntFieldUpdateOperationsInput | number
   currentOccupancy?: Prisma.IntFieldUpdateOperationsInput | number
   isAccessible?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -712,7 +669,6 @@ export type RoomUncheckedUpdateWithoutAllocationsInput = {
 export type RoomCreateManyHostelInput = {
   id?: string
   roomNumber: string
-  floor?: number | null
   capacity?: number
   currentOccupancy?: number
   isAccessible?: boolean
@@ -724,7 +680,6 @@ export type RoomCreateManyHostelInput = {
 export type RoomUpdateWithoutHostelInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   roomNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  floor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   capacity?: Prisma.IntFieldUpdateOperationsInput | number
   currentOccupancy?: Prisma.IntFieldUpdateOperationsInput | number
   isAccessible?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -737,7 +692,6 @@ export type RoomUpdateWithoutHostelInput = {
 export type RoomUncheckedUpdateWithoutHostelInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   roomNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  floor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   capacity?: Prisma.IntFieldUpdateOperationsInput | number
   currentOccupancy?: Prisma.IntFieldUpdateOperationsInput | number
   isAccessible?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -750,7 +704,6 @@ export type RoomUncheckedUpdateWithoutHostelInput = {
 export type RoomUncheckedUpdateManyWithoutHostelInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   roomNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  floor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   capacity?: Prisma.IntFieldUpdateOperationsInput | number
   currentOccupancy?: Prisma.IntFieldUpdateOperationsInput | number
   isAccessible?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -794,7 +747,6 @@ export type RoomSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   id?: boolean
   hostelId?: boolean
   roomNumber?: boolean
-  floor?: boolean
   capacity?: boolean
   currentOccupancy?: boolean
   isAccessible?: boolean
@@ -810,7 +762,6 @@ export type RoomSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   id?: boolean
   hostelId?: boolean
   roomNumber?: boolean
-  floor?: boolean
   capacity?: boolean
   currentOccupancy?: boolean
   isAccessible?: boolean
@@ -824,7 +775,6 @@ export type RoomSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   id?: boolean
   hostelId?: boolean
   roomNumber?: boolean
-  floor?: boolean
   capacity?: boolean
   currentOccupancy?: boolean
   isAccessible?: boolean
@@ -838,7 +788,6 @@ export type RoomSelectScalar = {
   id?: boolean
   hostelId?: boolean
   roomNumber?: boolean
-  floor?: boolean
   capacity?: boolean
   currentOccupancy?: boolean
   isAccessible?: boolean
@@ -847,7 +796,7 @@ export type RoomSelectScalar = {
   updatedAt?: boolean
 }
 
-export type RoomOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "hostelId" | "roomNumber" | "floor" | "capacity" | "currentOccupancy" | "isAccessible" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["room"]>
+export type RoomOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "hostelId" | "roomNumber" | "capacity" | "currentOccupancy" | "isAccessible" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["room"]>
 export type RoomInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   hostel?: boolean | Prisma.HostelDefaultArgs<ExtArgs>
   allocations?: boolean | Prisma.Room$allocationsArgs<ExtArgs>
@@ -870,7 +819,6 @@ export type $RoomPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     id: string
     hostelId: string
     roomNumber: string
-    floor: number | null
     capacity: number
     currentOccupancy: number
     isAccessible: boolean
@@ -1305,7 +1253,6 @@ export interface RoomFieldRefs {
   readonly id: Prisma.FieldRef<"Room", 'String'>
   readonly hostelId: Prisma.FieldRef<"Room", 'String'>
   readonly roomNumber: Prisma.FieldRef<"Room", 'String'>
-  readonly floor: Prisma.FieldRef<"Room", 'Int'>
   readonly capacity: Prisma.FieldRef<"Room", 'Int'>
   readonly currentOccupancy: Prisma.FieldRef<"Room", 'Int'>
   readonly isAccessible: Prisma.FieldRef<"Room", 'Boolean'>

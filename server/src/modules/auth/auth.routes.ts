@@ -7,6 +7,9 @@ import {
   changePasswordSchema,
   forgotPasswordSchema,
   resetPasswordSchema,
+  signUpInitSchema,
+  signUpVerifySchema,
+  signUpCompleteSchema
 } from '@shared/auth';
 import {
   loginHandler,
@@ -17,7 +20,9 @@ import {
   forgotPasswordHandler,
   resetPasswordHandler,
   getMeHandler,
-  requestFirstLoginOtpHandler 
+  signUpInitHandler,
+  signUpVerifyOtpHandler,
+  signUpCompleteHandler
 } from './auth.controller';
 
 import {
@@ -35,10 +40,14 @@ router.post('/admin-login', validateBody(loginSchema), adminLoginHandler);
 router.post('/refresh', refreshHandler);
 router.post('/logout', authenticate, logoutHandler);
 // Inside auth.routes.ts
-router.post('/first-login/otp', authenticate, requestFirstLoginOtpHandler);
 router.post('/change-password', authenticate, validateBody(changePasswordSchema), changePasswordHandler);
 router.post('/forgot-password', validateBody(forgotPasswordSchema), forgotPasswordHandler);
 router.post('/reset-password', validateBody(resetPasswordSchema), resetPasswordHandler);
 router.get('/me', authenticate, getMeHandler);
+
+// Signup routes
+router.post('/signup/init', validateBody(signUpInitSchema), signUpInitHandler);
+router.post('/signup/verify', validateBody(signUpVerifySchema), signUpVerifyOtpHandler);
+router.post('/signup/complete', validateBody(signUpCompleteSchema), signUpCompleteHandler);
 
 export default router;

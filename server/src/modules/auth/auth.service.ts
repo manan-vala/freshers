@@ -51,26 +51,7 @@ export async function login(input: LoginInput) {
     throw new AppError(401, 'Invalid credentials');
   }
 if (user.mustChangePassword) {
-    if (user.role !== 'STUDENT') {
-      throw new AppError(403, 'First login flow is only supported for students');
-    }
-    const otpDestination = user.student?.gmailId;
-    if (!otpDestination) {
-      throw new AppError(500, 'We could not find a Gmail address for your account. Please contact the HMC office.');
-    }
-
-    const otp = generateOTP();
-    await storeOTP('first-login', user.id, otp, 5); // 5 min expiry
-    
-    if (env.NODE_ENV === 'development') {
-      console.log(`[DEV] First-login OTP sent to ${otpDestination}. Check your email worker output.`);
-    }
-    
-    await emailQueue.add('first-login-otp', {
-      to: otpDestination,
-      templateId: 'otp-email',
-      data: { otp },
-    });
+    throw new AppError(403, 'Please complete your registration via the Sign Up tab first.');
   }
   await prisma.user.update({
     where: { id: user.id },
@@ -177,7 +158,94 @@ export async function logout(jti: string, exp: number) {
 
 
 
-// ─── NEW: REQUEST FIRST LOGIN OTP ──────────────────────────────────────────
+// ─── SIGNUP FLOW (FIRST TIME LOGIN) ────────────────────────────────────────
+
+import type { SignUpInitInput, SignUpVerifyInput, SignUpCompleteInput } from '@shared/auth';
+
+export async function signUpInit(input: SignUpInitInput) {
+  const user = await prisma.user.findFirst({
+    where: { email: input.outlookId, deletedAt: null },
+    include: { student: true },
+  });
+
+  if (!user) {
+    throw new AppError(404, 'User not found. Please check your Institute Email.');
+  }
+
+  if (!user.isActive || user.role !== 'STUDENT') {
+    throw new AppError(403, 'Invalid request for this account type.');
+  }
+
+  if (!user.mustChangePassword) {
+    throw new AppError(409, "You're already registered. Please sign in.");
+  }
+
+  const otpDestination = user.student?.gmailId;
+  if (!otpDestination) {
+    throw new AppError(500, 'We could not find a Gmail address for your account. Please contact the HMC office.');
+  }
+
+  const otp = generateOTP();
+  await storeOTP('signup', user.id, otp, 5); // 5 min expiry
+  
+  if (env.NODE_ENV === 'development') {
+    console.log(`[DEV] Signup OTP sent to ${otpDestination}. Check your email worker output. OTP: ${otp}`);
+  }
+  
+  await emailQueue.add('first-login-otp', { // Using same template
+    to: otpDestination,
+    templateId: 'otp-email',
+    data: { otp },
+  });
+}
+
+export async function signUpVerifyOtp(input: SignUpVerifyInput) {
+  const user = await prisma.user.findFirst({
+    where: { email: input.outlookId, deletedAt: null },
+  });
+
+  if (!user || !user.isActive) {
+    throw new AppError(404, 'User not found');
+  }
+
+  const isValid = await verifyAndDeleteOTP('signup', user.id, input.otp);
+  if (!isValid) {
+    throw new AppError(400, 'Invalid or expired OTP');
+  }
+
+  // Set a short-lived flag to allow password completion
+  await redis.set(`signup-verified:${user.id}`, '1', 'EX', 10 * 60); // 10 minutes
+}
+
+export async function signUpComplete(input: SignUpCompleteInput) {
+  const user = await prisma.user.findFirst({
+    where: { email: input.outlookId, deletedAt: null },
+  });
+
+  if (!user || !user.isActive) {
+    throw new AppError(404, 'User not found');
+  }
+
+  const isVerified = await redis.get(`signup-verified:${user.id}`);
+  if (!isVerified) {
+    throw new AppError(403, 'OTP verification expired or not completed. Please restart signup.');
+  }
+
+  const newPasswordHash = await hashPassword(input.newPassword);
+
+  await prisma.user.update({
+    where: { id: user.id },
+    data: {
+      passwordHash: newPasswordHash,
+      mustChangePassword: false,
+      sessionInvalidatedAt: new Date(),
+    },
+  });
+
+  await redis.del(`signup-verified:${user.id}`);
+}
+
+// ─── REQUEST FIRST LOGIN OTP (Deprecated/To Be Removed) ────────────────────
 export async function requestFirstLoginOtp(userId: string) {
   const user = await prisma.user.findFirst({
     where: { id: userId, deletedAt: null },

@@ -9,8 +9,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { useLogin } from '@/lib/auth'
 import { loginSchema, type LoginInput } from '@shared/auth'
 
-// 👇 Import the new OTP component we just created
-import { OtpVerification } from '@/components/auth/OtpVerification'
+import { SignUpPanel } from '@/components/auth/SignUpPanel'
 
 export const Route = createFileRoute('/login')({
   beforeLoad: ({ context }) => {
@@ -41,8 +40,9 @@ function LoginPage() {
   const navigate = useNavigate()
   const [showPassword, setShowPassword] = useState(false)
   
-  // 👇 State to track if we need to show the OTP screen
-  const [requiresOtp, setRequiresOtp] = useState(false)
+  // State to switch between Sign In and Sign Up panels
+  const [activePanel, setActivePanel] = useState<'signin' | 'signup'>('signin')
+  const [showSuccessBanner, setShowSuccessBanner] = useState(false)
   
   const form = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
@@ -55,13 +55,7 @@ function LoginPage() {
   const onSubmit = (data: LoginInput) => {
     loginMutation.mutate(data, {
       onSuccess: (user) => {
-        // 👇 Intercept the login if they need to change their password
-        if (user.mustChangePassword) {
-          setRequiresOtp(true)
-          return
-        }
-
-        // Otherwise, redirect as normal
+        // Redirect as normal
         navigate({
           to: user.student?.onboardingStatus === 'SUBMITTED' 
             ? '/onboarding-complete' 
@@ -118,19 +112,46 @@ function LoginPage() {
         </div>
       </div>
 
-      {/* Right Panel: Login Form / OTP Form */}
+      {/* Right Panel: Login Form / Sign Up Form */}
       <div className="flex-1 flex items-center justify-center p-6 md:p-12 relative">
         <div className="w-full max-w-md bg-white p-8 sm:p-10 rounded-2xl shadow-xl border border-slate-100 animate-in fade-in slide-in-from-bottom-4 duration-500">
           
-          {/* 👇 Conditional Rendering Starts Here 👇 */}
-          {requiresOtp ? (
-            <OtpVerification email={form.getValues('email')} />
+          <div className="flex bg-slate-100 p-1 rounded-lg mb-8">
+            <button
+              onClick={() => setActivePanel('signin')}
+              className={`flex-1 py-2 text-sm font-medium rounded-md transition-all ${
+                activePanel === 'signin' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'
+              }`}
+            >
+              Sign In
+            </button>
+            <button
+              onClick={() => setActivePanel('signup')}
+              className={`flex-1 py-2 text-sm font-medium rounded-md transition-all ${
+                activePanel === 'signup' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'
+              }`}
+            >
+              Sign Up
+            </button>
+          </div>
+
+          {activePanel === 'signup' ? (
+            <SignUpPanel onRegistrationComplete={() => {
+              setActivePanel('signin')
+              setShowSuccessBanner(true)
+            }} />
           ) : (
-            <>
+            <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
               <div className="mb-8 text-center">
                 <h2 className="text-2xl font-bold text-slate-900 mb-2">Student Login</h2>
                 <p className="text-slate-500 text-sm">Enter your IITG email and password to access your portal</p>
               </div>
+
+              {showSuccessBanner && (
+                <div className="mb-6 p-3 rounded-lg bg-green-50 border border-green-100 text-sm text-green-700 font-medium text-center">
+                  Registration complete! Please sign in with your new password.
+                </div>
+              )}
 
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
@@ -236,9 +257,8 @@ function LoginPage() {
                   Login as Hostel Admin
                 </Button>
               </div>
-            </>
+            </div>
           )}
-          {/* 👆 Conditional Rendering Ends Here 👆 */}
 
         </div>
       </div>

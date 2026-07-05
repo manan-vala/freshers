@@ -27,3 +27,26 @@ export type LoginInput = z.infer<typeof loginSchema>;
 export type ChangePasswordInput = z.infer<typeof changePasswordSchema>;
 export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
 export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;
+
+// ─── SIGNUP SCHEMAS ─────────────────────────────────────────────────────
+export const signUpInitSchema = z.object({
+  outlookId: z.string().email('Must be a valid Outlook email'),
+});
+
+export const signUpVerifySchema = z.object({
+  outlookId: z.string().email(),
+  otp: z.string().length(6, 'OTP must be exactly 6 digits'),
+});
+
+export const signUpCompleteSchema = z.object({
+  outlookId: z.string().email(),
+  newPassword: z.string().min(8, 'Password must be at least 8 characters'),
+  confirmPassword: z.string().min(8),
+}).refine((d) => d.newPassword === d.confirmPassword, {
+  message: "Passwords don't match",
+  path: ['confirmPassword'],
+});
+
+export type SignUpInitInput = z.infer<typeof signUpInitSchema>;
+export type SignUpVerifyInput = z.infer<typeof signUpVerifySchema>;
+export type SignUpCompleteInput = z.infer<typeof signUpCompleteSchema>;

@@ -33,7 +33,7 @@ export async function getOnboardedStudentsHandler(req: Request, res: Response, n
 
 export async function verifyStudentHandler(req: Request, res: Response, next: NextFunction) {
   try {
-    const { studentId } = req.body
+    const { studentId } = req.params
     const { isVerified, needsReview } = req.body
     
     const result = await verifyStudent(studentId, Boolean(isVerified), Boolean(needsReview))

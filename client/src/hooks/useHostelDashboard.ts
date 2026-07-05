@@ -37,8 +37,9 @@ export function useVerifyStudent() {
       const { data } = await api.patch(`/v1/onboarding/students/${studentId}/verify`, { isVerified, needsReview })
       return data.data
     },
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: hostelKeys.all })
+      queryClient.invalidateQueries({ queryKey: ['student', variables.studentId] })
     }
   })
 }

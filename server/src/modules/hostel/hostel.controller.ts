@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 import { prisma } from '@/config/prisma'
 
-export async function getHostelsHandler(req: Request, res: Response, next: NextFunction) {
+export async function getHostelsHandler(_req: Request, res: Response, next: NextFunction) {
   try {
     const hostels = await prisma.hostel.findMany({
       where: { isActive: true },

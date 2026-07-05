@@ -189,7 +189,6 @@ model Room {
   hostelId         String
   hostel           Hostel  @relation(fields: [hostelId], references: [id], onDelete: Cascade)
   roomNumber       String  // e.g. "A-101"
-  floor            Int?
   capacity         Int     @default(2)
   currentOccupancy Int     @default(0)  // Kept in sync via Prisma transactions on alloc/dealloc
   isAccessible     Boolean @default(false)  // Reserved for students with accessibility requirements

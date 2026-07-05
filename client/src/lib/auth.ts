@@ -91,3 +91,31 @@ export function useLogout() {
     },
   });
 }
+
+// Signup Mutations
+export function useSignUpInit() {
+  return useMutation({
+    mutationFn: async (data: import('@shared/auth').SignUpInitInput) => {
+      const response = await api.post('/v1/auth/signup/init', data);
+      return response.data;
+    },
+  });
+}
+
+export function useSignUpVerifyOtp() {
+  return useMutation({
+    mutationFn: async (data: import('@shared/auth').SignUpVerifyInput) => {
+      const response = await api.post('/v1/auth/signup/verify', data);
+      return response.data;
+    },
+  });
+}
+
+export function useSignUpComplete() {
+  return useMutation({
+    mutationFn: async (data: import('@shared/auth').SignUpCompleteInput) => {
+      const response = await api.post('/v1/auth/signup/complete', data);
+      return response.data;
+    },
+  });
+}

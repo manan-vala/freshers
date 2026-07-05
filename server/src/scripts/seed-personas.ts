@@ -45,11 +45,37 @@ async function main() {
     ...Array.from({ length: 10 }, (_, i) => `test${i + 1}@outlook.com`)
   ];
   
-  await prisma.user.deleteMany({
-    where: {
-      email: { in: allTestEmails }
-    }
+  const usersToDelete = await prisma.user.findMany({
+    where: { email: { in: allTestEmails } },
+    select: { id: true }
   });
+  
+  const userIds = usersToDelete.map((u) => u.id);
+  
+  if (userIds.length > 0) {
+    // Delete dependent records to avoid foreign key constraints
+    await prisma.allocationAudit.deleteMany({
+      where: {
+        OR: [
+          { allocation: { student: { userId: { in: userIds } } } },
+          { performedBy: { in: userIds } }
+        ]
+      }
+    });
+    
+    await prisma.allocation.deleteMany({
+      where: {
+        OR: [
+          { student: { userId: { in: userIds } } },
+          { allocatedBy: { in: userIds } }
+        ]
+      }
+    });
+
+    await prisma.user.deleteMany({
+      where: { id: { in: userIds } }
+    });
+  }
 
   for (const p of personas) {
     let hostel = await prisma.hostel.findFirst({

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { env } from '@/config/env';
 import * as authService from './auth.service';
-import type { LoginInput, ChangePasswordInput, ForgotPasswordInput, ResetPasswordInput } from '@shared/auth';
+import type { LoginInput, ChangePasswordInput, ForgotPasswordInput, ResetPasswordInput, SignUpInitInput, SignUpVerifyInput, SignUpCompleteInput } from '@shared/auth';
 
 export function setAuthCookies(res: Response, accessToken: string, refreshToken: string) {
   const secure = env.NODE_ENV === 'production';
@@ -130,5 +130,34 @@ export async function getMeHandler(req: Request, res: Response) {
   res.status(200).json({
     success: true,
     data: user,
+  });
+}
+
+// ─── SIGNUP HANDLERS ──────────────────────────────────────────────────────
+
+export async function signUpInitHandler(req: Request, res: Response) {
+  const input = req.body as SignUpInitInput;
+  await authService.signUpInit(input);
+  res.status(200).json({
+    success: true,
+    message: 'OTP sent to your registered email.',
+  });
+}
+
+export async function signUpVerifyOtpHandler(req: Request, res: Response) {
+  const input = req.body as SignUpVerifyInput;
+  await authService.signUpVerifyOtp(input);
+  res.status(200).json({
+    success: true,
+    message: 'OTP verified. You can now set your password.',
+  });
+}
+
+export async function signUpCompleteHandler(req: Request, res: Response) {
+  const input = req.body as SignUpCompleteInput;
+  await authService.signUpComplete(input);
+  res.status(200).json({
+    success: true,
+    message: 'Registration complete. Please sign in.',
   });
 }

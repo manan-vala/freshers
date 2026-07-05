@@ -1,15 +1,16 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useState, useEffect } from 'react'
 import { useVerifyStudent, useAllocateRoom } from '@/hooks/useHostelDashboard'
+import { useRoomsForHostel } from '@/hooks/useRooms'
 import { api } from '@/lib/api'
 import { useQuery } from '@tanstack/react-query'
 import { Card, CardContent, CardHeader, CardDescription } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import {
   IconArrowLeft,
   IconCircleCheck,
@@ -82,9 +83,10 @@ function VerifyStudent() {
 
   const [isVerified, setIsVerified] = useState(false)
   const [needsReview, setNeedsReview] = useState(false)
-  const [roomNumber, setRoomNumber] = useState('')
+  const [roomId, setRoomId] = useState('')
   const [notes, setNotes] = useState('')
   const [success, setSuccess] = useState(false)
+  const [saveSuccess, setSaveSuccess] = useState(false)
 
   useEffect(() => {
     if (student) {
@@ -92,6 +94,8 @@ function VerifyStudent() {
       setNeedsReview(student.needsReview)
     }
   }, [student])
+
+  const { data: rooms } = useRoomsForHostel(myHostel?.id)
 
   /* ─── Loading ─── */
   if (studentLoading) {
@@ -121,6 +125,8 @@ function VerifyStudent() {
 
   const handleVerify = async () => {
     await verifyMutation.mutateAsync({ studentId, isVerified, needsReview })
+    setSaveSuccess(true)
+    setTimeout(() => setSaveSuccess(false), 3000)
   }
 
   const handleAllocate = async (e: React.FormEvent) => {
@@ -131,7 +137,7 @@ function VerifyStudent() {
     }
     if (!myHostel) return
     await handleVerify()
-    await allocateMutation.mutateAsync({ studentId, hostelId: myHostel.id, roomNumber, notes })
+    await allocateMutation.mutateAsync({ studentId, hostelId: myHostel.id, roomId, notes })
     setSuccess(true)
   }
 
@@ -149,8 +155,7 @@ function VerifyStudent() {
           <div>
             <h2 className="text-xl font-bold text-slate-900">Allocation Successful</h2>
             <p className="text-sm text-slate-500 mt-1">
-              <span className="font-semibold text-slate-700">{student.name}</span> has been allocated to Room{' '}
-              <span className="font-semibold text-slate-700">{roomNumber}</span>.
+              <span className="font-semibold text-slate-700">{student.name}</span> has been allocated successfully.
             </p>
           </div>
           <Button
@@ -195,15 +200,15 @@ function VerifyStudent() {
         )}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-7 gap-6">
         {/* ── Left column: Student Details ─── */}
-        <div className="lg:col-span-3 space-y-5">
+        <div className="lg:col-span-4 space-y-5">
           {/* Identity */}
           <Card className="border-0 shadow-sm bg-white">
             <CardHeader className="px-6 pt-0 pb-3 border-b">
               <SectionHeader icon={IconUser} title="Identity & Academics" />
             </CardHeader>
-            <CardContent className="px-6 py-5 grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-5">
+            <CardContent className="px-6 py-4 grid grid-cols-2 sm:grid-cols-3 gap-x-10 gap-y-3">
               <InfoRow label="Programme" value={student.programme} />
               <InfoRow label="Discipline" value={student.discipline} />
               <InfoRow label="Roll Number" value={student.rollNumber} />
@@ -224,7 +229,7 @@ function VerifyStudent() {
             <CardHeader className="px-6 pt-0 pb-3 border-b">
               <SectionHeader icon={IconPhone} title="Contact & Emergency" />
             </CardHeader>
-            <CardContent className="px-6 py-5 grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-5">
+            <CardContent className="px-6 py-4 grid grid-cols-2 sm:grid-cols-3 gap-x-10 gap-y-3">
               <InfoRow label="Phone" value={student.contactNumber} />
               <InfoRow label="Alternate Phone" value={student.alternateContactNumber} />
               <InfoRow label="Emergency Name" value={student.emergencyContactName} />
@@ -238,7 +243,7 @@ function VerifyStudent() {
             <CardHeader className="px-6 pt-0 pb-3 border-b">
               <SectionHeader icon={IconDroplet} title="Medical Information" />
             </CardHeader>
-            <CardContent className="px-6 py-5 grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-5">
+            <CardContent className="px-6 py-4 grid grid-cols-2 sm:grid-cols-3 gap-x-10 gap-y-3">
               <InfoRow label="Blood Group" value={student.bloodGroup?.replace(/_/g, ' ')} />
               <InfoRow label="Identification Mark" value={student.identificationMark} />
               <InfoRow label="Handicapped" value={student.isHandicapped ? 'Yes' : 'No'} />
@@ -251,7 +256,7 @@ function VerifyStudent() {
         </div>
 
         {/* ── Right column: Actions ─── */}
-        <div className="lg:col-span-2 space-y-5">
+        <div className="lg:col-span-3 space-y-5">
           {/* Verification */}
           <Card className="border-0 shadow-sm bg-white">
             <CardHeader className="px-6 pt-0 pb-3 border-b">
@@ -294,16 +299,29 @@ function VerifyStudent() {
 
               <Button
                 variant="secondary"
-                className="w-full h-9 text-sm font-semibold"
+                className={`w-full h-9 text-sm font-semibold transition-all ${saveSuccess ? 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100 hover:text-emerald-800 border border-emerald-200' : ''}`}
                 onClick={handleVerify}
-                disabled={verifyMutation.isPending}
+                disabled={verifyMutation.isPending || saveSuccess}
               >
                 {verifyMutation.isPending ? (
                   <><IconLoader2 className="h-4 w-4 mr-2 animate-spin" /> Saving…</>
+                ) : saveSuccess ? (
+                  <><IconCircleCheck className="h-4 w-4 mr-2" /> Saved Successfully</>
                 ) : (
                   'Save Verification Status'
                 )}
               </Button>
+            </CardContent>
+          </Card>
+
+          {/* Email summary — compact, below Verification */}
+          <Card className="border-0 shadow-sm bg-white">
+            <CardHeader className="px-6 pt-0 pb-3 border-b">
+              <SectionHeader icon={IconMail} title="Email Addresses" />
+            </CardHeader>
+            <CardContent className="px-6 py-3 grid grid-cols-2 gap-x-6 gap-y-2">
+              <InfoRow label="Gmail (Personal)" value={student.gmailId} />
+              <InfoRow label="Outlook (IITG)" value={student.outlookId} />
             </CardContent>
           </Card>
 
@@ -339,17 +357,25 @@ function VerifyStudent() {
               ) : (
                 <form onSubmit={handleAllocate} className="space-y-4">
                   <div className="space-y-1.5">
-                    <Label htmlFor="roomNumber" className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                      Room Number
+                    <Label htmlFor="roomId" className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                      Room Selection
                     </Label>
-                    <Input
-                      id="roomNumber"
-                      placeholder="e.g. A-101"
-                      value={roomNumber}
-                      onChange={(e) => setRoomNumber(e.target.value)}
-                      className="h-9 text-sm bg-slate-50 border-slate-200 focus:bg-white"
-                      required
-                    />
+                    <Select value={roomId} onValueChange={setRoomId} required>
+                      <SelectTrigger id="roomId" className="h-9 text-sm bg-slate-50 border-slate-200 focus:bg-white">
+                        <SelectValue placeholder="Select a room…" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {rooms?.filter((r: any) => r.isActive && r.currentOccupancy < r.capacity).length === 0 ? (
+                          <SelectItem value="none" disabled>No available rooms</SelectItem>
+                        ) : (
+                          rooms?.filter((r: any) => r.isActive && r.currentOccupancy < r.capacity).map((r: any) => (
+                            <SelectItem key={r.id} value={r.id}>
+                              {r.roomNumber} ({r.currentOccupancy}/{r.capacity})
+                            </SelectItem>
+                          ))
+                        )}
+                      </SelectContent>
+                    </Select>
                   </div>
                   <div className="space-y-1.5">
                     <Label htmlFor="notes" className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
@@ -364,7 +390,7 @@ function VerifyStudent() {
                     />
                   </div>
 
-                  {!isVerified && roomNumber && (
+                  {!isVerified && roomId && (
                     <p className="text-xs text-amber-600 flex items-center gap-1">
                       <IconAlertTriangle className="h-3.5 w-3.5 shrink-0" />
                       Please verify the student first.
@@ -375,7 +401,7 @@ function VerifyStudent() {
                     type="submit"
                     className="w-full h-9 text-sm font-semibold"
                     style={{ background: PRIMARY, color: PRIMARY_FG }}
-                    disabled={!isVerified || allocateMutation.isPending || !roomNumber}
+                    disabled={!isVerified || allocateMutation.isPending || !roomId}
                   >
                     {allocateMutation.isPending ? (
                       <><IconLoader2 className="h-4 w-4 mr-2 animate-spin" /> Allocating…</>
@@ -385,17 +411,6 @@ function VerifyStudent() {
                   </Button>
                 </form>
               )}
-            </CardContent>
-          </Card>
-
-          {/* Email summary */}
-          <Card className="border-0 shadow-sm bg-white">
-            <CardHeader className="px-6 pt-0 pb-3 border-b">
-              <SectionHeader icon={IconMail} title="Email Addresses" />
-            </CardHeader>
-            <CardContent className="px-6 py-5 space-y-3">
-              <InfoRow label="Gmail (Personal)" value={student.gmailId} />
-              <InfoRow label="Outlook (IITG)" value={student.outlookId} />
             </CardContent>
           </Card>
         </div>

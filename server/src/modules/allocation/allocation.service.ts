@@ -25,48 +25,37 @@ export async function allocateRoom(input: AllocationInput, allocatedBy: string) 
   if (existing) throw new AppError(409, 'Student already has an active allocation', 'ALREADY_ALLOCATED');
 
   const allocation = await prisma.$transaction(async (tx) => {
-    let room = await tx.room.findUnique({
+    const updated = await tx.room.updateMany({
       where: {
-        hostelId_roomNumber: {
-          hostelId: input.hostelId,
-          roomNumber: input.roomNumber
-        }
-      }
+        id: input.roomId,
+        hostelId: input.hostelId,
+        isActive: true,
+        currentOccupancy: { lt: prisma.room.fields.capacity }
+      },
+      data: { currentOccupancy: { increment: 1 } },
     });
 
-    if (!room) {
-      room = await tx.room.create({
-        data: {
-          hostelId: input.hostelId,
-          roomNumber: input.roomNumber,
-          capacity: 2,
-          currentOccupancy: 0
-        }
-      });
-    }
-
-    if (room.currentOccupancy >= room.capacity) {
-      await tx.room.update({
-        where: { id: room.id },
-        data: { capacity: room.currentOccupancy + 1 }
-      });
+    if (updated.count === 0) {
+      const room = await tx.room.findUnique({ where: { id: input.roomId } });
+      if (!room) throw new AppError(404, 'Selected room does not exist');
+      if (room.hostelId !== input.hostelId) throw new AppError(400, 'Selected room does not belong to the correct hostel');
+      if (!room.isActive) throw new AppError(400, 'Selected room is not available for allocation');
+      throw new AppError(
+        400,
+        `Room ${room.roomNumber} is at capacity (${room.currentOccupancy}/${room.capacity}). Please select a different room.`
+      );
     }
 
     const newAllocation = await tx.allocation.create({
       data: {
         studentId: input.studentId,
         hostelId: input.hostelId,
-        roomId: room.id,
+        roomId: input.roomId,
         notes: input.notes,
         allocatedBy,
         academicYearId: activeYear.id,
         isActive: true
       }
-    });
-
-    await tx.room.update({
-      where: { id: room.id },
-      data: { currentOccupancy: { increment: 1 } },
     });
 
     await tx.allocationAudit.create({
@@ -75,7 +64,7 @@ export async function allocateRoom(input: AllocationInput, allocatedBy: string) 
         academicYearId: activeYear.id,
         action: 'ALLOCATED',
         performedBy: allocatedBy,
-        newRoomId: room.id,
+        newRoomId: input.roomId,
       },
     });
 
