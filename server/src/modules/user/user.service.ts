@@ -228,3 +228,22 @@ export async function getAllStudents(params: {
     limit,
   };
 }
+
+export async function exportAllStudents() {
+  const activeYear = await prisma.academicYear.findFirst({ where: { isActive: true } });
+  if (!activeYear) {
+    throw new AppError(400, 'No active academic year found');
+  }
+
+  const students = await prisma.student.findMany({
+    where: { academicYearId: activeYear.id },
+    include: {
+      user: { select: { email: true, isActive: true } },
+      hostel: { select: { name: true, code: true } },
+      allocation: { select: { id: true, isActive: true } },
+    },
+    orderBy: { createdAt: 'desc' },
+  });
+
+  return students;
+}

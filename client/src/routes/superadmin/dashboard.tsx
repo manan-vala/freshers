@@ -4,6 +4,20 @@ import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
+import {
+  useReactTable,
+  getCoreRowModel,
+  getSortedRowModel,
+  getFilteredRowModel,
+  flexRender,
+} from '@tanstack/react-table'
+import type {
+  ColumnDef,
+  SortingState,
+  VisibilityState,
+  ColumnFiltersState,
+} from '@tanstack/react-table'
+import * as XLSX from 'xlsx'
 import { superAdminApi } from '@/lib/superadmin'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -19,7 +33,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
-import { IconTrash, IconPlus, IconLoader2, IconLogout, IconShieldCheck, IconUpload, IconUsers, IconHome, IconSearch, IconBed, IconEdit, IconCheck, IconX, IconAlertCircle, IconAlertTriangle } from '@tabler/icons-react'
+import { IconTrash, IconPlus, IconLoader2, IconLogout, IconShieldCheck, IconUpload, IconUsers, IconHome, IconSearch, IconBed, IconEdit, IconCheck, IconX, IconAlertCircle, IconAlertTriangle, IconDownload, IconFilter } from '@tabler/icons-react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -72,7 +86,7 @@ const HOSTEL_OPTIONS: { value: string; label: string }[] = [
 function SuperAdminDashboard() {
   const queryClient = useQueryClient()
   const navigate = Route.useNavigate()
-  const [activeView, setActiveView] = useState<'hostel-admin' | 'upload-data' | 'students-data' | 'rooms-management'>('hostel-admin')
+  const [activeView, setActiveView] = useState<'hostel-admin' | 'upload-data' | 'students-data' | 'rooms-management' | 'data-download'>('hostel-admin')
 
   const { data: users, isLoading } = useQuery({
     queryKey: ['superadmin', 'hmc-users'],
@@ -193,12 +207,20 @@ function SuperAdminDashboard() {
                     <span>Rooms Inventory</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
+                <SidebarMenuItem>
+                  <SidebarMenuButton 
+                    isActive={activeView === 'data-download'}
+                    onClick={() => setActiveView('data-download')}
+                  >
+                    <IconDownload />
+                    <span>Data Download</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>
       </Sidebar>
-
       <SidebarInset className="bg-slate-50 min-h-screen flex flex-col">
         {/* Navbar */}
         <nav className="bg-slate-950 text-slate-100 px-4 py-4 flex items-center justify-between shadow-md h-[60px] shrink-0">
@@ -225,7 +247,7 @@ function SuperAdminDashboard() {
           </Button>
         </nav>
 
-        <main className="max-w-6xl mx-auto p-6 md:p-8 space-y-8 w-full flex-1">
+        <main className={`mx-auto p-4 md:p-6 space-y-6 w-full flex-1 transition-all duration-300 ${['data-download', 'students-data', 'rooms-management'].includes(activeView) ? 'max-w-full' : 'max-w-6xl'}`}>
           
           {activeView === 'hostel-admin' && (
             <>
@@ -408,6 +430,10 @@ function SuperAdminDashboard() {
 
           {activeView === 'rooms-management' && (
             <RoomsManagementView />
+          )}
+
+          {activeView === 'data-download' && (
+            <DataDownloadView />
           )}
 
         </main>
@@ -1006,6 +1032,367 @@ function RoomsManagementView() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+    </div>
+  )
+}
+
+function DataDownloadView() {
+  const { data: students, isLoading } = useQuery({
+    queryKey: ['superadmin', 'students', 'export'],
+    queryFn: async () => {
+      const { data } = await superAdminApi.get('/v1/users/students/export')
+      return data.data
+    },
+    staleTime: 5 * 60 * 1000, // 5 mins
+  })
+
+  const [sorting, setSorting] = useState<SortingState>([])
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(() => {
+    const saved = localStorage.getItem('dataDownloadCols')
+    if (saved) return JSON.parse(saved)
+    return {
+      id: false,
+      userId: false,
+      academicYearId: false,
+      createdAt: false,
+      updatedAt: false,
+      onboardingSubmittedAt: false,
+      contactNumber: false,
+      alternateContactNumber: false,
+      permanentAddress: false,
+      country: false,
+      state: false,
+      emergencyContactName: false,
+      emergencyContactNumber: false,
+      emergencyContactRelation: false,
+      bloodGroup: false,
+      medicalConditions: false,
+      identificationMark: false,
+      allergies: false,
+      dob: false,
+      gender: false,
+      isHandicapped: false,
+      handicapDetails: false,
+      consentGiven: false,
+      editAllowedByAdmin: false,
+      isVerified: false,
+      needsReview: false,
+    }
+  })
+  const [rowSelection, setRowSelection] = useState({})
+  const [globalFilter, setGlobalFilter] = useState('')
+
+  useEffect(() => {
+    localStorage.setItem('dataDownloadCols', JSON.stringify(columnVisibility))
+  }, [columnVisibility])
+
+  const columns: ColumnDef<any>[] = [
+    {
+      id: 'select',
+      header: ({ table }) => (
+        <input
+          type="checkbox"
+          className="rounded border-slate-300 text-emerald-600 focus:ring-emerald-600"
+          checked={table.getIsAllPageRowsSelected()}
+          onChange={table.getToggleAllPageRowsSelectedHandler()}
+        />
+      ),
+      cell: ({ row }) => (
+        <input
+          type="checkbox"
+          className="rounded border-slate-300 text-emerald-600 focus:ring-emerald-600"
+          checked={row.getIsSelected()}
+          onChange={row.getToggleSelectedHandler()}
+        />
+      ),
+      enableSorting: false,
+      enableHiding: false,
+    },
+    { accessorKey: 'name', header: 'Name', enablePinning: true },
+    { accessorKey: 'rollNumber', header: 'Roll No.', enablePinning: true },
+    { accessorKey: 'discipline', header: 'Discipline' },
+    { accessorKey: 'programme', header: 'Programme' },
+    { accessorFn: row => HOSTEL_OPTIONS.find((h: any) => h.value === row.hostel?.name)?.label || 'Unassigned', id: 'hostel', header: 'Hostel' },
+    { accessorFn: row => row.user?.email, id: 'email', header: 'Email' },
+    { accessorKey: 'outlookId', header: 'Outlook ID' },
+    { accessorKey: 'onboardingStatus', header: 'Status' },
+    { accessorFn: row => row.allocation ? 'Allocated' : 'Unallocated', id: 'allocation', header: 'Allocation' },
+    { accessorKey: 'gender', header: 'Gender' },
+    { accessorKey: 'bloodGroup', header: 'Blood Group' },
+    { accessorKey: 'contactNumber', header: 'Contact No.' },
+    { accessorKey: 'alternateContactNumber', header: 'Alt Contact No.' },
+    { accessorKey: 'permanentAddress', header: 'Address' },
+    { accessorKey: 'country', header: 'Country' },
+    { accessorKey: 'state', header: 'State' },
+    { accessorKey: 'emergencyContactName', header: 'Emerg. Contact Name' },
+    { accessorKey: 'emergencyContactNumber', header: 'Emerg. Contact No.' },
+    { accessorKey: 'emergencyContactRelation', header: 'Emerg. Relation' },
+    { accessorKey: 'medicalConditions', header: 'Medical Conditions' },
+    { accessorKey: 'identificationMark', header: 'Identification Mark' },
+    { accessorKey: 'allergies', header: 'Allergies' },
+    { accessorKey: 'dob', header: 'DOB' },
+    { accessorFn: row => row.isHandicapped ? 'Yes' : 'No', id: 'isHandicapped', header: 'Handicapped' },
+    { accessorKey: 'handicapDetails', header: 'Handicap Details' },
+    { accessorFn: row => row.consentGiven ? 'Yes' : 'No', id: 'consentGiven', header: 'Consent Given' },
+    { accessorFn: row => row.editAllowedByAdmin ? 'Yes' : 'No', id: 'editAllowedByAdmin', header: 'Edit Allowed' },
+    { accessorFn: row => row.isVerified ? 'Yes' : 'No', id: 'isVerified', header: 'Verified' },
+    { accessorFn: row => row.needsReview ? 'Yes' : 'No', id: 'needsReview', header: 'Needs Review' },
+    { accessorKey: 'id', header: 'ID' },
+    { accessorKey: 'userId', header: 'User ID' },
+    { accessorKey: 'academicYearId', header: 'Academic Year ID' },
+    { accessorKey: 'createdAt', header: 'Created At' },
+    { accessorKey: 'updatedAt', header: 'Updated At' },
+    { accessorKey: 'onboardingSubmittedAt', header: 'Submitted At' },
+  ]
+
+  const table = useReactTable({
+    data: students || [],
+    columns,
+    state: {
+      sorting,
+      columnFilters,
+      columnVisibility,
+      rowSelection,
+      globalFilter,
+    },
+    enableRowSelection: true,
+    onRowSelectionChange: setRowSelection,
+    onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
+    onColumnVisibilityChange: setColumnVisibility,
+    onGlobalFilterChange: setGlobalFilter,
+    getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+  })
+
+  const exportData = (format: 'csv' | 'xlsx') => {
+    const rows = table.getFilteredSelectedRowModel().rows
+    if (rows.length === 0) {
+      alert('Select at least one row to export')
+      return
+    }
+
+    const exportCols = table.getVisibleLeafColumns().filter(c => c.id !== 'select')
+    
+    const data = rows.map(row => {
+      const obj: any = {}
+      exportCols.forEach(col => {
+        obj[col.columnDef.header as string] = row.getValue(col.id)
+      })
+      return obj
+    })
+
+    if (format === 'csv') {
+      const header = exportCols.map(c => c.columnDef.header as string).join(',')
+      const csvRows = data.map(row => 
+        exportCols.map(c => {
+          let val = row[c.columnDef.header as string]
+          if (val === null || val === undefined) val = ''
+          val = String(val).replace(/"/g, '""')
+          if (val.includes(',') || val.includes('\n') || val.includes('"')) {
+            val = `"${val}"`
+          }
+          return val
+        }).join(',')
+      )
+      const csvStr = [header, ...csvRows].join('\n')
+      const blob = new Blob([csvStr], { type: 'text/csv;charset=utf-8;' })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `students_export_${new Date().toISOString().split('T')[0]}.csv`
+      a.click()
+      URL.revokeObjectURL(url)
+    } else {
+      const worksheet = XLSX.utils.json_to_sheet(data)
+      const workbook = XLSX.utils.book_new()
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Students")
+      XLSX.writeFile(workbook, `students_export_${new Date().toISOString().split('T')[0]}.xlsx`)
+    }
+  }
+
+  const selectedCount = Object.keys(rowSelection).length
+  const totalCount = students?.length || 0
+  const filteredCount = table.getFilteredRowModel().rows.length
+  const pendingCount = table.getFilteredRowModel().rows.filter(r => r.getValue('onboardingStatus') === 'PENDING').length
+  const submittedCount = table.getFilteredRowModel().rows.filter(r => r.getValue('onboardingStatus') === 'SUBMITTED').length
+
+  return (
+    <div className="space-y-6">
+      <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+        <div className="flex flex-col md:flex-row gap-4 items-center justify-between mb-6">
+          <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
+            <IconDownload size={20} className="text-slate-500" />
+            Data Download Center
+          </h2>
+          <div className="flex items-center gap-3">
+            <Button variant="outline" size="sm" onClick={() => exportData('csv')} className="border-slate-300">
+              <IconDownload size={16} className="mr-2" /> Export CSV
+            </Button>
+            <Button variant="default" size="sm" onClick={() => exportData('xlsx')} className="bg-emerald-600 hover:bg-emerald-700">
+              <IconDownload size={16} className="mr-2" /> Export Excel
+            </Button>
+          </div>
+        </div>
+
+        <div className="flex flex-col md:flex-row gap-4 items-center justify-between mb-4">
+          <div className="relative w-full md:w-80">
+            <IconSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 size-4" />
+            <Input 
+              placeholder="Search all data..." 
+              className="pl-9 h-10 w-full"
+              value={globalFilter ?? ''}
+              onChange={(e) => setGlobalFilter(e.target.value)}
+            />
+          </div>
+          
+          <div className="flex items-center gap-2">
+            <Select onValueChange={(v) => {
+                if (v === 'ALL') table.getColumn('onboardingStatus')?.setFilterValue(undefined)
+                else table.getColumn('onboardingStatus')?.setFilterValue(v)
+            }}>
+              <SelectTrigger className="w-[140px] h-10">
+                <SelectValue placeholder="Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="ALL">All Status</SelectItem>
+                <SelectItem value="PENDING">Pending</SelectItem>
+                <SelectItem value="SUBMITTED">Submitted</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Select onValueChange={(v) => {
+                if (v === 'ALL') table.getColumn('allocation')?.setFilterValue(undefined)
+                else table.getColumn('allocation')?.setFilterValue(v)
+            }}>
+              <SelectTrigger className="w-[140px] h-10">
+                <SelectValue placeholder="Allocation" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="ALL">All Allocation</SelectItem>
+                <SelectItem value="Allocated">Allocated</SelectItem>
+                <SelectItem value="Unallocated">Unallocated</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <div className="relative group">
+              <Button variant="outline" className="h-10">
+                <IconFilter size={16} className="mr-2" /> Columns
+              </Button>
+              <div className="absolute right-0 mt-2 w-64 bg-white border border-slate-200 rounded-md shadow-lg z-50 hidden group-hover:block p-2 max-h-96 overflow-y-auto">
+                {table.getAllLeafColumns().filter(col => col.id !== 'select').map(column => {
+                  return (
+                    <div key={column.id} className="px-2 py-1 flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        checked={column.getIsVisible()}
+                        onChange={column.getToggleVisibilityHandler()}
+                        className="rounded border-slate-300 text-emerald-600 focus:ring-emerald-600"
+                      />
+                      <span className="text-sm text-slate-700">{column.id}</span>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {columnFilters.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-4">
+             {columnFilters.map(f => (
+               <Badge key={f.id} variant="secondary" className="flex items-center gap-1 bg-slate-100">
+                 {f.id}: {String(f.value)}
+                 <IconX size={14} className="cursor-pointer hover:text-slate-900" onClick={() => table.getColumn(f.id)?.setFilterValue(undefined)} />
+               </Badge>
+             ))}
+          </div>
+        )}
+
+        <div className="text-sm text-slate-500 mb-4 flex items-center gap-2">
+          <span>Showing <strong>{filteredCount}</strong> of <strong>{totalCount}</strong> students</span>
+          <span className="text-slate-300">|</span>
+          <span className="text-emerald-600 font-medium">{selectedCount} selected</span>
+          <span className="text-slate-300">|</span>
+          <span>{pendingCount} Pending</span>
+          <span>·</span>
+          <span>{submittedCount} Submitted</span>
+        </div>
+
+        <div className="border border-slate-200 rounded-xl overflow-hidden relative">
+          <div className="overflow-x-auto max-h-[60vh]">
+            <Table className="relative w-full text-sm">
+              <TableHeader className="sticky top-0 bg-slate-50 z-20 shadow-sm">
+                {table.getHeaderGroups().map(headerGroup => (
+                  <TableRow key={headerGroup.id}>
+                    {headerGroup.headers.map(header => {
+                      const isPinned = header.column.getIsPinned()
+                      return (
+                        <TableHead 
+                          key={header.id}
+                          className={`whitespace-nowrap transition-colors hover:bg-slate-100 cursor-pointer select-none ${isPinned ? 'sticky bg-slate-50 z-10 drop-shadow-[2px_0_2px_rgba(0,0,0,0.05)]' : ''}`}
+                          style={{ left: isPinned === 'left' ? `${header.column.getStart('left')}px` : undefined }}
+                          onClick={header.column.getToggleSortingHandler()}
+                        >
+                          <div className="flex items-center gap-1">
+                            {flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                            {{
+                              asc: ' 🔼',
+                              desc: ' 🔽',
+                            }[header.column.getIsSorted() as string] ?? null}
+                          </div>
+                        </TableHead>
+                      )
+                    })}
+                  </TableRow>
+                ))}
+              </TableHeader>
+              <TableBody>
+                {isLoading ? (
+                   <TableRow>
+                     <TableCell colSpan={table.getVisibleLeafColumns().length} className="h-32 text-center text-slate-500">
+                       <IconLoader2 className="animate-spin mx-auto size-6 text-emerald-500" />
+                     </TableCell>
+                   </TableRow>
+                ) : table.getRowModel().rows?.length ? (
+                  table.getRowModel().rows.map(row => (
+                    <TableRow
+                      key={row.id}
+                      data-state={row.getIsSelected() && "selected"}
+                      className="hover:bg-slate-50/50"
+                    >
+                      {row.getVisibleCells().map(cell => {
+                        const isPinned = cell.column.getIsPinned()
+                        return (
+                          <TableCell 
+                            key={cell.id} 
+                            className={`whitespace-nowrap max-w-[200px] truncate ${isPinned ? 'sticky bg-white z-10 drop-shadow-[2px_0_2px_rgba(0,0,0,0.02)] group-hover:bg-slate-50/50' : ''}`}
+                            style={{ left: isPinned === 'left' ? `${cell.column.getStart('left')}px` : undefined }}
+                            title={String(cell.getValue() || '')}
+                          >
+                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                          </TableCell>
+                        )
+                      })}
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={table.getVisibleLeafColumns().length} className="h-24 text-center">
+                      No results.
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 import { parse } from 'csv-parse/sync'
 import { prisma } from '@/config/prisma'
-import { createUser, createAdminUser, getAllStudents, enqueueStudentImport, getImportJobStatus } from './user.service'
+import { createUser, createAdminUser, getAllStudents, enqueueStudentImport, getImportJobStatus, exportAllStudents } from './user.service'
 import { bulkUploadRowSchema } from '@shared/student'
 import { AppError } from '@/utils/errors'
 import type { HostelName } from '@/generated/prisma/enums'
@@ -212,6 +212,15 @@ export async function getAllStudentsHandler(req: Request, res: Response, next: N
       success: true,
       ...result, // spreads data, total, page, limit
     });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function exportAllStudentsHandler(req: Request, res: Response, next: NextFunction) {
+  try {
+    const result = await exportAllStudents();
+    res.status(200).json({ success: true, data: result });
   } catch (error) {
     next(error);
   }

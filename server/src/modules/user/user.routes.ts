@@ -9,6 +9,7 @@ import {
   bulkUploadStudentsHandler,
   getImportStatusHandler,
   getAllStudentsHandler,
+  exportAllStudentsHandler,
 } from './user.controller'
 
 const router = Router()
@@ -28,6 +29,7 @@ router.delete('/hmc/:id', authenticate, authorize('ADMIN'), deleteHMCUserHandler
 
 // ── Student management ────────────────────────────────────────────────────────
 router.get('/students', authenticate, authorize('ADMIN'), getAllStudentsHandler)
+router.get('/students/export', authenticate, authorize('ADMIN'), exportAllStudentsHandler)
 
 // ── Bulk CSV upload ───────────────────────────────────────────────────────────
 // Step 1: Upload CSV → 202 + { jobId }
