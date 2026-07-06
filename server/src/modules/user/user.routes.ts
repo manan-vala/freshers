@@ -10,6 +10,7 @@ import {
   getImportStatusHandler,
   getAllStudentsHandler,
   exportAllStudentsHandler,
+  seedPersonasHandler,
 } from './user.controller'
 
 const router = Router()
@@ -26,6 +27,9 @@ const upload = multer({
 router.post('/admin', authenticate, authorize('ADMIN'), createAdminUserHandler)
 router.get('/hmc', authenticate, authorize('ADMIN'), getHMCUsersHandler)
 router.delete('/hmc/:id', authenticate, authorize('ADMIN'), deleteHMCUserHandler)
+
+// ── Seed management ───────────────────────────────────────────────────────────
+router.post('/seed-personas', authenticate, authorize('ADMIN'), seedPersonasHandler)
 
 // ── Student management ────────────────────────────────────────────────────────
 router.get('/students', authenticate, authorize('ADMIN'), getAllStudentsHandler)

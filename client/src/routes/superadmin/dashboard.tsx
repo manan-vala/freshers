@@ -33,7 +33,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
-import { IconTrash, IconPlus, IconLoader2, IconLogout, IconShieldCheck, IconUpload, IconUsers, IconHome, IconSearch, IconBed, IconEdit, IconCheck, IconX, IconAlertCircle, IconAlertTriangle, IconDownload, IconFilter } from '@tabler/icons-react'
+import { IconTrash, IconPlus, IconLoader2, IconLogout, IconShieldCheck, IconUpload, IconUsers, IconHome, IconSearch, IconBed, IconEdit, IconCheck, IconX, IconAlertCircle, IconAlertTriangle, IconDownload, IconFilter, IconDatabase } from '@tabler/icons-react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -86,7 +86,7 @@ const HOSTEL_OPTIONS: { value: string; label: string }[] = [
 function SuperAdminDashboard() {
   const queryClient = useQueryClient()
   const navigate = Route.useNavigate()
-  const [activeView, setActiveView] = useState<'hostel-admin' | 'upload-data' | 'students-data' | 'rooms-management' | 'data-download'>('hostel-admin')
+  const [activeView, setActiveView] = useState<'hostel-admin' | 'upload-data' | 'students-data' | 'rooms-management' | 'data-download' | 'setup-db'>('hostel-admin')
 
   const { data: users, isLoading } = useQuery({
     queryKey: ['superadmin', 'hmc-users'],
@@ -214,6 +214,15 @@ function SuperAdminDashboard() {
                   >
                     <IconDownload />
                     <span>Data Download</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                  <SidebarMenuButton 
+                    isActive={activeView === 'setup-db'}
+                    onClick={() => setActiveView('setup-db')}
+                  >
+                    <IconDatabase />
+                    <span>Setup DB</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               </SidebarMenu>
@@ -436,6 +445,10 @@ function SuperAdminDashboard() {
             <DataDownloadView />
           )}
 
+          {activeView === 'setup-db' && (
+            <SetupDbView />
+          )}
+
         </main>
       </SidebarInset>
     </SidebarProvider>
@@ -520,8 +533,8 @@ function StudentsDataView() {
                 <TableHead>Roll No.</TableHead>
                 <TableHead>Programme</TableHead>
                 <TableHead>Discipline</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Outlook Email</TableHead>
+                <TableHead>Gmail ID</TableHead>
+                <TableHead>Outlook ID</TableHead>
                 <TableHead>Hostel</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Room</TableHead>
@@ -549,7 +562,7 @@ function StudentsDataView() {
                       <TableCell className="text-slate-500">{student.rollNumber}</TableCell>
                       <TableCell className="text-slate-600">{student.programme}</TableCell>
                       <TableCell className="text-slate-600 max-w-[150px] truncate" title={student.discipline}>{student.discipline}</TableCell>
-                      <TableCell className="text-slate-500">{student.user.email}</TableCell>
+                      <TableCell className="text-slate-500">{student.gmailId}</TableCell>
                       <TableCell className="text-slate-500">{student.outlookId}</TableCell>
                       <TableCell>{readableHostel}</TableCell>
                       <TableCell>
@@ -1395,4 +1408,99 @@ function DataDownloadView() {
       </div>
     </div>
   )
+}
+
+function SetupDbView() {
+  const currentYear = new Date().getFullYear();
+  const exampleFormat = `${currentYear}-${currentYear + 1}`;
+  const [academicYear, setAcademicYear] = useState(exampleFormat);
+  const [errorMsg, setErrorMsg] = useState('');
+  const [successMsg, setSuccessMsg] = useState('');
+
+  const seedMutation = useMutation({
+    mutationFn: async (year: string) => {
+      const { data } = await superAdminApi.post('/v1/users/seed-personas', { academicYear: year });
+      return data.data;
+    },
+    onSuccess: (data) => {
+      setErrorMsg('');
+      setSuccessMsg(`${data.personsSeeded} personas seeded for ${data.academicYear}. Login with test1@iitg.ac.in / Swc_password.`);
+    },
+    onError: (error: any) => {
+      setSuccessMsg('');
+      setErrorMsg(error.response?.data?.message || 'Failed to seed database.');
+    }
+  });
+
+  const handleSeed = () => {
+    setErrorMsg('');
+    setSuccessMsg('');
+    if (!/^\d{4}-\d{4}$/.test(academicYear)) {
+      setErrorMsg('Invalid format. Must be YYYY-YYYY (e.g. 2026-2027)');
+      return;
+    }
+    seedMutation.mutate(academicYear);
+  };
+
+  return (
+    <section className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 max-w-2xl">
+      <h2 className="text-lg font-semibold text-slate-900 mb-6 flex items-center gap-2">
+        <IconDatabase size={20} className="text-slate-500" />
+        Setup Test Database
+      </h2>
+
+      <div className="space-y-6">
+        <div>
+          <label className="block text-sm font-medium text-slate-700 mb-1">Academic Year</label>
+          <Input 
+            value={academicYear}
+            onChange={(e) => setAcademicYear(e.target.value)}
+            placeholder={exampleFormat}
+            className="max-w-[200px]"
+          />
+          <p className="text-xs text-slate-500 mt-1">Format: YYYY-YYYY (e.g. {exampleFormat}), [Current Year - Next year]</p>
+        </div>
+
+        <div className="bg-slate-50 p-4 rounded-lg text-sm text-slate-700 space-y-2">
+          <p className="font-medium">This will seed 10 test persona accounts:</p>
+          <ul className="list-disc pl-5 space-y-1 text-slate-600">
+            <li>test1@iitg.ac.in through test10@iitg.ac.in</li>
+            <li>Default password: <strong>Swc_password</strong></li>
+            <li>Outlook ID = @iitg.ac.in, Gmail ID = @gmail.com</li>
+          </ul>
+        </div>
+
+        <Alert variant="destructive" className="bg-red-50 border-red-200">
+          <IconAlertTriangle className="h-4 w-4" />
+          <AlertTitle>Warning</AlertTitle>
+          <AlertDescription>
+            Existing test personas  and their allocations will be wiped and re-created.
+          </AlertDescription>
+        </Alert>
+
+        {errorMsg && (
+          <Alert variant="destructive">
+            <IconAlertCircle className="h-4 w-4" />
+            <AlertDescription>{errorMsg}</AlertDescription>
+          </Alert>
+        )}
+
+        {successMsg && (
+          <Alert className="bg-emerald-50 border-emerald-200 text-emerald-800">
+            <IconCheck className="h-4 w-4 text-emerald-600" />
+            <AlertTitle className="text-emerald-800">Success</AlertTitle>
+            <AlertDescription>{successMsg}</AlertDescription>
+          </Alert>
+        )}
+
+        <Button 
+          onClick={handleSeed} 
+          disabled={seedMutation.isPending}
+        >
+          {seedMutation.isPending ? <IconLoader2 className="mr-2 h-4 w-4 animate-spin" /> : <IconDatabase className="mr-2 h-4 w-4" />}
+          Seed Database
+        </Button>
+      </div>
+    </section>
+  );
 }

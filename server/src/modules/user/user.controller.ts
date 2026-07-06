@@ -1,7 +1,8 @@
 import { Request, Response, NextFunction } from 'express'
 import { parse } from 'csv-parse/sync'
 import { prisma } from '@/config/prisma'
-import { createUser, createAdminUser, getAllStudents, enqueueStudentImport, getImportJobStatus, exportAllStudents } from './user.service'
+import { createAdminUser, getAllStudents, enqueueStudentImport, getImportJobStatus, exportAllStudents } from './user.service'
+import { seedPersonas } from './seed.service'
 import { bulkUploadRowSchema } from '@shared/student'
 import { AppError } from '@/utils/errors'
 import type { HostelName } from '@/generated/prisma/enums'
@@ -220,6 +221,19 @@ export async function getAllStudentsHandler(req: Request, res: Response, next: N
 export async function exportAllStudentsHandler(req: Request, res: Response, next: NextFunction) {
   try {
     const result = await exportAllStudents();
+    res.status(200).json({ success: true, data: result });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function seedPersonasHandler(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { academicYear } = req.body;
+    if (!academicYear || !/^\d{4}-\d{4}$/.test(academicYear)) {
+      throw new AppError(400, 'Invalid academicYear format. Must be YYYY-YYYY (e.g. 2026-2027).');
+    }
+    const result = await seedPersonas(academicYear);
     res.status(200).json({ success: true, data: result });
   } catch (error) {
     next(error);
