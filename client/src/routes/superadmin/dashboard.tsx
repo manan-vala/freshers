@@ -39,6 +39,12 @@ import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Pagination, PaginationContent, PaginationItem, PaginationNext, PaginationPrevious } from '@/components/ui/pagination'
 import {
+  DropdownMenu,
+  DropdownMenuItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
@@ -230,7 +236,7 @@ function SuperAdminDashboard() {
           </SidebarGroup>
         </SidebarContent>
       </Sidebar>
-      <SidebarInset className="bg-slate-50 min-h-screen flex flex-col">
+      <SidebarInset className="bg-slate-50 min-h-screen flex flex-col min-w-0 overflow-hidden">
         {/* Navbar */}
         <nav className="bg-slate-950 text-slate-100 px-4 py-4 flex items-center justify-between shadow-md h-[60px] shrink-0">
           <div className="flex items-center gap-3">
@@ -256,7 +262,7 @@ function SuperAdminDashboard() {
           </Button>
         </nav>
 
-        <main className={`mx-auto p-4 md:p-6 space-y-6 w-full flex-1 transition-all duration-300 ${['data-download', 'students-data', 'rooms-management'].includes(activeView) ? 'max-w-full' : 'max-w-6xl'}`}>
+        <main className={`mx-auto p-4 md:p-6 space-y-6 w-full min-w-0 flex-1 transition-all duration-300 overflow-hidden ${['data-download', 'students-data', 'rooms-management'].includes(activeView) ? 'max-w-full' : 'max-w-6xl'}`}>
           
           {activeView === 'hostel-admin' && (
             <>
@@ -1233,8 +1239,8 @@ function DataDownloadView() {
   const submittedCount = table.getFilteredRowModel().rows.filter(r => r.getValue('onboardingStatus') === 'SUBMITTED').length
 
   return (
-    <div className="space-y-6">
-      <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+    <div className="space-y-6 min-w-0">
+      <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 min-w-0">
         <div className="flex flex-col md:flex-row gap-4 items-center justify-between mb-6">
           <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
             <IconDownload size={20} className="text-slate-500" />
@@ -1244,7 +1250,7 @@ function DataDownloadView() {
             <Button variant="outline" size="sm" onClick={() => exportData('csv')} className="border-slate-300">
               <IconDownload size={16} className="mr-2" /> Export CSV
             </Button>
-            <Button variant="default" size="sm" onClick={() => exportData('xlsx')} className="bg-emerald-600 hover:bg-emerald-700">
+            <Button variant="default" size="sm" onClick={() => exportData('xlsx')} className="bg-emerald-600 hover:bg-emerald-700 text-white">
               <IconDownload size={16} className="mr-2" /> Export Excel
             </Button>
           </div>
@@ -1290,26 +1296,33 @@ function DataDownloadView() {
               </SelectContent>
             </Select>
 
-            <div className="relative group">
-              <Button variant="outline" className="h-10">
-                <IconFilter size={16} className="mr-2" /> Columns
-              </Button>
-              <div className="absolute right-0 mt-2 w-64 bg-white border border-slate-200 rounded-md shadow-lg z-50 hidden group-hover:block p-2 max-h-96 overflow-y-auto">
-                {table.getAllLeafColumns().filter(col => col.id !== 'select').map(column => {
-                  return (
-                    <div key={column.id} className="px-2 py-1 flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        checked={column.getIsVisible()}
-                        onChange={column.getToggleVisibilityHandler()}
-                        className="rounded border-slate-300 text-emerald-600 focus:ring-emerald-600"
-                      />
-                      <span className="text-sm text-slate-700">{column.id}</span>
-                    </div>
-                  )
-                })}
-              </div>
-            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="h-10">
+                  <IconFilter size={16} className="mr-2" /> Columns
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-64 max-h-96 overflow-y-auto">
+                {table.getAllLeafColumns().filter(col => col.id !== 'select').map(column => (
+                  <DropdownMenuItem
+                    key={column.id}
+                    onSelect={(e) => {
+                      e.preventDefault()
+                      column.toggleVisibility(!column.getIsVisible())
+                    }}
+                    className="flex items-center gap-2 cursor-pointer"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={column.getIsVisible()}
+                      readOnly
+                      className="rounded border-slate-300 text-emerald-600 focus:ring-emerald-600 pointer-events-none"
+                    />
+                    <span>{column.id}</span>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
 
@@ -1334,8 +1347,8 @@ function DataDownloadView() {
           <span>{submittedCount} Submitted</span>
         </div>
 
-        <div className="border border-slate-200 rounded-xl overflow-hidden relative">
-          <div className="overflow-x-auto max-h-[60vh]">
+        <div className="border border-slate-200 rounded-xl overflow-hidden relative min-w-0">
+          <div className="overflow-x-auto max-h-[60vh] w-full">
             <Table className="relative w-full text-sm">
               <TableHeader className="sticky top-0 bg-slate-50 z-20 shadow-sm">
                 {table.getHeaderGroups().map(headerGroup => (
